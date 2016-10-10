@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import { addProject } from './Projects.actions'
 
 class CreateProject extends Component {
 
@@ -16,8 +15,9 @@ class CreateProject extends Component {
   }
 
   saveHandler = e => {
-    console.log('CreateProject().saveHandler()')
-    addProject(this.state.title)
+    console.log('CreateProject().saveHandler() - this: ', this)
+    console.log('CreateProject().saveHandler() - this.props.submitHandler: ', this.props.submitHandler)
+    this.props.submitHandler(this.state.title)
     this.setState({ title: '' })
   }
 
