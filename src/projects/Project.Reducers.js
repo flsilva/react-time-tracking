@@ -1,4 +1,4 @@
-import { ADD_PROJECT } from './Projects.actions'
+import { ADD_PROJECT } from './Project.Actions'
 
 const project = (state, action) => {
   switch (action.type) {

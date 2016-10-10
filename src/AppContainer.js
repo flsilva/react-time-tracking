@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import AppComponent from './AppComponent'
-import DashboardContainer from './dashboard/DashboardContainer'
-import ProjectsContainer from './projects/ProjectsContainer'
-import * as ProjectsActions from './projects/Projects.actions'
+import DashboardSection from './dashboard/DashboardSection'
+import ProjectsSection from './projects/ProjectsSection'
+import * as ProjectActions from './projects/Project.Actions'
 
 /*
 const AppContainer = ({projects, actions}) => (
@@ -27,7 +27,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(ProjectsActions, dispatch)
+  actions: bindActionCreators(ProjectActions, dispatch)
 })
 
 const ConnectedAppContainer = connect(
@@ -38,9 +38,9 @@ const ConnectedAppContainer = connect(
 export const routes = {
   path: '/',
   component: ConnectedAppContainer,
-  indexRoute: { component: DashboardContainer },
+  indexRoute: { component: DashboardSection },
   childRoutes: [
-    { path: 'projects', component: ProjectsContainer }
+    { path: 'projects', component: ProjectsSection }
   ]
 }
 

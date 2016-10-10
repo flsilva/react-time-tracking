@@ -1,4 +1,4 @@
-import projects from './projects/Projects.reducers'
+import projects from './projects/Project.Reducers'
 
 const reducers = {
   projects
