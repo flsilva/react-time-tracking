@@ -4,7 +4,7 @@ const project = (state, action) => {
   switch (action.type) {
     case ADD_PROJECT:
       return {
-        id: action.id,
+        id: new Date().toString(),
         title: action.title,
         active: false
       }
@@ -22,8 +22,8 @@ const projects = (state = [], action) => {
     case ADD_PROJECT:
       console.log('Projects.Reducers().projects() - case ADD_PROJECT');
       return [
-        ...state,
-        project(undefined, action)
+        project(undefined, action),
+        ...state
       ]
     default:
       return state

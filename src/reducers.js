@@ -1,8 +1,7 @@
-import { combineReducers } from 'redux'
 import projects from './projects/Projects.reducers'
 
-const app = combineReducers({
+const reducers = {
   projects
-})
+}
 
-export default app
+export default reducers

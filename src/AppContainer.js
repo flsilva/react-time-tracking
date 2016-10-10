@@ -13,11 +13,6 @@ const AppContainer = ({projects, actions}) => (
 */
 
 class AppContainer extends Component {
-  test = e => {
-    console.log('AppContainer().test()');
-    this.props.actions.addProject('abcabc')
-  }
-
   render() {
     console.log('AppContainer().render() - this: ', this);
 

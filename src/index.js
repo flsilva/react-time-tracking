@@ -10,7 +10,7 @@ import './index.css'
 
 const store = createStore(
   combineReducers({
-    reducers,
+    ...reducers,
     routing: routerReducer
   })
 )
