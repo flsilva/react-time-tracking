@@ -4,18 +4,18 @@ import ProjectListItem from './ProjectListItem'
 class ProjectList extends Component {
 
   render() {
-    const elements = this.props.data.map(function(project) {
-      return (
-        <ProjectListItem key={project.id}>
-          {project.title}
-        </ProjectListItem>
-      );
-    });
-
     return (
       <div className="ProjectList">
-        {elements}
+        {this.props.data.map(this.renderItem)}
       </div>
+    )
+  }
+
+  renderItem({id, title}) {
+    return (
+      <ProjectListItem key={id}>
+        {title}
+      </ProjectListItem>
     )
   }
 }
