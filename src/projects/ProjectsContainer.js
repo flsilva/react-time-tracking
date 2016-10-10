@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ProjectList from './ProjectList';
 import CreateProject from './CreateProject';
 
 class ProjectsContainer extends Component {
@@ -10,6 +11,7 @@ class ProjectsContainer extends Component {
         <p>
           Projects section
         </p>
+        <ProjectList data={this.props.projects} />
         <CreateProject submitHandler={this.props.actions.addProject} />
       </div>
     );
