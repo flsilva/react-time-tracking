@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import MainNav from './main-nav/MainNav'
+import MainNav from '../components/main-nav/MainNav'
 import logo from './logo.svg'
 import './App.css'
 
-class AppComponent extends Component {
+class App extends Component {
   render() {
-    console.log('AppComponent().render() - this: ', this)
+    console.log('App().render() - this: ', this)
 
     return (
       <div className="App">
@@ -22,4 +22,4 @@ class AppComponent extends Component {
   }
 }
 
-export default AppComponent
+export default App

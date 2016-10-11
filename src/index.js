@@ -4,8 +4,8 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
-import { routes } from './AppContainer'
-import reducers from './reducers'
+import { routes } from './app/AppContainer'
+import reducers from './app/reducers'
 import './index.css'
 
 const store = createStore(
