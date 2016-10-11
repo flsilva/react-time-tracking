@@ -1,23 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ProjectListItem from './ProjectListItem'
 
-class ProjectList extends Component {
-
-  render() {
-    return (
-      <div className="ProjectList">
-        {this.props.data.map(this.renderItem)}
-      </div>
-    )
-  }
-
-  renderItem({id, title}) {
+const ProjectList = (props) => {
+  const renderItem = ({id, title}) => {
     return (
       <ProjectListItem key={id}>
         {title}
       </ProjectListItem>
     )
   }
+
+  return (
+    <div className="ProjectList">
+      {props.data.map(renderItem)}
+    </div>
+  )
 }
 
 export default ProjectList

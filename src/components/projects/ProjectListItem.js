@@ -1,14 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class ProjectListItem extends Component {
+const ProjectListItem = (props) => (
+  <div className="ProjectListItem">
+    {props.children}
+  </div>
+)
 
-  render() {
-    return (
-      <div className="ProjectListItem">
-        {this.props.children}
-      </div>
-    )
-  }
+ProjectListItem.propTypes = {
+  children: React.PropTypes.string.isRequired
 }
 
 export default ProjectListItem

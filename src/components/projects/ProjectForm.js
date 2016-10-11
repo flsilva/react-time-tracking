@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 
-class ProjectFormComponent extends Component {
+class ProjectForm extends Component {
 
   static propTypes = {
+    heading: PropTypes.string.isRequired,
     title: PropTypes.string
   }
 
@@ -15,17 +16,15 @@ class ProjectFormComponent extends Component {
   }
 
   saveHandler = e => {
-    console.log('ProjectFormComponent().saveHandler() - this: ', this)
-    console.log('ProjectFormComponent().saveHandler() - this.props.submitHandler: ', this.props.submitHandler)
     this.props.submitHandler(this.state.title)
     this.setState({ title: '' })
   }
 
   render() {
     return (
-      <div className="CreateProject">
+      <div className="ProjectForm">
         <h3>
-          New Project
+          {this.props.heading}
         </h3>
         <input
           type="text"
@@ -40,4 +39,4 @@ class ProjectFormComponent extends Component {
   }
 }
 
-export default ProjectFormComponent
+export default ProjectForm

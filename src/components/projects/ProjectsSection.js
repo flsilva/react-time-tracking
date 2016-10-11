@@ -1,21 +1,15 @@
-import React, { Component } from 'react'
-import ProjectListComponent from './ProjectList'
-import ProjectFormComponent from './ProjectForm'
+import React from 'react'
+import ProjectList from './ProjectList'
+import ProjectForm from './ProjectForm'
 
-class ProjectsSection extends Component {
-  render() {
-    console.log('ProjectsContainer().render() - this: ', this)
-
-    return (
-      <div className="ProjectsContainer">
-        <p>
-          Projects section
-        </p>
-        <ProjectListComponent data={this.props.projects} />
-        <ProjectFormComponent submitHandler={this.props.actions.addProject} />
-      </div>
-    )
-  }
-}
+const ProjectsSection = (props) => (
+  <div className="ProjectsSection">
+    <p>
+      Projects section
+    </p>
+    <ProjectList data={props.projects} />
+    <ProjectForm heading="New Project" submitHandler={props.actions.addProject} />
+  </div>
+)
 
 export default ProjectsSection
