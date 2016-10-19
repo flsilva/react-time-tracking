@@ -5,10 +5,16 @@ const MainNav = (props) => (
   <nav className="MainNav">
     <ul>
       <li>
-        <NavLink to="/" onlyActiveOnIndex={true}>Dashboard</NavLink>
+        <NavLink to="/" onlyActiveOnIndex={true}>Home</NavLink>
       </li>
       <li>
-        <NavLink to="/projects">Projects</NavLink>
+        <NavLink to="/sign-up">Sign Up</NavLink>
+      </li>
+      <li>
+        <NavLink to="/app">Dashboard</NavLink>
+      </li>
+      <li>
+        <NavLink to="/app/projects">Projects</NavLink>
       </li>
     </ul>
   </nav>

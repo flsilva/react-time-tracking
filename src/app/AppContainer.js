@@ -1,7 +1,49 @@
 import React from 'react'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { Provider } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
+import { Router, browserHistory } from 'react-router'
+import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux'
+import { UserAuthWrapper } from 'redux-auth-wrapper'
+import appReducers from './reducers'
 import App from './App'
+import HomeSectionContainer from './home/HomeSectionContainer'
+import SignUpSectionContainer from './auth/SignUpSectionContainer'
+import SignUpSuccessSection from '../components/auth/SignUpSuccessSection'
+import SignUpConfirmationContainer from './auth/SignUpConfirmationContainer'
+import LoginSectionContainer from './auth/LoginSectionContainer'
 import DashboardSectionContainer from './dashboard/DashboardSectionContainer'
 import ProjectsSectionContainer from './projects/ProjectsSectionContainer'
+
+const reducers = combineReducers({
+  ...appReducers,
+  routing: routerReducer
+})
+
+const routingMiddleware = routerMiddleware(browserHistory)
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const store = createStore(
+  reducers,
+  composeEnhancers(
+    applyMiddleware(
+      thunkMiddleware,
+      routingMiddleware
+    )
+  )
+)
+
+const history = syncHistoryWithStore(browserHistory, store)
+
+// Redirects to /login by default
+const UserIsAuthenticated = UserAuthWrapper({
+  authSelector: state => state.auth.user, // how to get the user state
+  redirectAction: routerActions.replace, // the redux action to dispatch for redirect
+  wrapperDisplayName: 'UserIsAuthenticated' // a nice name for this auth check
+})
+
+const AuthenticationAppContainer = UserIsAuthenticated((props) => props.children)
 
 const AppContainer = (props) => (
   <App {...props} />
@@ -10,8 +52,24 @@ const AppContainer = (props) => (
 export const routes = {
   path: '/',
   component: AppContainer,
-  indexRoute: { component: DashboardSectionContainer },
+  indexRoute: { component: HomeSectionContainer },
   childRoutes: [
-    { path: 'projects', component: ProjectsSectionContainer }
+    { path: '/sign-up', component: SignUpSectionContainer },
+    { path: '/sign-up/success', component: SignUpSuccessSection },
+    { path: '/sign-up/confirmation', component: SignUpConfirmationContainer },
+    { path: '/login', component: LoginSectionContainer },
+    {
+      component: AuthenticationAppContainer,
+      childRoutes: [
+        { path: '/app', component: DashboardSectionContainer },
+        { path: '/app/projects', component: ProjectsSectionContainer }
+      ]
+    }
   ]
 }
+
+export const Root = () => (
+  <Provider store={store}>
+    <Router history={history} routes={routes} />
+  </Provider>
+)
