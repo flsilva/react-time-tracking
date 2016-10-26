@@ -4,20 +4,26 @@ class ProjectForm extends Component {
 
   static propTypes = {
     heading: PropTypes.string.isRequired,
-    title: PropTypes.string
+    name: PropTypes.string
   }
 
   state = {
-    title: this.props.title || ''
+    name: this.props.name || ''
   }
 
   changeHandler = e => {
-    this.setState({ title: e.target.value })
+    this.setState({ name: e.target.value })
   }
 
   saveHandler = e => {
-    this.props.submitHandler(this.state.title)
-    this.setState({ title: '' })
+    const data = {
+      name: this.state.name
+    }
+
+    this.props.submitHandler(data)
+      .then((data) => {
+        this.setState({ name: '' })
+      })
   }
 
   render() {
@@ -30,7 +36,7 @@ class ProjectForm extends Component {
           type="text"
           placeholder="Project name"
           autoFocus="true"
-          value={this.state.title}
+          value={this.state.name}
           onChange={this.changeHandler}
         />
         <button onClick={this.saveHandler}>Save</button>

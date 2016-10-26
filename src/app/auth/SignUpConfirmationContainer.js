@@ -5,7 +5,6 @@ import SignUpConfirmationSection from '../../components/auth/SignUpConfirmationS
 class SignUpConfirmationContainer extends Component {
   constructor(props) {
     super(props)
-    console.log('SignUpConfirmationContainer().constructor() - props: ', props)
     const email = this.props.location.query.uid
     let success = this.props.location.query.account_confirmation_success
     success = (success === 'true') ? true : false
@@ -29,6 +28,7 @@ class SignUpConfirmationContainer extends Component {
           email: this.state.email
         }
       }
+
       browserHistory.push(path)
     }
   }

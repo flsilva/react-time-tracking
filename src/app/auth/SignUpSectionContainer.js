@@ -17,17 +17,11 @@ class SignUpSectionContainer extends Component {
   submitHandler = (email, password, confirmPassword) => {
     this.props.actions.emailSignUp(email, password, confirmPassword)
       .then(this.submitHandlerSuccess)
-      .catch(this.submitHandlerError)
   }
 
   submitHandlerSuccess = () => {
     console.log('SignUpSectionContainer().submitHandlerSuccess()')
     browserHistory.push('/sign-up/success')
-  }
-
-  submitHandlerError = () => {
-    console.log('SignUpSectionContainer().submitHandlerError()')
-    // do nothing, reducer will update state.
   }
 
   render() {

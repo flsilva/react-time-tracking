@@ -16,6 +16,9 @@ const MainNav = (props) => (
       <li>
         <NavLink to="/app/projects">Projects</NavLink>
       </li>
+      <li>
+        <NavLink to="/sign-out">Sign Out</NavLink>
+      </li>
     </ul>
   </nav>
 )

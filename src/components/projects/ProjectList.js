@@ -2,17 +2,17 @@ import React from 'react'
 import ProjectListItem from './ProjectListItem'
 
 const ProjectList = (props) => {
-  const renderItem = ({id, title}) => {
+  const renderItem = ({id, name}) => {
     return (
       <ProjectListItem key={id}>
-        {title}
+        {name}
       </ProjectListItem>
     )
   }
 
   return (
     <div className="ProjectList">
-      {props.data.map(renderItem)}
+      {props.data ? props.data.map(renderItem) : null}
     </div>
   )
 }
