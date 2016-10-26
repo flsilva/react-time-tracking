@@ -6,7 +6,6 @@ import { Router, browserHistory } from 'react-router'
 import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 import appReducers from './reducers'
-import ApiMiddleware from './api/ApiMiddleware'
 import App from './App'
 import HomeSectionContainer from './home/HomeSectionContainer'
 import SignUpSectionContainer from './auth/SignUpSectionContainer'
@@ -32,8 +31,7 @@ const store = createStore(
   composeEnhancers(
     applyMiddleware(
       thunkMiddleware,
-      routingMiddleware,
-      ApiMiddleware
+      routingMiddleware
     )
   )
 )

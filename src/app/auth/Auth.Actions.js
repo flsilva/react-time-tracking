@@ -112,25 +112,6 @@ export const emailSignIn = (email, password) => (
     }
 
     return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
-
-    /*
-    return fetch('http://127.0.0.1:3000/auth/sign_in', opts)
-      .then((response) => {
-        console.log('Auth.Actions().emailSignIn().then() - response: ', response); 
-        response.json().then(json => {
-          console.log('Auth.Actions().emailSignIn().then() - json: ', json); 
-          if (response.ok) {
-            dispatch(emailSignInSuccess(json.data))
-          } else {
-            const error = (json.errors.full_messages) ? json.errors.full_messages : json.errors
-            errorHandler(error)
-          }
-        })
-      }).catch(function(err) {
-        console.log('Auth.Actions().emailSignIn().catch() - err: ', err); 
-        errorHandler(err)
-      })
-      */
   }
 )
 
@@ -181,30 +162,6 @@ export const emailSignUp = (email, password, confirmPassword) => (
     }
 
     return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
-
-    /*
-    return new Promise((resolve, reject) => {
-      const fetcher = new ApiFetcher()
-
-      fetcher.post('http://127.0.0.1:3000/auth', opts)
-        .then((response) => {
-          console.log('Auth.Actions().emailSignUp().then() - response: ', response); 
-          response.json().then(json => {
-            console.log('Auth.Actions().emailSignUp().then() - json: ', json); 
-            if (response.ok) {
-              const user = json.data
-              dispatch(emailSignUpSuccess(user))
-              resolve(user)
-            } else {
-              errorHandler(json.errors, reject)
-            }
-          })
-        }).catch(function(error) {
-          console.log('Auth.Actions().emailSignUp().catch() - error: ', error); 
-          errorHandler(error, reject)
-        })
-    })
-    */
   }
 )
 
