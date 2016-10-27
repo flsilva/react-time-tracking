@@ -3,7 +3,7 @@ import MainNav from '../components/main-nav/MainNav'
 import logo from './logo.svg'
 import './App.css'
 
-const App = (props) => (
+/*const App = (props) => (
   <div className="App">
     <div className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
@@ -13,6 +13,12 @@ const App = (props) => (
     <div className="SectionContainer">
       {React.cloneElement(props.children, props)}
     </div>
+  </div>
+)*/
+
+const App = (props) => (
+  <div className="App">
+    {props.children}
   </div>
 )
 

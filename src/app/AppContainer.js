@@ -7,7 +7,7 @@ import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } 
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 import appReducers from './reducers'
 import App from './App'
-import HomeSectionContainer from './home/HomeSectionContainer'
+import LandingSectionContainer from './landing/LandingSectionContainer'
 import SignUpSectionContainer from './auth/SignUpSectionContainer'
 import { tokenSignIn } from './auth/Auth.Actions'
 import SignUpSuccessSection from '../components/auth/SignUpSuccessSection'
@@ -64,10 +64,11 @@ const AppContainer = (props) => (
   <App {...props} />
 )
 
+/*
 export const routes = {
   path: '/',
   component: AppContainer,
-  indexRoute: { component: HomeSectionContainer },
+  indexRoute: { component: LandingSectionContainer },
   childRoutes: [
     { path: '/sign-out', component: SignOutSectionContainer },
     {
@@ -84,6 +85,45 @@ export const routes = {
       childRoutes: [
         { path: '/app', component: DashboardSectionContainer },
         { path: '/app/projects', component: ProjectsSectionContainer }
+      ]
+    }
+  ]
+}
+*/
+
+import WebsiteLayout from '../components/WebsiteLayout'
+import FaqSection from '../components/FaqSection'
+
+export const routes = {
+  component: AppContainer,
+  childRoutes: [
+    {
+      path: '/',
+      component: WebsiteLayout,
+      indexRoute: { component: LandingSectionContainer },
+      childRoutes: [
+        { path: '/faq', component: FaqSection }
+      ]
+    },
+    {
+      childRoutes: [
+        { path: '/sign-out', component: SignOutSectionContainer },
+        {
+          component: NotAuthenticatedAppContainer,
+          childRoutes: [
+            { path: '/sign-up', component: SignUpSectionContainer },
+            { path: '/sign-up/success', component: SignUpSuccessSection },
+            { path: '/sign-up/confirmation', component: SignUpConfirmationContainer },
+            { path: '/login', component: LoginSectionContainer },
+          ]
+        },
+        {
+          component: AuthenticatedAppContainer,
+          childRoutes: [
+            { path: '/app', component: DashboardSectionContainer },
+            { path: '/app/projects', component: ProjectsSectionContainer }
+          ]
+        }
       ]
     }
   ]
