@@ -1,5 +1,5 @@
 import ApiFetcher from './ApiFetcher'
-import { newToken, emailSignOut } from '../auth/Auth.Actions'
+import { newToken, emailSignOutSuccess } from '../auth/Auth.Actions'
 
 const STORAGE_TOKEN_ID = 'APP_TOKEN'
 const endPoint = 'http://127.0.0.1:3000/'
@@ -50,7 +50,7 @@ export const apiRequest = (payload) => (
       cachedHeaders = getState().auth.headers
     }
 
-    console.log('ApiMiddleware() - call ApiFetcher().fetch() cachedHeaders: ', cachedHeaders)
+    console.log('Api.Actions::apiRequest() - call ApiFetcher().fetch() cachedHeaders: ', cachedHeaders)
 
     if (cachedHeaders) {
       Object.keys(cachedHeaders).forEach(key => {
@@ -61,13 +61,13 @@ export const apiRequest = (payload) => (
     return new Promise((resolve, reject) => {
       fetcher.fetch(url, opts)
         .then((response) => {
-          console.log('ApiMiddleware().then() - response: ', response); 
+          console.log('Api.Actions::apiRequest().then() - response: ', response); 
           response.json().then(json => {
-            console.log('ApiMiddleware().then() - json: ', json); 
+            console.log('Api.Actions::apiRequest().then() - json: ', json); 
             if (response.ok) {
               if (!payload.signOut) {
                 const headers = extractHeadersToCache(headersToCache, response)
-                console.log('ApiMiddleware().then() - headers: ', headers); 
+                console.log('Api.Actions::apiRequest().then() - headers: ', headers); 
                 if (headers && Object.keys(headers).length) {
                   dispatch(newToken(headers))
                   localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(headers))
@@ -75,14 +75,14 @@ export const apiRequest = (payload) => (
               }
               resolve(json)
             } else if (response.status === 401 && !payload.signIn && !payload.signOut) {
-              dispatch(emailSignOut())
+              dispatch(emailSignOutSuccess())
               reject('Your session has expired, please sign in again.')
             } else {
               reject(json)
             }
           })
         }).catch(function(error) {
-          console.log('ApiMiddleware().catch() - error: ', error); 
+          console.log('Api.Actions::apiRequest().catch() - error: ', error); 
           reject(error)
         })
     })

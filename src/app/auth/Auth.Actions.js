@@ -2,11 +2,11 @@ import { apiRequest } from '../api/Api.Actions'
 
 export const NEW_TOKEN = 'NEW_TOKEN'
 
-export const EMAIL_SIGN_IN = 'EMAIL_SIGN_IN'
+export const EMAIL_SIGN_IN_START = 'EMAIL_SIGN_IN_START'
 export const EMAIL_SIGN_IN_SUCCESS = 'EMAIL_SIGN_IN_SUCCESS'
 export const EMAIL_SIGN_IN_ERROR = 'EMAIL_SIGN_IN_ERROR'
 
-export const EMAIL_SIGN_UP = 'EMAIL_SIGN_UP'
+export const EMAIL_SIGN_UP_START = 'EMAIL_SIGN_UP_START'
 export const EMAIL_SIGN_UP_SUCCESS = 'EMAIL_SIGN_UP_SUCCESS'
 export const EMAIL_SIGN_UP_ERROR = 'EMAIL_SIGN_UP_ERROR'
 
@@ -19,15 +19,15 @@ export const TOKEN_SIGN_IN_ERROR = 'TOKEN_SIGN_IN_ERROR'
 
 export const newToken = (payload) => ({ type: NEW_TOKEN, payload })
 
-const _emailSignIn = () => ({ type: EMAIL_SIGN_IN })
+const emailSignInStart = () => ({ type: EMAIL_SIGN_IN_START })
 const emailSignInSuccess = (payload) => ({ type: EMAIL_SIGN_IN_SUCCESS, payload })
 const emailSignInError = (payload) => ({ type: EMAIL_SIGN_IN_ERROR, payload })
 
-const _emailSignUp = () => ({ type: EMAIL_SIGN_UP })
+const emailSignUpStart = () => ({ type: EMAIL_SIGN_UP_START })
 const emailSignUpSuccess = (payload) => ({ type: EMAIL_SIGN_UP_SUCCESS, payload })
 const emailSignUpError = (payload) => ({ type: EMAIL_SIGN_UP_ERROR, payload })
 
-const emailSignOutSuccess = () => ({ type: EMAIL_SIGN_OUT_SUCCESS })
+export const emailSignOutSuccess = () => ({ type: EMAIL_SIGN_OUT_SUCCESS })
 const emailSignOutError = () => ({ type: EMAIL_SIGN_OUT_ERROR })
 
 const tokenSignInStart = () => ({ type: TOKEN_SIGN_IN_START })
@@ -68,7 +68,7 @@ export const emailSignIn = (email, password) => (
   (dispatch) => {
     console.log('Auth.Actions::emailSignIn()')
 
-    dispatch(_emailSignIn())
+    dispatch(emailSignInStart())
 
     const errorHandler = (error) => {
       console.log('Auth.Actions::emailSignIn().errorHandler() - error: ', error)
@@ -117,7 +117,7 @@ export const emailSignIn = (email, password) => (
 
 export const emailSignUp = (email, password, confirmPassword) => (
   (dispatch) => {
-    dispatch(_emailSignUp())
+    dispatch(emailSignUpStart())
 
     const errorHandler = (error) => {
       console.log('emailSignUp().errorHandler() - error: ', error)

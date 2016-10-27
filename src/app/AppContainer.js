@@ -95,4 +95,4 @@ export const Root = () => (
   </Provider>
 )
 
-store.dispatch(tokenSignIn())
+store.dispatch(tokenSignIn()).catch(error => { console.log('AppContainer().store.dispatch(tokenSignIn()).catch()') })
