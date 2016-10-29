@@ -1,11 +1,10 @@
 import React from 'react'
+import WebsiteHeader from './header/WebsiteHeader'
 
 const WebsiteLayout = (props) => (
   <div className="WebsiteLayout">
-    <p>
-      website header
-    </p>
-    <div>
+    <WebsiteHeader user={props.auth.user} />
+    <div className="SectionContainer">
       {props.children}
     </div>
     <p>

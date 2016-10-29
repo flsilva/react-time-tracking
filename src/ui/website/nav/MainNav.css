@@ -1,0 +1,7 @@
+.MainNav ul {
+  list-style-type: none;
+}
+
+.MainNav ul li {
+  float: left;
+}

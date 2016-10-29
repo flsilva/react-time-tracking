@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import * as AuthActions from './Auth.Actions'
-import SignUpSection from '../../components/auth/SignUpSection'
+import SignUpSection from '../../../ui/app/auth/SignUpSection'
 
 const mapStateToProps = state => ({
   auth: state.auth

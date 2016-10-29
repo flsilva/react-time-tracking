@@ -2,7 +2,7 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as AuthActions from './Auth.Actions'
-import LoginSection from '../../components/auth/LoginSection'
+import LoginSection from '../../../ui/app/auth/LoginSection'
 
 const mapStateToProps = state => ({
   auth: state.auth

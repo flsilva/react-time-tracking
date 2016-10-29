@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
-import SignUpConfirmationSection from '../../components/auth/SignUpConfirmationSection'
+import SignUpConfirmationSection from '../../../ui/app/auth/SignUpConfirmationSection'
 
 class SignUpConfirmationContainer extends Component {
   constructor(props) {

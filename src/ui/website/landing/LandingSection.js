@@ -1,5 +1,4 @@
 import React from 'react'
-import WebsiteLayout from '../WebsiteLayout'
 
 const LandingSection = (props) => (
   <div className="LandingSection">

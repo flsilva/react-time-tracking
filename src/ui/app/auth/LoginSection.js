@@ -1,5 +1,5 @@
 import React from 'react'
-import EmailSignInForm from '../../components/auth/EmailSignInForm'
+import EmailSignInForm from './EmailSignInForm'
 import ErrorMessages from '../error/ErrorMessages'
 
 const LoginSection = (props) => (

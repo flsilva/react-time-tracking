@@ -1,5 +1,5 @@
 import React from 'react'
-import EmailSignUpForm from '../../components/auth/EmailSignUpForm'
+import EmailSignUpForm from './EmailSignUpForm'
 import ErrorMessages from '../error/ErrorMessages'
 
 const SignUpSection = (props) => (
