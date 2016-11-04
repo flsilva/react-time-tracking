@@ -6,7 +6,6 @@ import thunkMiddleware from 'redux-thunk'
 import { Router, browserHistory } from 'react-router'
 import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import appReducers from './behavior/app/reducers'
 import Layout from './ui/Layout'
 import WebsiteLayout from './behavior/website/WebsiteLayout'
@@ -22,9 +21,9 @@ import SignOutSectionContainer from './behavior/app/auth/SignOutSectionContainer
 import DashboardSectionContainer from './behavior/app/dashboard/DashboardSectionContainer'
 import ProjectsSectionContainer from './behavior/app/projects/ProjectsSectionContainer'
 
-import './index.css'
+import 'react-toolbox/lib/commons.css'
+//import './index.css'
 
-injectTapEventPlugin()
 
 const reducers = combineReducers({
   ...appReducers,
@@ -59,7 +58,7 @@ const UserIsAuthenticated = UserAuthWrapper({
 
 const UserIsNotAuthenticated = UserAuthWrapper({
   authSelector: state => state.auth, // how to get the user state
-  //authenticatingSelector: state => state.auth.isFetching,
+  authenticatingSelector: state => state.auth.isFetching,
   predicate: auth => !auth.isFetching && !auth.user,
   redirectAction: routerActions.replace, // the redux action to dispatch for redirect
   failureRedirectPath: (state, ownProps) => ownProps.location.query.redirect || '/app',
@@ -67,7 +66,11 @@ const UserIsNotAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotAuthenticated' // a nice name for this auth check
 })
 
-const AuthenticatedAppContainer = UserIsAuthenticated((props) => props.children)
+//const AuthenticatedAppContainer = UserIsAuthenticated((props) => props.children)
+const AuthenticatedAppContainer = UserIsAuthenticated((props) => {
+  console.log('AuthenticatedAppContainer() - props: ', props)
+  return React.cloneElement(props.children, { user: props.authData.user })
+})
 const NotAuthenticatedAppContainer = UserIsNotAuthenticated((props) => props.children)
 
 export const routes = {

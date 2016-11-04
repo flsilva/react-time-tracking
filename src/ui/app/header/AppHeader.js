@@ -1,15 +1,40 @@
-import React from 'react'
-import AppBar from 'material-ui/AppBar'
+import React, { Component, PropTypes } from 'react'
+import { AppBar } from 'react-toolbox/lib/app_bar'
+import FontIcon from 'react-toolbox/lib/font_icon'
+import Drawer from 'react-toolbox/lib/drawer'
 import Logo from '../../common/logo/Logo'
 import MainNav from '../nav/MainNav'
 
-const AppHeader = (props) => (
-  <div className="AppHeader">
-    <AppBar
-      iconElementLeft={<Logo />}
-      iconElementRight={<MainNav user={props.user} />}
-    />
-  </div>
-)
+class AppHeader extends Component {
+
+  static propTypes = {
+    title: PropTypes.string,
+    user: PropTypes.object
+  }
+
+  state = {
+    menuActive: false
+  }
+
+  toggleMenu = () => {
+    this.setState({menuActive: !this.state.menuActive})
+  }
+
+  render() {
+    return (
+      <div className="AppHeader">
+        <AppBar
+          onLeftIconClick={this.toggleMenu}
+          leftIcon={<FontIcon value='menu' />}
+          title={this.props.title}
+        />
+        <Drawer active={this.state.menuActive} onOverlayClick={this.toggleMenu}>
+          <MainNav user={this.props.user} />
+        </Drawer>
+      </div>
+    )
+  }
+}
 
 export default AppHeader
+

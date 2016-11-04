@@ -9,6 +9,8 @@ var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeMod
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
+var rootPath = path.join(__dirname, './..')
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 var publicPath = '/';
@@ -116,7 +118,7 @@ module.exports = {
       // in development "style" loader enables hot editing of CSS.
       {
         test: /\.css$/,
-        loader: 'style!css!postcss'
+        loader: 'style!css?modules!postcss'
       },
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
@@ -148,8 +150,30 @@ module.exports = {
   },
   
   // We use PostCSS for autoprefixing only.
-  postcss: function() {
+  postcss: function(webpackInstance) {
     return [
+      require('postcss-import')({
+        addDependencyTo: webpackInstance,
+        root: rootPath,
+        path: [
+          paths.reactToolboxPath
+        ]
+      }),
+      require('postcss-cssnext')({
+        features: {
+          customProperties: {
+            variables: {
+              'color-primary': 'var(--palette-teal-500)',
+              'color-primary-dark': 'var(--palette-teal-700)',
+              'color-primary-light': 'var(--palette-teal-500)',
+              'color-accent': 'var(--palette-amber-a200)',
+              'color-accent-dark': 'var(--palette-amber-700)',
+              'color-primary-contrast': 'var(--color-dark-contrast)',
+              'color-accent-contrast': 'var(--color-dark-contrast)'
+            }
+          }
+        }
+      }),
       autoprefixer({
         browsers: [
           '>1%',

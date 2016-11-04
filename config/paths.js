@@ -35,5 +35,6 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
   ownNodeModules: resolveApp('node_modules'),
+  reactToolboxPath: resolveApp('node_modules/react-toolbox'),
   nodePaths: nodePaths
 };
