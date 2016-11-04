@@ -27,9 +27,10 @@ class SignUpSectionContainer extends Component {
   render() {
     return (
       <SignUpSection
-        submitHandler={this.submitHandler}
-        isFetching={this.props.auth.isFetching}
         error={this.props.auth.error}
+        isFetching={this.props.auth.isFetching}
+        submitHandler={this.submitHandler}
+        user={this.props.auth.user}
       />
     )
   }

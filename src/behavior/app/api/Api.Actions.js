@@ -2,7 +2,7 @@ import ApiFetcher from './ApiFetcher'
 import { newToken, emailSignOutSuccess } from '../auth/Auth.Actions'
 
 const STORAGE_TOKEN_ID = 'APP_TOKEN'
-const endPoint = 'http://127.0.0.1:3000/'
+const endPoint = 'http://192.168.1.76:3000/'
 
 const headersToCache = [
   'access-token',
@@ -31,10 +31,6 @@ export const apiRequest = (payload) => (
   (dispatch, getState) => {
     console.log('Api.Actions::apiRequest() - payload: ', payload)
 
-    if (payload.signOut) {
-      localStorage.removeItem(STORAGE_TOKEN_ID)
-    }
-
     const fetcher = new ApiFetcher()
     const url = endPoint + payload.path
     const opts = Object.assign({}, payload.opts)
@@ -50,6 +46,10 @@ export const apiRequest = (payload) => (
       cachedHeaders = getState().auth.headers
     }
 
+    if (payload.signOut) {
+      localStorage.removeItem(STORAGE_TOKEN_ID)
+    }
+
     console.log('Api.Actions::apiRequest() - call ApiFetcher().fetch() cachedHeaders: ', cachedHeaders)
 
     if (cachedHeaders) {
@@ -59,6 +59,11 @@ export const apiRequest = (payload) => (
     }
 
     return new Promise((resolve, reject) => {
+      if (payload.authToken && !cachedHeaders) {
+        reject()
+        return
+      }
+
       fetcher.fetch(url, opts)
         .then((response) => {
           console.log('Api.Actions::apiRequest().then() - response: ', response); 

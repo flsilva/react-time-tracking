@@ -1,19 +1,24 @@
 import React from 'react'
+import { List, ListItem } from 'react-toolbox/lib/list'
 import ProjectListItem from './ProjectListItem'
 
 const ProjectList = (props) => {
   const renderItem = ({id, name}) => {
+
     return (
-      <ProjectListItem key={id}>
-        {name}
-      </ProjectListItem>
+      <ListItem
+        caption={name}
+        key={id}
+        leftIcon='folder'
+        rightIcon='star'
+      />
     )
   }
 
   return (
-    <div className="ProjectList">
+    <List selectable ripple>
       {props.data ? props.data.map(renderItem) : null}
-    </div>
+    </List>
   )
 }
 

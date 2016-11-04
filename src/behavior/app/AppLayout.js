@@ -7,7 +7,7 @@ const AppLayoutContainer = (props) => (
 )
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  user: state.auth.user
 })
 
 export default connect(

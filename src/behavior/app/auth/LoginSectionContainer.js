@@ -14,10 +14,11 @@ const mapDispatchToProps = dispatch => ({
 
 const LoginSectionContainer = (props) => (
   <LoginSection
-    submitHandler={props.actions.emailSignIn}
-    isFetching={props.auth.isFetching}
     email={props.location.query.email}
     error={props.auth.error}
+    isFetching={props.auth.isFetching}
+    submitHandler={props.actions.emailSignIn}
+    user={props.auth.user}
   />
 )
 

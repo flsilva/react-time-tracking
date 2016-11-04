@@ -1,33 +1,35 @@
 import React from 'react'
+import { browserHistory } from 'react-router'
+import Navigation from 'react-toolbox/lib/navigation'
 import NavLink from '../../common/nav/NavLink'
 import './MainNav.css'
 
 const MainNav = (props) => {
-  const signedInNav = () => (
-    <ul>
-      <li>
-        <NavLink to="/app">Back to App</NavLink>
-      </li>
-    </ul>
+  const navigateToSignUp = () => {
+    browserHistory.push('/sign-up')
+  }
+
+  const navigateToSignIn = () => {
+    browserHistory.push('/sign-in')
+  }
+
+  const signedInLinks = () => (
+    [
+      { label: 'Back to App', flat: true, icon: 'keyboard_arrow_left', href: '/app' }
+    ]
   )
 
-  const signedOutNav = () => (
-    <ul>
-      <li>
-        <NavLink to="/sign-up">Sign Up</NavLink>
-      </li>
-      <li>
-        <NavLink to="/sign-in">Sign In</NavLink>
-      </li>
-    </ul>
+  const signedOutLinks = () => (
+    [
+      { label: 'Sign Up', flat: true, onMouseUp: navigateToSignUp },
+      { label: 'Sign In', flat: true, onMouseUp: navigateToSignIn }
+    ]
   )
 
-  const nav = (props.user) ? signedInNav() : signedOutNav()
+  const links = (props.user) ? signedInLinks() : signedOutLinks()
 
   return (
-    <nav className="MainNav">
-      {nav}
-    </nav>
+    <Navigation type='vertical' actions={links} />
   )
 }
 

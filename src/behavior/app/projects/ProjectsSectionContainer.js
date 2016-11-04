@@ -13,9 +13,10 @@ class ProjectsSectionContainer extends Component {
   render() {
     return (
       <ProjectsSection
-        projects={this.props.projects.data}
         addProject={this.props.actions.addProject}
         error={this.props.projects.error}
+        projects={this.props.projects.data}
+        user={this.props.user}
       />
     )
   }

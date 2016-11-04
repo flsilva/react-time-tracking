@@ -12,10 +12,10 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(AuthActions, dispatch)
 })
 
-class SignUpSectionContainer extends Component {
+class SignOutSectionContainer extends Component {
   componentDidMount() {
     this.props.actions.emailSignOut()
-      browserHistory.push('/')
+    browserHistory.push('/')
   }
 
   render() {
@@ -26,5 +26,5 @@ class SignUpSectionContainer extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SignUpSectionContainer)
+)(SignOutSectionContainer)
 
