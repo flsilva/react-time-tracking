@@ -2,7 +2,7 @@ import ApiFetcher from './ApiFetcher'
 import { newToken, emailSignOutSuccess } from '../auth/Auth.Actions'
 
 const STORAGE_TOKEN_ID = 'APP_TOKEN'
-const endPoint = 'http://192.168.1.76:3000/'
+const endPoint = 'http://127.0.0.1:3000/'
 
 const headersToCache = [
   'access-token',
