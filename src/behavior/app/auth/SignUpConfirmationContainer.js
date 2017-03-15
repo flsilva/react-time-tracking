@@ -23,7 +23,7 @@ class SignUpConfirmationContainer extends Component {
     this.setState({seconds: this.state.seconds - 1});
     if (this.state.seconds === 0) {
       const path = {
-        pathname: '/login',
+        pathname: '/sign-in',
         query: {
           email: this.state.email
         }
