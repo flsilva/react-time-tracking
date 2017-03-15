@@ -21,7 +21,7 @@ import SignOutSectionContainer from './behavior/app/auth/SignOutSectionContainer
 import DashboardSectionContainer from './behavior/app/dashboard/DashboardSectionContainer'
 import ProjectsSectionContainer from './behavior/app/projects/ProjectsSectionContainer'
 
-import 'react-toolbox/lib/commons.css'
+//import 'react-toolbox/lib/commons.css'
 //import './index.css'
 
 
