@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react'
 class ProjectForm extends Component {
 
   static propTypes = {
-    heading: PropTypes.string.isRequired,
     name: PropTypes.string
   }
 
@@ -29,9 +28,6 @@ class ProjectForm extends Component {
   render() {
     return (
       <div className="ProjectForm">
-        <h3>
-          {this.props.heading}
-        </h3>
         <input
           type="text"
           placeholder="Project name"
