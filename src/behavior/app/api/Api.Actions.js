@@ -66,13 +66,13 @@ export const apiRequest = (payload) => (
 
       fetcher.fetch(url, opts)
         .then((response) => {
-          console.log('Api.Actions::apiRequest().then() - response: ', response); 
+          console.log('Api.Actions::apiRequest().then() - response: ', response)
           response.json().then(json => {
             console.log('Api.Actions::apiRequest().then() - json: ', json); 
             if (response.ok) {
               if (!payload.signOut) {
                 const headers = extractHeadersToCache(headersToCache, response)
-                console.log('Api.Actions::apiRequest().then() - headers: ', headers); 
+                console.log('Api.Actions::apiRequest().then() - headers: ', headers)
                 if (headers && Object.keys(headers).length) {
                   dispatch(newToken(headers))
                   localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(headers))
@@ -87,7 +87,7 @@ export const apiRequest = (payload) => (
             }
           })
         }).catch(function(error) {
-          console.log('Api.Actions::apiRequest().catch() - error: ', error); 
+          console.log('Api.Actions::apiRequest().catch() - error: ', error)
           reject(error)
         })
     })
