@@ -1,7 +1,6 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
 import Navigation from 'react-toolbox/lib/navigation'
-import NavLink from '../../common/nav/NavLink'
 
 const MainNav = (props) => {
   const navigateToSignUp = () => {
