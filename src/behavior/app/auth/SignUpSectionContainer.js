@@ -27,8 +27,8 @@ class SignUpSectionContainer extends Component {
   render() {
     return (
       <SignUpSection
-        error={this.props.auth.error}
-        isFetching={this.props.auth.isFetching}
+        error={this.props.auth.emailSignUp.error}
+        isFetching={this.props.auth.emailSignUp.isFetching}
         submitHandler={this.submitHandler}
         user={this.props.auth.user}
       />
@@ -40,4 +40,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SignUpSectionContainer)
-

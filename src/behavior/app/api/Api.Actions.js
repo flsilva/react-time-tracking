@@ -43,7 +43,7 @@ export const apiRequest = (payload) => (
     if (payload.authToken) {
       cachedHeaders = JSON.parse(localStorage.getItem(STORAGE_TOKEN_ID))
     } else {
-      cachedHeaders = getState().auth.headers
+      cachedHeaders = getState().auth.tokenSignIn.headers
     }
 
     if (payload.signOut) {

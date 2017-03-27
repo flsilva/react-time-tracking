@@ -44,6 +44,7 @@ class EmailSignUpForm extends Component {
           placeholder="confirm password"
         />
         <button type="submit" {...submitButtonAttrs}>Send</button>
+        { this.props.isFetching ? <p>Connecting, please wait...</p> : null }
       </form>
     )
   }

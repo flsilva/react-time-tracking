@@ -16,7 +16,7 @@ const ErrorMessages = (props) => {
 
   return (
     <div className="ErrorMessages">
-      {errors ? errors.map(renderItem) : null}
+      {errors instanceof Array ? errors.map(renderItem) : null}
     </div>
   )
 }
