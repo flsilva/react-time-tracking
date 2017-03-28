@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as AuthActions from './Auth.Actions'
+import * as EmailSignInActions from './email/EmailSignInActions'
 import LoginSection from '../../../ui/app/auth/LoginSection'
 
 const mapStateToProps = state => ({
@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(AuthActions, dispatch)
+  actions: bindActionCreators(EmailSignInActions, dispatch)
 })
 
 const LoginSectionContainer = (props) => (

@@ -1,5 +1,6 @@
 import ApiFetcher from './ApiFetcher'
-import { newToken, emailSignOutSuccess } from '../auth/Auth.Actions'
+import { newTokenReceived } from '../auth/Auth.Actions'
+import { signOutSuccess } from '../auth/sign-out/SignOutActions'
 
 const STORAGE_TOKEN_ID = 'APP_TOKEN'
 const endPoint = 'http://127.0.0.1:3000/'
@@ -43,7 +44,7 @@ export const apiRequest = (payload) => (
     if (payload.authToken) {
       cachedHeaders = JSON.parse(localStorage.getItem(STORAGE_TOKEN_ID))
     } else {
-      cachedHeaders = getState().auth.tokenSignIn.headers
+      cachedHeaders = getState().auth.token
     }
 
     if (payload.signOut) {
@@ -74,13 +75,14 @@ export const apiRequest = (payload) => (
                 const headers = extractHeadersToCache(headersToCache, response)
                 console.log('Api.Actions::apiRequest().then() - headers: ', headers)
                 if (headers && Object.keys(headers).length) {
-                  dispatch(newToken(headers))
+                  dispatch(newTokenReceived(headers))
                   localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(headers))
                 }
               }
               resolve(json)
             } else if (response.status === 401 && !payload.signIn && !payload.signOut) {
-              dispatch(emailSignOutSuccess())
+              dispatch(signOutSuccess())
+              localStorage.removeItem(STORAGE_TOKEN_ID)
               reject('Your session has expired, please sign in again.')
             } else {
               reject(json)
