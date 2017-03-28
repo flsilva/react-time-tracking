@@ -1,5 +1,5 @@
 import ApiFetcher from './ApiFetcher'
-import { newTokenReceived } from '../auth/Auth.Actions'
+import { newTokenReceived } from '../auth/AuthActions'
 import { signOutSuccess } from '../auth/sign-out/SignOutActions'
 
 const STORAGE_TOKEN_ID = 'APP_TOKEN'

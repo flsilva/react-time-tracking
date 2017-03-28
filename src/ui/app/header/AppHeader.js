@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 import FontIcon from 'react-toolbox/lib/font_icon'
 import Drawer from 'react-toolbox/lib/drawer'
-import Logo from '../../common/logo/Logo'
 import MainNav from '../nav/MainNav'
 
 class AppHeader extends Component {

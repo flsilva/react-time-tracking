@@ -1,4 +1,4 @@
-import { apiRequest } from '../api/Api.Actions'
+import { apiRequest } from '../api/ApiActions'
 
 export const ADD_PROJECT_START = 'ADD_PROJECT_START'
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS'

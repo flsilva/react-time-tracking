@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/Api.Actions'
+import { apiRequest } from '../../api/ApiActions'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const LOCAL_TOKEN_SIGN_IN_START = 'LOCAL_TOKEN_SIGN_IN_START'

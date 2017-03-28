@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { NEW_TOKEN_RECEIVED } from './Auth.Actions'
+import { NEW_TOKEN_RECEIVED } from './AuthActions'
 import { SIGN_OUT_SUCCESS } from './sign-out/SignOutActions'
 import { EMAIL_SIGN_IN_SUCCESS } from './email/EmailSignInActions'
 import { LOCAL_TOKEN_SIGN_IN_SUCCESS } from './local-token/LocalTokenSignInActions'
@@ -12,6 +12,7 @@ const user = (state = null, action) => {
   switch (action.type) {
     case EMAIL_SIGN_IN_SUCCESS:
     case LOCAL_TOKEN_SIGN_IN_SUCCESS:
+      console.log('AuthReducers::user() - case LOCAL_TOKEN_SIGN_IN_SUCCESS OR EMAIL_SIGN_IN_SUCCESS')
       return action.payload || null
 
     case SIGN_OUT_SUCCESS:
@@ -27,6 +28,7 @@ const token = (state = null, action) => {
   // TO CLEAR HEADERS HERE
   switch (action.type) {
     case NEW_TOKEN_RECEIVED:
+      console.log('AuthReducers::token() - case NEW_TOKEN_RECEIVED')
       return action.payload || null
 
     case SIGN_OUT_SUCCESS:

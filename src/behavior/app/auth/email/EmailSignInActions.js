@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/Api.Actions'
+import { apiRequest } from '../../api/ApiActions'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const EMAIL_SIGN_IN_START = 'EMAIL_SIGN_IN_START'

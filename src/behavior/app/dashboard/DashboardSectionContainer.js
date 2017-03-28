@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as ProjectActions from '../projects/Project.Actions'
+import * as ProjectActions from '../projects/ProjectActions'
 import DashboardSection from '../../../ui/app/dashboard/DashboardSection'
 
 const mapStateToProps = state => ({

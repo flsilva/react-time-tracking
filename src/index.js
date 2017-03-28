@@ -16,7 +16,7 @@ import SignUpSectionContainer from './behavior/app/auth/SignUpSectionContainer'
 import { localTokenSignIn } from './behavior/app/auth/local-token/LocalTokenSignInActions'
 import SignUpSuccessSection from './ui/app/auth/SignUpSuccessSection'
 import SignUpConfirmationContainer from './behavior/app/auth/SignUpConfirmationContainer'
-import LoginSectionContainer from './behavior/app/auth/LoginSectionContainer'
+import SignInSectionContainer from './behavior/app/auth/SignInSectionContainer'
 import SignOutSectionContainer from './behavior/app/auth/SignOutSectionContainer'
 import DashboardSectionContainer from './behavior/app/dashboard/DashboardSectionContainer'
 import ProjectsSectionContainer from './behavior/app/projects/ProjectsSectionContainer'
@@ -94,7 +94,7 @@ export const routes = {
             { path: '/sign-up', component: SignUpSectionContainer },
             { path: '/sign-up/success', component: SignUpSuccessSection },
             { path: '/sign-up/confirmation', component: SignUpConfirmationContainer },
-            { path: '/sign-in', component: LoginSectionContainer },
+            { path: '/sign-in', component: SignInSectionContainer },
           ]
         },
         {

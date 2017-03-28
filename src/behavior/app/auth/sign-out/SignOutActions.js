@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/Api.Actions'
+import { apiRequest } from '../../api/ApiActions'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const SIGN_OUT_START = 'SIGN_OUT_START'

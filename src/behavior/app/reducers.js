@@ -1,5 +1,5 @@
-import projects from './projects/Project.Reducers'
-import auth from './auth/Auth.Reducers'
+import projects from './projects/ProjectReducers'
+import auth from './auth/AuthReducers'
 
 const reducers = {
   auth,

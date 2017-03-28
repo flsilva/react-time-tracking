@@ -1,6 +1,5 @@
 import React from 'react'
 import { List, ListItem } from 'react-toolbox/lib/list'
-import ProjectListItem from './ProjectListItem'
 
 const ProjectList = (props) => {
   const renderItem = ({id, name}) => {

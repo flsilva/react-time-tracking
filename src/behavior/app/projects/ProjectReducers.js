@@ -1,5 +1,5 @@
-import { ADD_PROJECT_SUCCESS, ADD_PROJECT_ERROR, GET_PROJECTS_SUCCESS } from './Project.Actions'
-import { EMAIL_SIGN_OUT_SUCCESS, EMAIL_SIGN_OUT_ERROR } from '../auth/Auth.Actions'
+import { ADD_PROJECT_SUCCESS, ADD_PROJECT_ERROR, GET_PROJECTS_SUCCESS } from './ProjectActions'
+import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions'
 
 const project = (state, action) => {
   switch (action.type) {
@@ -11,13 +11,13 @@ const project = (state, action) => {
 }
 
 const projects = (state = {}, action) => {
-  console.log('Project.Reducers().projects()');
+  console.log('ProjectReducers().projects()');
   console.log('state:', state);
   console.log('action:', action);
 
   switch (action.type) {
     case ADD_PROJECT_SUCCESS:
-      console.log('Project.Reducers().projects() - case ADD_PROJECT');
+      console.log('ProjectReducers().projects() - case ADD_PROJECT');
       return {
         data: [
           ...state.data,
@@ -25,14 +25,13 @@ const projects = (state = {}, action) => {
         ]
       }
     case ADD_PROJECT_ERROR:
-      console.log('Project.Reducers() - case ADD_PROJECT_ERROR')
+      console.log('ProjectReducers() - case ADD_PROJECT_ERROR')
       return Object.assign({}, state, { error: action.payload })
     case GET_PROJECTS_SUCCESS:
       return {
         data: action.payload
       }
-    case EMAIL_SIGN_OUT_SUCCESS:
-    case EMAIL_SIGN_OUT_ERROR:
+    case SIGN_OUT_SUCCESS:
       return {}
     default:
       return state
