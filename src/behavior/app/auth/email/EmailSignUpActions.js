@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/ApiActions'
+import { getFetcher } from '../../api/ApiConfig'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const EMAIL_SIGN_UP_START = 'EMAIL_SIGN_UP_START'
@@ -44,6 +44,6 @@ export const emailSignUp = (email, password, confirmPassword) => (
       path: 'auth'
     }
 
-    return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
   }
 )

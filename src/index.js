@@ -6,6 +6,8 @@ import thunkMiddleware from 'redux-thunk'
 import { Router, browserHistory } from 'react-router'
 import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
+
+import { init as initApi } from './behavior/app/api/ApiConfig'
 import appReducers from './behavior/app/reducers'
 import Layout from './ui/Layout'
 import WebsiteLayout from './behavior/website/WebsiteLayout'
@@ -43,6 +45,8 @@ const store = createStore(
     )
   )
 )
+
+initApi(store.dispatch, store.getState)
 
 const history = syncHistoryWithStore(browserHistory, store)
 

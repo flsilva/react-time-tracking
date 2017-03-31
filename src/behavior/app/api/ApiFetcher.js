@@ -1,32 +1,63 @@
 class ApiFetcher {
-  fetch = (url, opts) => {
-    opts = this.getOpts(opts)
-    console.log('ApiFetcher().fetch() - opts: ', opts)
 
-    return fetch(url, opts)
+  constructor (config) {
+    this.config = config
+  }
+  
+  fetch (request) {
+    this.processRequestHandlers(this.config, request)
+
+    return new Promise((resolve, reject) => {
+      fetch(request.url, request.opts)
+        .then(response => this.processSuccessHandlers(request, response, resolve, reject))
+        .catch((error) => this.errorHandler(error, reject))
+    })
   }
 
-  getHeaders = (headers) => {
-    if (!headers) {
-      headers = new Headers()
+  processRequestHandlers = (config, request) => {
+    let handler = this.requestHandler(config, request)
+
+    if (this.config.requestHandlers) {
+      let handlers = this.config.requestHandlers.slice()
+      handlers.reverse()
+      handlers.forEach((middleware) => {
+        handler = middleware(config, request, handler)
+      })
     }
 
-    headers.append('Content-Type', 'application/json')
-    return headers
+    handler()
   }
 
-  getOpts = (opts) => {
-    opts = Object.assign({}, opts, {
-      headers: this.getHeaders(opts.headers),
-      mode: 'cors'
-    })
+  processSuccessHandlers = (request, response, resolve, reject) => {
+    let handler = this.successHandler(request, response, resolve, reject)
 
-    return opts
+    if (this.config.successResponseHandlers) {
+      let handlers = this.config.successResponseHandlers.slice()
+      handlers.reverse()
+      handlers.forEach((middleware) => {
+        handler = middleware(request, response, resolve, reject, handler)
+      })
+    }
+
+    handler()
   }
 
-  post = (url, opts) => {
-    opts = { method: 'POST', ...opts }
-    return this.fetch(url, opts)
+  requestHandler = (config, request) => {
+    return () => {
+      console.log('ApiFetcher().requestHandler() - request: ', request)
+    }
+  }
+  
+  successHandler = (request, response, resolve, reject) => {
+    return () => {
+      console.log('ApiFetcher().successResponseHandler() - response: ', response)
+      resolve(response)
+    }
+  }
+
+  errorHandler = (error, reject) => {
+    console.log('ApiFetcher().errorHandler() - error: ', error)
+    reject(error)
   }
 }
 

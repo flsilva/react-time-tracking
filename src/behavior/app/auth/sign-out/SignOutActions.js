@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/ApiActions'
+import { getFetcher } from '../../api/ApiConfig'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const SIGN_OUT_START = 'SIGN_OUT_START'
@@ -36,9 +36,9 @@ export const signOut = () => (
     const payload = {
       opts,
       path: 'auth/sign_out',
-      signOut: true
+      isSigningOut: true
     }
 
-    return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
   }
 )

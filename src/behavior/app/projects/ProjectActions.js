@@ -1,4 +1,4 @@
-import { apiRequest } from '../api/ApiActions'
+import { getFetcher } from '../api/ApiConfig'
 
 export const ADD_PROJECT_START = 'ADD_PROJECT_START'
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS'
@@ -44,12 +44,12 @@ export const addProject = (data) => (
       path: 'projects'
     }
 
-    return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
   }
 )
 
 export const getProjects = () => (
-  (dispatch) => {
+  (dispatch, getState) => {
     console.log('Projects.actions().getProjects()')
 
     dispatch(getProjectsStart())
@@ -74,6 +74,6 @@ export const getProjects = () => (
       path: 'projects'
     }
 
-    return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
   }
 )

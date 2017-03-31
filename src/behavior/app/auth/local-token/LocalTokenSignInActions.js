@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/ApiActions'
+import { getFetcher } from '../../api/ApiConfig'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const LOCAL_TOKEN_SIGN_IN_START = 'LOCAL_TOKEN_SIGN_IN_START'
@@ -34,9 +34,9 @@ export const localTokenSignIn = () => (
     const payload = {
       opts,
       path: 'auth/validate_token',
-      authToken: true
+      isRecoveringSession: true
     }
 
-    return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
   }
 )

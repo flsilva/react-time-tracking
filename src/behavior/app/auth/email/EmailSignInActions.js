@@ -1,4 +1,4 @@
-import { apiRequest } from '../../api/ApiActions'
+import { getFetcher } from '../../api/ApiConfig'
 import { extractApiErrors } from '../../api/ApiErrors'
 
 export const EMAIL_SIGN_IN_START = 'EMAIL_SIGN_IN_START'
@@ -40,9 +40,9 @@ export const emailSignIn = (email, password) => (
     const payload = {
       opts,
       path: 'auth/sign_in',
-      signIn: true
+      isSigningIn: true
     }
 
-    return dispatch(apiRequest(payload)).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
   }
 )
