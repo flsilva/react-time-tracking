@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux'
 import {
-  LOCAL_TOKEN_SIGN_IN_START,
-  LOCAL_TOKEN_SIGN_IN_SUCCESS,
-  LOCAL_TOKEN_SIGN_IN_ERROR
-} from './LocalTokenSignInActions'
+  RESTORE_SESSION_START,
+  RESTORE_SESSION_SUCCESS,
+  RESTORE_SESSION_ERROR
+} from './RestoreSessionActions'
 
 const isFetching = (state = null, action) => {
   switch (action.type) {
-    case LOCAL_TOKEN_SIGN_IN_START:
+    case RESTORE_SESSION_START:
       return true
 
-    case LOCAL_TOKEN_SIGN_IN_SUCCESS:
-    case LOCAL_TOKEN_SIGN_IN_ERROR:
+    case RESTORE_SESSION_SUCCESS:
+    case RESTORE_SESSION_ERROR:
       return false
 
     default:
@@ -21,11 +21,11 @@ const isFetching = (state = null, action) => {
 
 const error = (state = null, action) => {
   switch (action.type) {
-    case LOCAL_TOKEN_SIGN_IN_ERROR:
+    case RESTORE_SESSION_ERROR:
       return action.payload || null
 
-    case LOCAL_TOKEN_SIGN_IN_START:
-    case LOCAL_TOKEN_SIGN_IN_SUCCESS:
+    case RESTORE_SESSION_START:
+    case RESTORE_SESSION_SUCCESS:
       return null
 
     default:

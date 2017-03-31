@@ -15,7 +15,7 @@ import FaqSection from './ui/website/faq/FaqSection'
 import LandingSectionContainer from './behavior/website/landing/LandingSectionContainer'
 import AppLayout from './behavior/app/AppLayout'
 import SignUpSectionContainer from './behavior/app/auth/SignUpSectionContainer'
-import { localTokenSignIn } from './behavior/app/auth/local-token/LocalTokenSignInActions'
+import { restoreSession } from './behavior/app/auth/restore-session/RestoreSessionActions'
 import SignUpSuccessSection from './ui/app/auth/SignUpSuccessSection'
 import SignUpConfirmationContainer from './behavior/app/auth/SignUpConfirmationContainer'
 import SignInSectionContainer from './behavior/app/auth/SignInSectionContainer'
@@ -53,8 +53,8 @@ const history = syncHistoryWithStore(browserHistory, store)
 // Redirects to /login by default
 const UserIsAuthenticated = UserAuthWrapper({
   authSelector: state => state.auth, // how to get the user state
-  authenticatingSelector: state => state.auth.localTokenSignIn.isFetching,
-  predicate: auth => !auth.localTokenSignIn.isFetching && auth.user,
+  authenticatingSelector: state => state.auth.restoreSession.isFetching,
+  predicate: auth => !auth.restoreSession.isFetching && auth.user,
   redirectAction: routerActions.replace, // the redux action to dispatch for redirect
   failureRedirectPath: (state, ownProps) => ownProps.location.query.redirect || '/sign-in',
   wrapperDisplayName: 'UserIsAuthenticated' // a nice name for this auth check
@@ -62,8 +62,8 @@ const UserIsAuthenticated = UserAuthWrapper({
 
 const UserIsNotAuthenticated = UserAuthWrapper({
   authSelector: state => state.auth, // how to get the user state
-  authenticatingSelector: state => state.auth.localTokenSignIn.isFetching,
-  predicate: auth => !auth.localTokenSignIn.isFetching && !auth.user,
+  authenticatingSelector: state => state.auth.restoreSession.isFetching,
+  predicate: auth => !auth.restoreSession.isFetching && !auth.user,
   redirectAction: routerActions.replace, // the redux action to dispatch for redirect
   failureRedirectPath: (state, ownProps) => ownProps.location.query.redirect || '/app',
   allowRedirectBack: false,
@@ -114,7 +114,7 @@ export const routes = {
   ]
 }
 
-store.dispatch(localTokenSignIn()).catch(error => { console.log('AppContainer().store.dispatch(localTokenSignIn()).catch()') })
+store.dispatch(restoreSession()).catch(error => { console.log('AppContainer().store.dispatch(restoreSession()).catch()') })
 
 ReactDOM.render(
   <Provider store={store}>
