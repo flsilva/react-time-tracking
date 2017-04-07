@@ -1,4 +1,11 @@
-import { ADD_PROJECT_SUCCESS, ADD_PROJECT_ERROR, GET_PROJECTS_SUCCESS } from './ProjectActions'
+import { 
+  ADD_PROJECT_SUCCESS,
+  ADD_PROJECT_ERROR,
+  GET_PROJECTS_SUCCESS,
+  GET_PROJECT_START,
+  GET_PROJECT_SUCCESS
+} from './ProjectActions'
+
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions'
 
 const project = (state, action) => {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { browserHistory } from 'react-router'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 import ProjectForm from './ProjectForm'
@@ -6,7 +6,9 @@ import ErrorMessages from '../error/ErrorMessages'
 
 class ProjectFormSection extends Component {
   static propTypes = {
-    user: React.PropTypes.object
+    isFetching: PropTypes.bool,
+    project: PropTypes.object,
+    user: PropTypes.object
   }
 
   backHandler = () => {
@@ -18,6 +20,8 @@ class ProjectFormSection extends Component {
   }
 
   render() {
+    const title = (this.props.isFetching || this.props.project) ? 'Edit Project' : 'New Project'
+
     return (
       <div className="ProjectFormSection">
         <AppBar
@@ -25,9 +29,14 @@ class ProjectFormSection extends Component {
             onRightIconClick={this.submitHandler}
             leftIcon="arrow_back"
             rightIcon="done"
-            title="New Project"
+            title={title}
           />
-        <ProjectForm ref={(node) => { this.projectForm = node; }} data={this.props.projects} submitHandler={this.props.submitHandler} />
+        <ProjectForm
+          ref={(node) => { this.projectForm = node; }}
+          isFetching={this.props.isFetching}
+          project={this.props.project}
+          submitHandler={this.props.submitHandler}
+        />
         <ErrorMessages error={this.props.error} />
       </div>
     )

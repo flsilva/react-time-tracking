@@ -106,7 +106,8 @@ export const routes = {
           childRoutes: [
             { path: '/app', component: DashboardSectionContainer },
             { path: '/app/projects', component: ProjectsSectionContainer },
-            { path: '/app/projects/new', component: ProjectFormSectionContainer }
+            { path: '/app/projects/new', component: ProjectFormSectionContainer },
+            { path: '/app/projects/:projectId', component: ProjectFormSectionContainer }
           ]
         }
       ]
