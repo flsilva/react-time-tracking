@@ -1,20 +1,24 @@
-import React from 'react'
-import AppHeader from '../header/AppHeader'
+import React from 'react';
+import PropTypes from 'prop-types';
+import AppHeader from '../header/AppHeader';
 
-const DashboardSection = (props) => (
+const DashboardSection = props => (
   <div className="DashboardSection">
     <AppHeader title="Dashboard" user={props.user} />
     <p>
       Dashboard section
     </p>
-    <div className="children">
-      {props.children}
-    </div>
   </div>
-)
+);
 
 DashboardSection.propTypes = {
-  user: React.PropTypes.object
-}
+  user: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+};
 
-export default DashboardSection
+DashboardSection.defaultProps = {
+  user: null,
+};
+
+export default DashboardSection;

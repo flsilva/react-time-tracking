@@ -1,16 +1,17 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const SignUpConfirmationSection = (props) => {
-  let heading
-  let body
+  let heading;
+  let body;
 
   if (props.success) {
-    heading = 'Thank you for completing your registration.'
-    body = `You\'ll be redirected to sign in in ${props.seconds} seconds.`
+    heading = 'Thank you for completing your registration.';
+    body = `You'll be redirected to sign in in ${props.seconds} seconds.`;
   } else {
-    heading = 'Oops!'
+    heading = 'Oops!';
     body = 'There was an error trying to confirm you registration.' +
-           ' Please contact us at support@apiapp.com to fix this problem.'
+           ' Please contact us at support@apiapp.com to fix this problem.';
   }
 
   return (
@@ -22,11 +23,12 @@ const SignUpConfirmationSection = (props) => {
         {body}
       </p>
     </div>
-  )
-}
+  );
+};
 
 SignUpConfirmationSection.propTypes = {
-  seconds: React.PropTypes.number.isRequired
-}
+  seconds: PropTypes.number.isRequired,
+  success: PropTypes.bool.isRequired,
+};
 
-export default SignUpConfirmationSection
+export default SignUpConfirmationSection;

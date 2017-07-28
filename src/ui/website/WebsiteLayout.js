@@ -1,7 +1,8 @@
-import React from 'react'
-import WebsiteHeader from './header/WebsiteHeader'
+import React from 'react';
+import PropTypes from 'prop-types';
+import WebsiteHeader from './header/WebsiteHeader';
 
-const WebsiteLayout = (props) => (
+const WebsiteLayout = props => (
   <div className="WebsiteLayout">
     <WebsiteHeader user={props.auth.user} />
     <div className="SectionContainer">
@@ -11,6 +12,13 @@ const WebsiteLayout = (props) => (
       website footer
     </p>
   </div>
-)
+);
 
-export default WebsiteLayout
+WebsiteLayout.propTypes = {
+  auth: PropTypes.shape({
+    user: PropTypes.object,
+  }).isRequired,
+  children: PropTypes.element.isRequired,
+};
+
+export default WebsiteLayout;

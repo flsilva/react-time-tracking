@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react'
-import { AppBar } from 'react-toolbox/lib/app_bar'
-import FontIcon from 'react-toolbox/lib/font_icon'
-import Drawer from 'react-toolbox/lib/drawer'
-import Logo from '../../common/logo/Logo'
-import MainNav from '../nav/MainNav'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { AppBar } from 'react-toolbox/lib/app_bar';
+import FontIcon from 'react-toolbox/lib/font_icon';
+import Drawer from 'react-toolbox/lib/drawer';
+import Logo from '../../common/logo/Logo';
+import MainNav from '../nav/MainNav';
 
 /*
 const WebsiteHeader = (props) => (
@@ -33,16 +34,12 @@ const WebsiteHeader = (props) => (
 
 class WebsiteHeader extends Component {
 
-  static propTypes = {
-    user: PropTypes.object
-  }
-
   state = {
-    menuActive: false
+    menuActive: false,
   }
 
   toggleMenu = () => {
-    this.setState({menuActive: !this.state.menuActive})
+    this.setState({ menuActive: !this.state.menuActive });
   }
 
   render() {
@@ -50,7 +47,7 @@ class WebsiteHeader extends Component {
       <div className="WebsiteHeader">
         <AppBar
           onLeftIconClick={this.toggleMenu}
-          leftIcon={<FontIcon value='menu' />}
+          leftIcon={<FontIcon value="menu" />}
         >
           <Logo />
         </AppBar>
@@ -70,8 +67,18 @@ class WebsiteHeader extends Component {
         </Drawer>
       </div>
       */
-    )
+    );
   }
 }
 
-export default WebsiteHeader
+WebsiteHeader.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+};
+
+WebsiteHeader.defaultProps = {
+  user: null,
+};
+
+export default WebsiteHeader;

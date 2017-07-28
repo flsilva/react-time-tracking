@@ -1,16 +1,16 @@
-export default (keys) => {
-  return (headers) => {
-    let _headers = {}
-    let headerValue
+export default keys => (
+  (headers) => {
+    const extractedHeaders = {};
+    let headerValue;
 
     keys.forEach((headerKey) => {
-      headerValue = headers.get(headerKey)
+      headerValue = headers.get(headerKey);
 
       if (headerValue) {
-        _headers[headerKey] = headerValue
+        extractedHeaders[headerKey] = headerValue;
       }
-    })
+    });
 
-    return _headers
+    return extractedHeaders;
   }
-}
+);

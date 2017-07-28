@@ -1,44 +1,47 @@
-import { getFetcher } from '../../api/ApiConfig'
-import { extractApiErrors } from '../../api/ApiErrors'
+import { getFetcher } from '../../api/ApiConfig';
+import { extractApiErrors } from '../../api/ApiErrors';
 
-export const SIGN_OUT_START = 'SIGN_OUT_START'
-export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS'
-export const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR'
+export const SIGN_OUT_START = 'SIGN_OUT_START';
+export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
+export const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR';
 
-const signOutStart = () => ({ type: SIGN_OUT_START })
-export const signOutSuccess = (payload) => ({ type: SIGN_OUT_SUCCESS, payload })
-const signOutError = (payload) => ({ type: SIGN_OUT_ERROR, payload })
+const signOutStart = () => ({ type: SIGN_OUT_START });
+export const signOutSuccess = payload => ({ type: SIGN_OUT_SUCCESS, payload });
+const signOutError = payload => ({ type: SIGN_OUT_ERROR, payload });
 
 export const signOut = () => (
   (dispatch) => {
-    console.log('SignOutActions::signOut()')
+    // eslint-disable-next-line no-console
+    console.log('SignOutActions::signOut()');
 
-    dispatch(signOutStart())
+    dispatch(signOutStart());
 
     const errorHandler = (error) => {
-      console.log('SignOutActions::signOut().errorHandler() - error: ', error)
+    // eslint-disable-next-line no-console
+      console.log('SignOutActions::signOut().errorHandler() - error: ', error);
 
-      error = extractApiErrors(error)
-      dispatch(signOutError(error))
-      return new Promise((resolve, reject) => reject(error))
-    }
+      const errors = extractApiErrors(error);
+      dispatch(signOutError(errors));
+      return new Promise((resolve, reject) => reject(errors));
+    };
 
     const successHandler = (json) => {
-      console.log('SignOutActions::signOut().successHandler() - json: ', json)
-      dispatch(signOutSuccess(json.data))
-      return json.data
-    }
+    // eslint-disable-next-line no-console
+      console.log('SignOutActions::signOut().successHandler() - json: ', json);
+      dispatch(signOutSuccess(json.data));
+      return json.data;
+    };
 
     const opts = {
-      method: 'DELETE'
-    }
+      method: 'DELETE',
+    };
 
     const payload = {
       opts,
       path: 'auth/sign_out',
-      isSigningOut: true
-    }
+      isSigningOut: true,
+    };
 
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler)
+    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
   }
-)
+);

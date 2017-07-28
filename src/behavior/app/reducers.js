@@ -1,9 +1,9 @@
-import projects from './projects/ProjectReducers'
-import auth from './auth/AuthReducers'
+import projects from './projects/ProjectReducers';
+import auth from './auth/AuthReducers';
 
 const reducers = {
   auth,
-  projects
-}
+  projects,
+};
 
-export default reducers
+export default reducers;

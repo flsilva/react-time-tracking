@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-const LandingSection = (props) => (
+const LandingSection = () => (
   <div className="LandingSection">
     <p>
       Landing section
     </p>
   </div>
-)
+);
 
-export default LandingSection
+export default LandingSection;

@@ -1,25 +1,22 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class EmailSignUpForm extends Component {
 
-  static propTypes = {
-    heading: PropTypes.string.isRequired
-  }
+  submitHandler = (e) => {
+    e.preventDefault();
 
-  submitHandler = e => {
-    e.preventDefault()
+    const email = this.emailComponent.value;
+    const password = this.passwordComponent.value;
+    const confirmPassword = this.confirmPasswordComponent.value;
 
-    const email = this.refs.email.value
-    const password = this.refs.password.value
-    const confirmPassword = this.refs.confirmPassword.value
-
-    this.props.submitHandler(email, password, confirmPassword)
+    this.props.submitHandler(email, password, confirmPassword);
   }
 
   render() {
-    const submitButtonAttrs = {}
+    const submitButtonAttrs = {};
     if (this.props.isFetching) {
-      submitButtonAttrs.disabled = 'disabled'
+      submitButtonAttrs.disabled = 'disabled';
     }
 
     return (
@@ -28,26 +25,35 @@ class EmailSignUpForm extends Component {
           {this.props.heading}
         </h3>
         <input
-          ref="email"
+          ref={(c) => { this.emailComponent = c; }}
           type="text"
           placeholder="email"
-          autoFocus="true"
         />
         <input
-          ref="password"
+          ref={(c) => { this.passwordComponent = c; }}
           type="password"
           placeholder="password"
         />
         <input
-          ref="confirmPassword"
+          ref={(c) => { this.confirmPasswordComponent = c; }}
           type="password"
           placeholder="confirm password"
         />
         <button type="submit" {...submitButtonAttrs}>Send</button>
         { this.props.isFetching ? <p>Connecting, please wait...</p> : null }
       </form>
-    )
+    );
   }
 }
 
-export default EmailSignUpForm
+EmailSignUpForm.propTypes = {
+  heading: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool,
+  submitHandler: PropTypes.func.isRequired,
+};
+
+EmailSignUpForm.defaultProps = {
+  isFetching: false,
+};
+
+export default EmailSignUpForm;

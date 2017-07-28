@@ -1,9 +1,10 @@
-import React from 'react'
-import AppHeader from '../header/AppHeader'
-import EmailSignInForm from './EmailSignInForm'
-import ErrorMessages from '../error/ErrorMessages'
+import React from 'react';
+import PropTypes from 'prop-types';
+import AppHeader from '../header/AppHeader';
+import EmailSignInForm from './EmailSignInForm';
+import ErrorMessages from '../error/ErrorMessages';
 
-const LoginSection = (props) => (
+const LoginSection = props => (
   <div className="LoginSection">
     <AppHeader title="Sign In" user={props.user} />
     <EmailSignInForm
@@ -14,10 +15,23 @@ const LoginSection = (props) => (
     />
     <ErrorMessages error={props.error} />
   </div>
-)
+);
 
 LoginSection.propTypes = {
-  user: React.PropTypes.object
-}
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  email: PropTypes.string,
+  isFetching: PropTypes.bool,
+  submitHandler: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+};
 
-export default LoginSection
+LoginSection.defaultProps = {
+  email: '',
+  isFetching: false,
+  error: null,
+  user: null,
+};
+
+export default LoginSection;

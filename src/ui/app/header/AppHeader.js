@@ -1,22 +1,18 @@
-import React, { Component, PropTypes } from 'react'
-import { AppBar } from 'react-toolbox/lib/app_bar'
-import FontIcon from 'react-toolbox/lib/font_icon'
-import Drawer from 'react-toolbox/lib/drawer'
-import MainNav from '../nav/MainNav'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { AppBar } from 'react-toolbox/lib/app_bar';
+import FontIcon from 'react-toolbox/lib/font_icon';
+import Drawer from 'react-toolbox/lib/drawer';
+import MainNav from '../nav/MainNav';
 
 class AppHeader extends Component {
 
-  static propTypes = {
-    title: PropTypes.string,
-    user: PropTypes.object
-  }
-
   state = {
-    menuActive: false
+    menuActive: false,
   }
 
   toggleMenu = () => {
-    this.setState({menuActive: !this.state.menuActive})
+    this.setState({ menuActive: !this.state.menuActive });
   }
 
   render() {
@@ -24,16 +20,26 @@ class AppHeader extends Component {
       <div className="AppHeader">
         <AppBar
           onLeftIconClick={this.toggleMenu}
-          leftIcon={<FontIcon value='menu' />}
+          leftIcon={<FontIcon value="menu" />}
           title={this.props.title}
         />
         <Drawer active={this.state.menuActive} onOverlayClick={this.toggleMenu}>
           <MainNav user={this.props.user} />
         </Drawer>
       </div>
-    )
+    );
   }
 }
 
-export default AppHeader
+AppHeader.propTypes = {
+  title: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+};
 
+AppHeader.defaultProps = {
+  user: null,
+};
+
+export default AppHeader;

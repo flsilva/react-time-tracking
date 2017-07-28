@@ -1,39 +1,39 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 import {
   EMAIL_SIGN_IN_START,
   EMAIL_SIGN_IN_SUCCESS,
-  EMAIL_SIGN_IN_ERROR
-} from './EmailSignInActions'
+  EMAIL_SIGN_IN_ERROR,
+} from './EmailSignInActions';
 
 const isFetching = (state = null, action) => {
   switch (action.type) {
     case EMAIL_SIGN_IN_START:
-      return true
+      return true;
 
     case EMAIL_SIGN_IN_SUCCESS:
     case EMAIL_SIGN_IN_ERROR:
-      return false
+      return false;
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 const error = (state = null, action) => {
   switch (action.type) {
     case EMAIL_SIGN_IN_ERROR:
-      return action.payload || null
+      return action.payload || null;
 
     case EMAIL_SIGN_IN_START:
     case EMAIL_SIGN_IN_SUCCESS:
-      return null
+      return null;
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 export default combineReducers({
   isFetching,
-  error
-})
+  error,
+});

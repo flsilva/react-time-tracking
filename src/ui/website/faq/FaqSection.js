@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-const FaqSection = (props) => (
+const FaqSection = () => (
   <div className="FaqSection">
     <p>
       Faq section
     </p>
   </div>
-)
+);
 
-export default FaqSection
+export default FaqSection;

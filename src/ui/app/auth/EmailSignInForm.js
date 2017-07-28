@@ -1,29 +1,25 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class EmailSignInForm extends Component {
 
-  static propTypes = {
-    heading: PropTypes.string.isRequired,
-    email: PropTypes.string
-  }
-
   state = {
-    email: this.props.email || ''
+    email: this.props.email || '',
   }
 
-  emailChangeHandler = e => {
-    this.setState({ email: e.target.value })
+  emailChangeHandler = (e) => {
+    this.setState({ email: e.target.value });
   }
 
-  submitHandler = e => {
-    e.preventDefault()
-    this.props.submitHandler(this.state.email, this.refs.password.value)
+  submitHandler = (e) => {
+    e.preventDefault();
+    this.props.submitHandler(this.state.email, this.passwordComponent.value);
   }
 
   render() {
-    const submitButtonAttrs = {}
+    const submitButtonAttrs = {};
     if (this.props.isFetching) {
-      submitButtonAttrs.disabled = 'disabled'
+      submitButtonAttrs.disabled = 'disabled';
     }
 
     return (
@@ -34,20 +30,31 @@ class EmailSignInForm extends Component {
         <input
           type="text"
           placeholder="email"
-          autoFocus="true"
           value={this.state.email}
           onChange={this.emailChangeHandler}
         />
         <input
-          ref="password"
+          ref={(c) => { this.passwordComponent = c; }}
           type="password"
           placeholder="password"
         />
         <button type="submit" {...submitButtonAttrs}>Send</button>
         { this.props.isFetching ? <p>Connecting, please wait...</p> : null }
       </form>
-    )
+    );
   }
 }
 
-export default EmailSignInForm
+EmailSignInForm.propTypes = {
+  email: PropTypes.string,
+  heading: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool,
+  submitHandler: PropTypes.func.isRequired,
+};
+
+EmailSignInForm.defaultProps = {
+  email: '',
+  isFetching: false,
+};
+
+export default EmailSignInForm;

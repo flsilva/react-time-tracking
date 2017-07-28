@@ -1,9 +1,10 @@
-import React from 'react'
-import AppHeader from '../header/AppHeader'
-import EmailSignUpForm from './EmailSignUpForm'
-import ErrorMessages from '../error/ErrorMessages'
+import React from 'react';
+import PropTypes from 'prop-types';
+import AppHeader from '../header/AppHeader';
+import EmailSignUpForm from './EmailSignUpForm';
+import ErrorMessages from '../error/ErrorMessages';
 
-const SignUpSection = (props) => (
+const SignUpSection = props => (
   <div className="SignUpSection">
     <AppHeader title="Sign Up" user={props.user} />
     <EmailSignUpForm
@@ -13,10 +14,21 @@ const SignUpSection = (props) => (
     />
     <ErrorMessages error={props.error} />
   </div>
-)
+);
 
 SignUpSection.propTypes = {
-  user: React.PropTypes.object
-}
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  isFetching: PropTypes.bool,
+  submitHandler: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+};
 
-export default SignUpSection
+SignUpSection.defaultProps = {
+  error: null,
+  isFetching: false,
+  user: null,
+};
+
+export default SignUpSection;
