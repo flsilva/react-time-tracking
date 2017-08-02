@@ -2,9 +2,6 @@
   "name": "test-app",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-scripts": "0.6.1"
-  },
   "dependencies": {
     "immutability-helper": "^2.0.0",
     "prop-types": "^15.5.10",
@@ -14,6 +11,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "react-router-redux": "^4.0.6",
+    "react-scripts": "1.0.10",
     "react-toolbox": "2.0.0-beta.7",
     "redux": "^3.6.0",
     "redux-auth-wrapper": "^0.8.0",
