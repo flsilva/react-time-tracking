@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 const Layout = props => (
-  <div className="Layout">
-    {props.children}
-  </div>
+  <MuiThemeProvider>
+    <div className="Layout">
+      {props.children}
+    </div>
+  </MuiThemeProvider>
 );
 
 Layout.propTypes = {

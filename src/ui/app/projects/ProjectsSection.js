@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import { Button } from 'react-toolbox/lib/button';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import AppHeader from '../header/AppHeader';
 import ProjectList from './ProjectList';
 import ErrorMessages from '../error/ErrorMessages';
@@ -15,7 +16,9 @@ const ProjectsSection = (props) => {
     <div className="ProjectsSection">
       <AppHeader title="Projects" user={props.user} />
       <ProjectList data={props.projects} />
-      <Button icon="add" onMouseUp={navToNewProject} floating primary />
+      <FloatingActionButton onClick={navToNewProject}>
+        <ContentAdd />
+      </FloatingActionButton>
       <ErrorMessages error={props.error} />
     </div>
   );
@@ -25,7 +28,7 @@ ProjectsSection.propTypes = {
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   projects: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
   }),
 };
 

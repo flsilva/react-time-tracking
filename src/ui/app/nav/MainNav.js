@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import Navigation from 'react-toolbox/lib/navigation';
+import { List, ListItem } from 'material-ui/List';
 
 const MainNav = (props) => {
+  const navigateToDashboard = () => {
+    browserHistory.push('/app');
+  };
+
   const navigateToSignUp = () => {
     browserHistory.push('/sign-up');
   };
@@ -20,26 +24,24 @@ const MainNav = (props) => {
     browserHistory.push('/app/projects');
   };
 
-  const signedInLinks = () => (
-    [
-      { label: 'Dashboard', flat: true, href: '/app' },
-      { label: 'Projects', flat: true, onMouseUp: navigateToProjects },
-      { label: 'Sign Out', flat: true, onMouseUp: navigateToSignOut },
-    ]
+  const signedInMenu = () => (
+    <List>
+      <ListItem primaryText="Dashboard" onClick={navigateToDashboard} />
+      <ListItem primaryText="Projects" onClick={navigateToProjects} />
+      <ListItem primaryText="Sign Out" onClick={navigateToSignOut} />
+    </List>
   );
 
-  const signedOutLinks = () => (
-    [
-      { label: 'Sign Up', flat: true, onMouseUp: navigateToSignUp },
-      { label: 'Sign In', flat: true, onMouseUp: navigateToSignIn },
-    ]
+  const signedOutMenu = () => (
+    <List>
+      <ListItem primaryText="Sign Up" onClick={navigateToSignUp} />
+      <ListItem primaryText="Sign In" onClick={navigateToSignIn} />
+    </List>
   );
 
-  const links = (props.user) ? signedInLinks() : signedOutLinks();
+  const menu = (props.user) ? signedInMenu() : signedOutMenu();
 
-  return (
-    <Navigation type="vertical" actions={links} />
-  );
+  return menu;
 };
 
 MainNav.propTypes = {

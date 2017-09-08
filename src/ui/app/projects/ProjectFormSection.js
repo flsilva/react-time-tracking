@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import { AppBar } from 'react-toolbox/lib/app_bar';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
 import ProjectForm from './ProjectForm';
 import ErrorMessages from '../error/ErrorMessages';
 
@@ -17,13 +19,23 @@ class ProjectFormSection extends Component {
   render() {
     const title = (this.props.isFetching || this.props.project) ? 'Edit Project' : 'New Project';
 
+    const BackButton = (
+      <IconButton onClick={this.backHandler}>
+        <FontIcon className="material-icons">arrow_back</FontIcon>
+      </IconButton>
+    );
+
+    const SaveButton = (
+      <IconButton onClick={this.submitHandler}>
+        <FontIcon className="material-icons">done</FontIcon>
+      </IconButton>
+    );
+
     return (
       <div className="ProjectFormSection">
         <AppBar
-          onLeftIconClick={this.backHandler}
-          onRightIconClick={this.submitHandler}
-          leftIcon="arrow_back"
-          rightIcon="done"
+          iconElementLeft={BackButton}
+          iconElementRight={SaveButton}
           title={title}
         />
         <ProjectForm

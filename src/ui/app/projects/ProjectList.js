@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import { List, ListItem } from 'react-toolbox/lib/list';
+import { List, ListItem } from 'material-ui/List';
+import FontIcon from 'material-ui/FontIcon';
 
 const ProjectList = (props) => {
   const navigateToProject = (id) => {
@@ -13,17 +14,17 @@ const ProjectList = (props) => {
 
     return (
       <ListItem
-        caption={name}
+        primaryText={name}
         key={id}
-        leftIcon="folder"
+        leftIcon={<FontIcon className="folder" />}
         onClick={() => navigateToProject(id)}
-        rightIcon="star"
+        rightIcon={<FontIcon className="star" />}
       />
     );
   };
 
   return (
-    <List selectable ripple>
+    <List>
       {props.data ? props.data.map(renderItem) : null}
     </List>
   );
@@ -35,7 +36,11 @@ ProjectList.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     }),
-  ).isRequired,
+  ),
+};
+
+ProjectList.defaultProps = {
+  data: null,
 };
 
 export default ProjectList;

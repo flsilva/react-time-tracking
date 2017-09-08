@@ -36,7 +36,7 @@ ProjectsSectionContainer.propTypes = {
   }),
 
   user: PropTypes.shape({
-    name: PropTypes.string,
+    email: PropTypes.string,
   }),
 };
 

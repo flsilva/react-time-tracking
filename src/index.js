@@ -24,8 +24,7 @@ import DashboardSectionContainer from './behavior/app/dashboard/DashboardSection
 import ProjectsSectionContainer from './behavior/app/projects/ProjectsSectionContainer';
 import ProjectFormSectionContainer from './behavior/app/projects/ProjectFormSectionContainer';
 
-// import 'react-toolbox/lib/commons.css'
-// import './index.css'
+import './index.css';
 
 const reducers = combineReducers({
   ...appReducers,
