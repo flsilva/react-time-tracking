@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
-import FontIcon from 'material-ui/FontIcon';
+import Avatar from 'material-ui/Avatar';
 
 const ProjectList = (props) => {
   const navigateToProject = (id) => {
@@ -16,9 +16,8 @@ const ProjectList = (props) => {
       <ListItem
         primaryText={name}
         key={id}
-        leftIcon={<FontIcon className="folder" />}
+        leftAvatar={<Avatar>F</Avatar>}
         onClick={() => navigateToProject(id)}
-        rightIcon={<FontIcon className="star" />}
       />
     );
   };

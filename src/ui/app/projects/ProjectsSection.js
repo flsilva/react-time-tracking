@@ -7,6 +7,12 @@ import AppHeader from '../header/AppHeader';
 import ProjectList from './ProjectList';
 import ErrorMessages from '../error/ErrorMessages';
 
+const fabStyles = {
+  bottom: '20px',
+  position: 'absolute',
+  right: '20px',
+};
+
 const ProjectsSection = (props) => {
   const navToNewProject = () => {
     browserHistory.push('/app/projects/new');
@@ -16,7 +22,7 @@ const ProjectsSection = (props) => {
     <div className="ProjectsSection">
       <AppHeader title="Projects" user={props.user} />
       <ProjectList data={props.projects} />
-      <FloatingActionButton onClick={navToNewProject}>
+      <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
         <ContentAdd />
       </FloatingActionButton>
       <ErrorMessages error={props.error} />
