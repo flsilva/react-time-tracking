@@ -1,4 +1,5 @@
 import { getFetcher } from '../api/ApiConfig';
+import { extractApiErrors } from '../api/ApiErrors';
 
 export const ADD_PROJECT_START = 'ADD_PROJECT_START';
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
@@ -40,7 +41,8 @@ export const addProject = data => (
 
     const errorHandler = (error) => {
       // console.log('Project.Actions::addProject().errorHandler() - error: ', error);
-      dispatch(addProjectError(error));
+      const errors = extractApiErrors(error);
+      dispatch(addProjectError(errors));
       return new Promise((resolve, reject) => reject(error));
     };
 
@@ -72,7 +74,8 @@ export const getProjects = () => (
 
     const errorHandler = (error) => {
       // console.log('Project.Actions::getProjects().errorHandler() - error: ', error);
-      dispatch(getProjectsError(error));
+      const errors = extractApiErrors(error);
+      dispatch(getProjectsError(errors));
       return new Promise((resolve, reject) => reject(error));
     };
 
@@ -104,7 +107,8 @@ export const getProject = id => (
 
     const errorHandler = (error) => {
       // console.log('Project.Actions::getProject().errorHandler() - error: ', error);
-      dispatch(getProjectError(error));
+      const errors = extractApiErrors(error);
+      dispatch(getProjectError(errors));
       return new Promise((resolve, reject) => reject(error));
     };
 
@@ -137,7 +141,8 @@ export const updateProject = (id, data) => (
 
     const errorHandler = (error) => {
       // console.log('Project.Actions::updateProject().errorHandler() - error: ', error);
-      dispatch(updateProjectError(error));
+      const errors = extractApiErrors(error);
+      dispatch(updateProjectError(errors));
       return new Promise((resolve, reject) => reject(error));
     };
 
