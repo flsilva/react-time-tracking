@@ -106,7 +106,7 @@ ProjectFormSectionContainer.propTypes = {
   }).isRequired,
 
   projects: PropTypes.shape({
-    error: PropTypes.object,
+    error: PropTypes.array,
   }).isRequired,
 
   user: PropTypes.shape({
