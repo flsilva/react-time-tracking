@@ -39,7 +39,7 @@ const apiConfig = (_dispatch, _getState) => {
 
   const config = {
     dispatch: _dispatch,
-    apiPath: 'http://127.0.0.1:3000/',
+    apiPath: 'http://192.168.0.4:3000/',
     requestHandlers: [
       addApiPathToRequest,
       addContentTypeJsonToRequest,
