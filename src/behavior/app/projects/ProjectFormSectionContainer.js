@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
 import ProjectFormSection from '../../../ui/app/projects/ProjectFormSection';
+import Notifications from '../../../ui/app/utils/Notifications';
+import { getNotifications } from '../utils';
 
 class ProjectFormSectionContainer extends Component {
 
@@ -79,17 +81,19 @@ class ProjectFormSectionContainer extends Component {
   }
 
   render() {
-    // eslint-disable-next-line no-console
-    console.log('ProjectFormSectionContainer::render() - this.state.isFetching: ', this.state.isFetching);
+    const { isFetching, error } = this.props.projects;
 
     return (
-      <ProjectFormSection
-        submitHandler={this.getSubmitHandler()}
-        error={this.props.projects.error}
-        isFetching={this.state.isFetching}
-        project={this.state.project}
-        user={this.props.user}
-      />
+      <div>
+        <ProjectFormSection
+          submitHandler={this.getSubmitHandler()}
+          error={this.props.projects.error}
+          isFetching={this.state.isFetching}
+          project={this.state.project}
+          user={this.props.user}
+        />
+        <Notifications notifications={getNotifications(error, isFetching)} />
+      </div>
     );
   }
 }
@@ -107,6 +111,7 @@ ProjectFormSectionContainer.propTypes = {
 
   projects: PropTypes.shape({
     error: PropTypes.array,
+    isFetching: PropTypes.bool,
   }).isRequired,
 
   user: PropTypes.shape({

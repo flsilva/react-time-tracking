@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import TextField from 'material-ui/TextField';
 
 class ProjectForm extends Component {
 
@@ -25,37 +26,24 @@ class ProjectForm extends Component {
       name: this.state.name,
     };
 
-    this.props.submitHandler(data)
-      .then(() => {
-        this.setState({ name: '' });
-      });
+    this.props.submitHandler(data);
   }
 
   render() {
-    let content;
-
-    if (this.props.isFetching) {
-      content = <p>Connecting, please wait...</p>;
-    } else {
-      content = (
-        <div className="ProjectForm">
-          <input
-            type="text"
-            placeholder="Project name"
-            value={this.state.name}
-            onChange={this.changeHandler}
-          />
-          <button onClick={this.saveHandler}>Save</button>
-        </div>
-      );
-    }
-
-    return content;
+    return (
+      <div className="ProjectForm">
+        <TextField
+          hintText="Project name"
+          onChange={this.changeHandler}
+          type="text"
+          value={this.state.name}
+        />
+      </div>
+    );
   }
 }
 
 ProjectForm.propTypes = {
-  isFetching: PropTypes.bool.isRequired,
   project: PropTypes.shape({
     name: PropTypes.string,
   }),

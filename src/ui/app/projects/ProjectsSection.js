@@ -5,7 +5,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import AppHeader from '../header/AppHeader';
 import ProjectList from './ProjectList';
-import Notifications from '../utils/Notifications';
 
 const fabStyles = {
   bottom: '20px',
@@ -13,25 +12,21 @@ const fabStyles = {
   right: '20px',
 };
 
-const ProjectsSection = (props) => {
-  const navToNewProject = () => {
-    browserHistory.push('/app/projects/new');
-  };
-
-  return (
-    <div className="ProjectsSection">
-      <AppHeader title="Projects" user={props.user} />
-      <ProjectList data={props.projects} />
-      <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
-        <ContentAdd />
-      </FloatingActionButton>
-      <Notifications notifications={props.error} />
-    </div>
-  );
+const navToNewProject = () => {
+  browserHistory.push('/app/projects/new');
 };
 
+const ProjectsSection = props => (
+  <div className="ProjectsSection">
+    <AppHeader title="Projects" user={props.user} />
+    <ProjectList data={props.projects} />
+    <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
+      <ContentAdd />
+    </FloatingActionButton>
+  </div>
+);
+
 ProjectsSection.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   projects: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.shape({
     email: PropTypes.string.isRequired,
@@ -39,7 +34,6 @@ ProjectsSection.propTypes = {
 };
 
 ProjectsSection.defaultProps = {
-  error: null,
   projects: null,
   user: null,
 };

@@ -1,70 +1,78 @@
+import { combineReducers } from 'redux';
 import {
+  ADD_PROJECT_START,
   ADD_PROJECT_SUCCESS,
   ADD_PROJECT_ERROR,
   GET_PROJECTS_START,
   GET_PROJECTS_SUCCESS,
   GET_PROJECTS_ERROR,
+  GET_PROJECT_START,
+  GET_PROJECT_SUCCESS,
+  GET_PROJECT_ERROR,
 } from './ProjectActions';
-
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 
-const project = (state = null, action) => {
-  // eslint-disable-next-line no-console
-  console.log('ProjectReducers().project() - state: ', state);
-  console.log('ProjectReducers().project() - action: ', action);
-
+const data = (state = [], action) => {
   switch (action.type) {
     case ADD_PROJECT_SUCCESS:
-      return action.payload;
-    default:
-      return state;
-  }
-};
+      return [
+        ...state,
+        action.payload,
+      ];
 
-const projects = (state = {}, action) => {
-  // eslint-disable-next-line no-console
-  console.log('ProjectReducers().projects() - state: ', state);
-  // eslint-disable-next-line no-console
-  console.log('ProjectReducers().projects() - action: ', action);
-
-  // this is needed when we access the app through
-  // /app/projects/new route directly, skipping data loading,
-  // so state.data === null, throwing an error when merging new projects.
-  if (!state.data) state.data = [];
-
-  switch (action.type) {
-    case ADD_PROJECT_SUCCESS:
-      // eslint-disable-next-line no-console
-      console.log('ProjectReducers().projects() - case ADD_PROJECT_SUCCESS');
-      
-      return {
-        data: [
-          ...state.data,
-          project(undefined, action),
-        ],
-      };
-    case ADD_PROJECT_ERROR:
-      // eslint-disable-next-line no-console
-      console.log('ProjectReducers() - case ADD_PROJECT_ERROR');
-      return Object.assign({}, state, { error: action.payload });
-    case GET_PROJECTS_START:
-      return {
-        isFetching: true,
-      };
     case GET_PROJECTS_SUCCESS:
-      return {
-        data: action.payload,
-        isFetching: false,
-      };
-    case GET_PROJECTS_ERROR:
-      return {
-        isFetching: false,
-      };
+      return action.payload || null;
+
     case SIGN_OUT_SUCCESS:
-      return {};
+      return null;
+
     default:
       return state;
   }
 };
 
-export default projects;
+const error = (state = null, action) => {
+  switch (action.type) {
+    case ADD_PROJECT_ERROR:
+    case GET_PROJECTS_ERROR:
+    case GET_PROJECT_ERROR:
+      return action.payload || null;
+
+    case ADD_PROJECT_START:
+    case ADD_PROJECT_SUCCESS:
+    case GET_PROJECTS_START:
+    case GET_PROJECTS_SUCCESS:
+    case GET_PROJECT_START:
+    case GET_PROJECT_SUCCESS:
+      return null;
+
+    default:
+      return state;
+  }
+};
+
+const isFetching = (state = false, action) => {
+  switch (action.type) {
+    case ADD_PROJECT_SUCCESS:
+    case ADD_PROJECT_ERROR:
+    case GET_PROJECTS_SUCCESS:
+    case GET_PROJECTS_ERROR:
+    case GET_PROJECT_SUCCESS:
+    case GET_PROJECT_ERROR:
+      return false;
+
+    case ADD_PROJECT_START:
+    case GET_PROJECTS_START:
+    case GET_PROJECT_START:
+      return true;
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  data,
+  error,
+  isFetching,
+});

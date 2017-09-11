@@ -5,7 +5,10 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import ProjectForm from './ProjectForm';
-import Notifications from '../utils/Notifications';
+
+const bodyStyles = {
+  margin: '20px',
+};
 
 class ProjectFormSection extends Component {
   backHandler = () => {
@@ -17,7 +20,8 @@ class ProjectFormSection extends Component {
   }
 
   render() {
-    const title = (this.props.isFetching || this.props.project) ? 'Edit Project' : 'New Project';
+    const { isFetching, project } = this.props;
+    const title = (isFetching || project) ? 'Edit Project' : 'New Project';
 
     const BackButton = (
       <IconButton onClick={this.backHandler}>
@@ -26,7 +30,7 @@ class ProjectFormSection extends Component {
     );
 
     const SaveButton = (
-      <IconButton onClick={this.submitHandler}>
+      <IconButton onClick={this.submitHandler} disabled={isFetching}>
         <FontIcon className="material-icons">done</FontIcon>
       </IconButton>
     );
@@ -38,21 +42,20 @@ class ProjectFormSection extends Component {
           iconElementRight={SaveButton}
           title={title}
         />
-        <ProjectForm
-          ref={(node) => { this.projectForm = node; }}
-          isFetching={this.props.isFetching}
-          project={this.props.project}
-          submitHandler={this.props.submitHandler}
-        />
-        <Notifications notifications={this.props.error} />
+        <div style={bodyStyles}>
+          <ProjectForm
+            ref={(node) => { this.projectForm = node; }}
+            isFetching={this.props.isFetching}
+            project={this.props.project}
+            submitHandler={this.props.submitHandler}
+          />
+        </div>
       </div>
     );
   }
 }
 
 ProjectFormSection.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-
   isFetching: PropTypes.bool,
 
   project: PropTypes.shape({
@@ -63,7 +66,6 @@ ProjectFormSection.propTypes = {
 };
 
 ProjectFormSection.defaultProps = {
-  error: null,
   isFetching: false,
   project: null,
 };
