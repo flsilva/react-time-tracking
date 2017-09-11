@@ -4,18 +4,39 @@ import AppHeader from '../header/AppHeader';
 import EmailSignInForm from './EmailSignInForm';
 import ErrorMessages from '../error/ErrorMessages';
 
-const LoginSection = props => (
-  <div className="LoginSection">
-    <AppHeader title="Sign In" user={props.user} />
-    <EmailSignInForm
-      heading="Sign In"
-      submitHandler={props.submitHandler}
-      isFetching={props.isFetching}
-      email={props.email}
-    />
-    <ErrorMessages error={props.error} />
-  </div>
-);
+const bodyStyles = {
+  margin: '20px',
+};
+
+const LoginSection = (props) => {
+  // const errorMessage = (props && props.error) ? props.error : '';
+
+  const getNotifications = () => {
+    if (!props) return null;
+
+    if (props.isFetching) {
+      return ['Connecting, please wait...'];
+    } else if (props && props.error) {
+      return props.error;
+    }
+
+    return null;
+  };
+
+  return (
+    <div className="LoginSection">
+      <AppHeader title="Sign In" user={props.user} />
+      <div style={bodyStyles}>
+        <EmailSignInForm
+          submitHandler={props.submitHandler}
+          isFetching={props.isFetching}
+          email={props.email}
+        />
+      </div>
+      <ErrorMessages notifications={getNotifications()} />
+    </div>
+  );
+};
 
 LoginSection.propTypes = {
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),

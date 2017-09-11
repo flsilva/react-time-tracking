@@ -1,31 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Snackbar from 'material-ui/Snackbar';
 
-const ErrorMessages = (props) => {
-  let errors = props.error;
-  if (typeof errors === 'string') {
-    errors = [errors];
-  }
+const joinNotifications = notifications => (
+  notifications && notifications.length ? notifications.join(' ') : ''
+);
 
-  const renderItem = (message, index) => (
-    <p key={index}>
-      {message}
-    </p>
-  );
-
-  return (
-    <div className="ErrorMessages">
-      {errors instanceof Array ? errors.map(renderItem) : null}
-    </div>
-  );
-};
+const ErrorMessages = props => (
+  <Snackbar
+    autoHideDuration={4000}
+    message={joinNotifications(props.notifications)}
+    open={joinNotifications(props.notifications) !== ''}
+  />
+);
 
 ErrorMessages.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
+  notifications: PropTypes.arrayOf(PropTypes.string),
 };
 
 ErrorMessages.defaultProps = {
-  error: null,
+  notifications: null,
 };
 
 export default ErrorMessages;
