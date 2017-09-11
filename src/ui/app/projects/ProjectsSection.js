@@ -5,7 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import AppHeader from '../header/AppHeader';
 import ProjectList from './ProjectList';
-import ErrorMessages from '../error/ErrorMessages';
+import Notifications from '../utils/Notifications';
 
 const fabStyles = {
   bottom: '20px',
@@ -25,7 +25,7 @@ const ProjectsSection = (props) => {
       <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
         <ContentAdd />
       </FloatingActionButton>
-      <ErrorMessages error={props.error} />
+      <Notifications notifications={props.error} />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import ProjectForm from './ProjectForm';
-import ErrorMessages from '../error/ErrorMessages';
+import Notifications from '../utils/Notifications';
 
 class ProjectFormSection extends Component {
   backHandler = () => {
@@ -44,7 +44,7 @@ class ProjectFormSection extends Component {
           project={this.props.project}
           submitHandler={this.props.submitHandler}
         />
-        <ErrorMessages error={this.props.error} />
+        <Notifications notifications={this.props.error} />
       </div>
     );
   }

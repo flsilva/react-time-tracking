@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppHeader from '../header/AppHeader';
 import EmailSignUpForm from './EmailSignUpForm';
-import ErrorMessages from '../error/ErrorMessages';
+import Notifications from '../utils/Notifications';
 
 const SignUpSection = props => (
   <div className="SignUpSection">
@@ -12,7 +12,7 @@ const SignUpSection = props => (
       submitHandler={props.submitHandler}
       isFetching={props.isFetching}
     />
-    <ErrorMessages error={props.error} />
+    <Notifications notifications={props.error} />
   </div>
 );
 

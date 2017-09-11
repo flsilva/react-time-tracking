@@ -6,20 +6,20 @@ const joinNotifications = notifications => (
   notifications && notifications.length ? notifications.join(' ') : ''
 );
 
-const ErrorMessages = props => (
+const Notifications = ({ notifications }) => (
   <Snackbar
     autoHideDuration={4000}
-    message={joinNotifications(props.notifications)}
-    open={joinNotifications(props.notifications) !== ''}
+    message={joinNotifications(notifications)}
+    open={joinNotifications(notifications) !== ''}
   />
 );
 
-ErrorMessages.propTypes = {
+Notifications.propTypes = {
   notifications: PropTypes.arrayOf(PropTypes.string),
 };
 
-ErrorMessages.defaultProps = {
+Notifications.defaultProps = {
   notifications: null,
 };
 
-export default ErrorMessages;
+export default Notifications;

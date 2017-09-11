@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppHeader from '../header/AppHeader';
 import EmailSignInForm from './EmailSignInForm';
-import ErrorMessages from '../error/ErrorMessages';
+import Notifications from '../utils/Notifications';
 
 const bodyStyles = {
   margin: '20px',
@@ -33,7 +33,7 @@ const LoginSection = (props) => {
           email={props.email}
         />
       </div>
-      <ErrorMessages notifications={getNotifications()} />
+      <Notifications notifications={getNotifications()} />
     </div>
   );
 };
