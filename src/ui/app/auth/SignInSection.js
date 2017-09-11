@@ -8,7 +8,7 @@ const bodyStyles = {
   margin: '20px',
 };
 
-const LoginSection = (props) => {
+const SignInSection = (props) => {
   // const errorMessage = (props && props.error) ? props.error : '';
 
   const getNotifications = () => {
@@ -24,7 +24,7 @@ const LoginSection = (props) => {
   };
 
   return (
-    <div className="LoginSection">
+    <div className="SignInSection">
       <AppHeader title="Sign In" user={props.user} />
       <div style={bodyStyles}>
         <EmailSignInForm
@@ -38,7 +38,7 @@ const LoginSection = (props) => {
   );
 };
 
-LoginSection.propTypes = {
+SignInSection.propTypes = {
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   email: PropTypes.string,
   isFetching: PropTypes.bool,
@@ -48,11 +48,11 @@ LoginSection.propTypes = {
   }),
 };
 
-LoginSection.defaultProps = {
+SignInSection.defaultProps = {
   email: '',
   isFetching: false,
   error: null,
   user: null,
 };
 
-export default LoginSection;
+export default SignInSection;

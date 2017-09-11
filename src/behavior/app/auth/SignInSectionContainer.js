@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as EmailSignInActions from './email/EmailSignInActions';
-import LoginSection from '../../../ui/app/auth/LoginSection';
+import SignInSection from '../../../ui/app/auth/SignInSection';
 
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -13,8 +13,8 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(EmailSignInActions, dispatch),
 });
 
-const LoginSectionContainer = props => (
-  <LoginSection
+const SignInSectionContainer = props => (
+  <SignInSection
     email={props.location.query.email}
     error={props.auth.emailSignIn.error}
     isFetching={props.auth.emailSignIn.isFetching}
@@ -23,7 +23,7 @@ const LoginSectionContainer = props => (
   />
 );
 
-LoginSectionContainer.propTypes = {
+SignInSectionContainer.propTypes = {
   actions: PropTypes.shape({
     emailSignIn: PropTypes.func.isRequired,
   }).isRequired,
@@ -46,4 +46,4 @@ LoginSectionContainer.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LoginSectionContainer);
+)(SignInSectionContainer);
