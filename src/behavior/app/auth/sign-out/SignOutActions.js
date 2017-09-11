@@ -20,9 +20,13 @@ export const signOut = () => (
     // eslint-disable-next-line no-console
       console.log('SignOutActions::signOut().errorHandler() - error: ', error);
 
+      // we can remotely log errors,
+      // but give OK feedback for end users,
+      // no need to show errors.
       const errors = extractApiErrors(error);
       dispatch(signOutError(errors));
-      return new Promise((resolve, reject) => reject(errors));
+      dispatch(signOutSuccess({}));
+      return {};
     };
 
     const successHandler = (json) => {
