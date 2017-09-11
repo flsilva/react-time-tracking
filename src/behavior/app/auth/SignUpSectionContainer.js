@@ -5,14 +5,8 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import * as EmailSignUpActions from './email/EmailSignUpActions';
 import SignUpSection from '../../../ui/app/auth/SignUpSection';
-
-const mapStateToProps = state => ({
-  auth: state.auth,
-});
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(EmailSignUpActions, dispatch),
-});
+import Notifications from '../../../ui/app/utils/Notifications';
+import { getNotifications } from '../utils';
 
 class SignUpSectionContainer extends Component {
   submitHandler = (email, password, confirmPassword) => {
@@ -25,13 +19,17 @@ class SignUpSectionContainer extends Component {
   }
 
   render() {
+    const { isFetching, error } = this.props.auth.emailSignUp;
+
     return (
-      <SignUpSection
-        error={this.props.auth.emailSignUp.error}
-        isFetching={this.props.auth.emailSignUp.isFetching}
-        submitHandler={this.submitHandler}
-        user={this.props.auth.user}
-      />
+      <div>
+        <SignUpSection
+          isFetching={isFetching}
+          submitHandler={this.submitHandler}
+          user={this.props.auth.user}
+        />
+        <Notifications notifications={getNotifications(error, isFetching)} />
+      </div>
     );
   }
 }
@@ -48,6 +46,14 @@ SignUpSectionContainer.propTypes = {
     user: PropTypes.object,
   }).isRequired,
 };
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(EmailSignUpActions, dispatch),
+});
 
 export default connect(
   mapStateToProps,

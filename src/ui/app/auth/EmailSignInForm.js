@@ -7,7 +7,7 @@ class EmailSignInForm extends Component {
 
   state = {
     email: this.props.email || '',
-    password: this.props.password || '',
+    password: '',
   }
 
   emailChangeHandler = (e) => {
@@ -59,14 +59,12 @@ class EmailSignInForm extends Component {
 EmailSignInForm.propTypes = {
   email: PropTypes.string,
   isFetching: PropTypes.bool,
-  password: PropTypes.string,
   submitHandler: PropTypes.func.isRequired,
 };
 
 EmailSignInForm.defaultProps = {
   email: '',
   isFetching: false,
-  password: '',
 };
 
 export default EmailSignInForm;

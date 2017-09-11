@@ -2,22 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppHeader from '../header/AppHeader';
 import EmailSignUpForm from './EmailSignUpForm';
-import Notifications from '../utils/Notifications';
+
+const bodyStyles = {
+  margin: '20px',
+};
 
 const SignUpSection = props => (
   <div className="SignUpSection">
     <AppHeader title="Sign Up" user={props.user} />
-    <EmailSignUpForm
-      heading="Sign Up"
-      submitHandler={props.submitHandler}
-      isFetching={props.isFetching}
-    />
-    <Notifications notifications={props.error} />
+    <div style={bodyStyles}>
+      <EmailSignUpForm
+        submitHandler={props.submitHandler}
+        isFetching={props.isFetching}
+      />
+    </div>
   </div>
 );
 
 SignUpSection.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   isFetching: PropTypes.bool,
   submitHandler: PropTypes.func.isRequired,
   user: PropTypes.shape({
@@ -26,7 +28,6 @@ SignUpSection.propTypes = {
 };
 
 SignUpSection.defaultProps = {
-  error: null,
   isFetching: false,
   user: null,
 };

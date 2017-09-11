@@ -1,15 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class EmailSignUpForm extends Component {
+
+  state = {
+    email: this.props.email || '',
+    password: '',
+    confirmPassword: '',
+  }
+
+  emailChangeHandler = (e) => {
+    this.setState({ email: e.target.value });
+  }
+
+  passwordChangeHandler = (e) => {
+    this.setState({ password: e.target.value });
+  }
+
+  confirmPasswordChangeHandler = (e) => {
+    this.setState({ confirmPassword: e.target.value });
+  }
 
   submitHandler = (e) => {
     e.preventDefault();
 
-    const email = this.emailComponent.value;
-    const password = this.passwordComponent.value;
-    const confirmPassword = this.confirmPasswordComponent.value;
-
+    const { email, password, confirmPassword } = this.state;
     this.props.submitHandler(email, password, confirmPassword);
   }
 
@@ -20,39 +37,46 @@ class EmailSignUpForm extends Component {
     }
 
     return (
-      <form className="EmailSignUpForm" onSubmit={this.submitHandler}>
-        <h3>
-          {this.props.heading}
-        </h3>
-        <input
-          ref={(c) => { this.emailComponent = c; }}
-          type="text"
-          placeholder="email"
+      <form className="EmailSignUpForm">
+        <TextField
+          hintText="email"
+          onChange={this.emailChangeHandler}
+          type="email"
+          value={this.state.email}
         />
-        <input
-          ref={(c) => { this.passwordComponent = c; }}
+        <TextField
+          hintText="password"
+          onChange={this.passwordChangeHandler}
           type="password"
-          placeholder="password"
+          value={this.state.password}
         />
-        <input
-          ref={(c) => { this.confirmPasswordComponent = c; }}
+        <TextField
+          hintText="type password again"
+          onChange={this.confirmPasswordChangeHandler}
           type="password"
-          placeholder="confirm password"
+          value={this.state.confirmPassword}
         />
-        <button type="submit" {...submitButtonAttrs}>Send</button>
-        { this.props.isFetching ? <p>Connecting, please wait...</p> : null }
+        <RaisedButton
+          primary
+          fullWidth
+          disabled={this.props.isFetching}
+          style={{ marginTop: 20 }}
+          label="Sign Up"
+          onClick={this.submitHandler}
+        />
       </form>
     );
   }
 }
 
 EmailSignUpForm.propTypes = {
-  heading: PropTypes.string.isRequired,
+  email: PropTypes.string,
   isFetching: PropTypes.bool,
   submitHandler: PropTypes.func.isRequired,
 };
 
 EmailSignUpForm.defaultProps = {
+  email: '',
   isFetching: false,
 };
 

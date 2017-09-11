@@ -1,7 +1,9 @@
 import {
   ADD_PROJECT_SUCCESS,
   ADD_PROJECT_ERROR,
+  GET_PROJECTS_START,
   GET_PROJECTS_SUCCESS,
+  GET_PROJECTS_ERROR,
 } from './ProjectActions';
 
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
@@ -45,9 +47,18 @@ const projects = (state = {}, action) => {
       // eslint-disable-next-line no-console
       console.log('ProjectReducers() - case ADD_PROJECT_ERROR');
       return Object.assign({}, state, { error: action.payload });
+    case GET_PROJECTS_START:
+      return {
+        isFetching: true,
+      };
     case GET_PROJECTS_SUCCESS:
       return {
         data: action.payload,
+        isFetching: false,
+      };
+    case GET_PROJECTS_ERROR:
+      return {
+        isFetching: false,
       };
     case SIGN_OUT_SUCCESS:
       return {};

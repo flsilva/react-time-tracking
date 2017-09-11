@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
 import ProjectsSection from '../../../ui/app/projects/ProjectsSection';
+import Notifications from '../../../ui/app/utils/Notifications';
+import { getNotifications } from '../utils';
 
 class ProjectsSectionContainer extends Component {
 
@@ -12,13 +14,18 @@ class ProjectsSectionContainer extends Component {
   }
 
   render() {
+    const { isFetching, error } = this.props.projects;
+
     return (
-      <ProjectsSection
-        addProject={this.props.actions.addProject}
-        error={this.props.projects.error}
-        projects={this.props.projects.data}
-        user={this.props.user}
-      />
+      <div>
+        <ProjectsSection
+          addProject={this.props.actions.addProject}
+          error={error}
+          projects={this.props.projects.data}
+          user={this.props.user}
+        />
+        <Notifications notifications={getNotifications(error, isFetching)} />
+      </div>
     );
   }
 
@@ -33,6 +40,7 @@ ProjectsSectionContainer.propTypes = {
   projects: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.object),
     error: PropTypes.object,
+    isFetching: PropTypes.bool,
   }),
 
   user: PropTypes.shape({

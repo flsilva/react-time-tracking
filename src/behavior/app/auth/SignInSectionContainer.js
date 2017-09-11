@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as EmailSignInActions from './email/EmailSignInActions';
 import SignInSection from '../../../ui/app/auth/SignInSection';
+import Notifications from '../../../ui/app/utils/Notifications';
+import { getNotifications } from '../utils';
 
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -13,15 +15,22 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(EmailSignInActions, dispatch),
 });
 
-const SignInSectionContainer = props => (
-  <SignInSection
-    email={props.location.query.email}
-    error={props.auth.emailSignIn.error}
-    isFetching={props.auth.emailSignIn.isFetching}
-    submitHandler={props.actions.emailSignIn}
-    user={props.auth.user}
-  />
-);
+const SignInSectionContainer = (props) => {
+  const { isFetching, error } = props.auth.emailSignIn;
+
+  return (
+    <div>
+      <SignInSection
+        email={props.location.query.email}
+        error={props.auth.emailSignIn.error}
+        isFetching={props.auth.emailSignIn.isFetching}
+        submitHandler={props.actions.emailSignIn}
+        user={props.auth.user}
+      />
+      <Notifications notifications={getNotifications(error, isFetching)} />
+    </div>
+  );
+};
 
 SignInSectionContainer.propTypes = {
   actions: PropTypes.shape({
