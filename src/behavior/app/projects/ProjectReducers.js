@@ -9,6 +9,7 @@ import {
   GET_PROJECT_START,
   GET_PROJECT_SUCCESS,
   GET_PROJECT_ERROR,
+  SELECT_PROJECT,
   UPDATE_PROJECT_START,
   UPDATE_PROJECT_SUCCESS,
   UPDATE_PROJECT_ERROR,
@@ -92,6 +93,16 @@ const isFetched = (state = false, action) => {
   }
 };
 
+const selectedEntity = (state = null, action) => {
+  switch (action.type) {
+    case SELECT_PROJECT:
+      return action.payload || null;
+
+    default:
+      return state;
+  }
+};
+
 export const denormalizeItem = (project) => {
   if (!project) return null;
   return { id: project.id, ...project.attributes };
@@ -107,4 +118,5 @@ export default combineReducers({
   error,
   isFetching,
   isFetched,
+  selectedEntity,
 });

@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import { Router, browserHistory } from 'react-router';
 import { routerReducer, syncHistoryWithStore, routerActions, routerMiddleware } from 'react-router-redux';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 
 import { init as initApi } from './behavior/app/api/ApiConfig';
 import appReducers from './behavior/app/reducers';
+import appSagas from './behavior/app/sagas';
 import Layout from './ui/Layout';
 import WebsiteLayout from './behavior/website/WebsiteLayout';
 import FaqSection from './ui/website/faq/FaqSection';
@@ -31,6 +33,7 @@ const reducers = combineReducers({
   routing: routerReducer,
 });
 
+const sagaMiddleware = createSagaMiddleware();
 const routingMiddleware = routerMiddleware(browserHistory);
 
 // eslint-disable-next-line no-underscore-dangle
@@ -44,8 +47,10 @@ const store = createStore(
       routingMiddleware,
     ),
   ),
+  applyMiddleware(sagaMiddleware),
 );
 
+sagaMiddleware.run(appSagas);
 initApi(store.dispatch, store.getState);
 
 const history = syncHistoryWithStore(browserHistory, store);

@@ -8,7 +8,7 @@ class ProjectForm extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    // console.log('ProjectForm().componentWillReceiveProps() - nextProps: ', nextProps);
+    console.log('ProjectForm().componentWillReceiveProps() - nextProps: ', nextProps);
 
     if (!nextProps.project) return;
 
