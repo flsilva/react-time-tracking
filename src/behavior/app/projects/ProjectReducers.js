@@ -97,13 +97,10 @@ export const denormalizeItem = (project) => {
   return { id: project.id, ...project.attributes };
 };
 
-export const denormalizeCollection = (projects) => {
-  console.log('ProjectReducers().getAllProjects() - projects: ', projects);
-
-  // return Object.keys(projects).map(key => projects[key]);
-  return Object.keys(projects).map(key => projects[key])
-    .map(value => denormalizeItem(value));
-};
+export const denormalizeCollection = projects => (
+  Object.keys(projects).map(key => projects[key])
+    .map(value => denormalizeItem(value))
+);
 
 export default combineReducers({
   byId,
