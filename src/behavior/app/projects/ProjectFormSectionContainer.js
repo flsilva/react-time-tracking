@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
+import { denormalizeItem } from './ProjectReducers';
 import ProjectFormSection from '../../../ui/app/projects/ProjectFormSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -21,20 +22,17 @@ class ProjectFormSectionContainer extends Component {
   }
 
   getProject = (id) => {
-    // eslint-disable-next-line no-console
-    console.log('ProjectFormSectionContainer::getProject() - this: ', this);
-
     if (!id) return;
+
+    const cachedProject = denormalizeItem(this.props.projects.byId[id]);
+    if (cachedProject) {
+      this.setState({ project: cachedProject });
+      return;
+    }
 
     this.setState({ isFetching: true });
 
-    // eslint-disable-next-line no-console
-    console.log('ProjectFormSectionContainer().getProject() - this.state.isFetching: ', this.state.isFetching);
-
     this.props.actions.getProject(id).then((project) => {
-      // eslint-disable-next-line no-console
-      console.log('ProjectFormSectionContainer().getProject().actions.getProject(id).then() - project: ', project);
-
       this.setState({
         project,
         isFetching: false,
@@ -63,6 +61,15 @@ class ProjectFormSectionContainer extends Component {
   );
 
   updateProject = (data) => {
+    // this is needed to fix an issue with UI.
+    // due to the use of ref={} in child component,
+    // form component gets outdated when editing a project
+    // when calling callback to submit data.
+    this.setState({
+      project: Object.assign({}, this.state.project, data),
+    });
+    //
+
     const id = this.state.project.id;
 
     return new Promise((resolve, reject) => {
@@ -110,6 +117,7 @@ ProjectFormSectionContainer.propTypes = {
   }).isRequired,
 
   projects: PropTypes.shape({
+    byId: PropTypes.object,
     error: PropTypes.array,
     isFetching: PropTypes.bool,
   }).isRequired,

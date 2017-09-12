@@ -8,7 +8,7 @@ import ProjectList from './ProjectList';
 
 const fabStyles = {
   bottom: '20px',
-  position: 'absolute',
+  position: 'fixed',
   right: '20px',
 };
 
@@ -19,22 +19,26 @@ const navToNewProject = () => {
 const ProjectsSection = props => (
   <div className="ProjectsSection">
     <AppHeader title="Projects" user={props.user} />
-    <ProjectList data={props.projects} />
-    <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
-      <ContentAdd />
-    </FloatingActionButton>
+    <ProjectList data={props.data} />
+    {!props.isFetching &&
+      <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
+        <ContentAdd />
+      </FloatingActionButton>
+    }
   </div>
 );
 
 ProjectsSection.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.object),
+  isFetching: PropTypes.bool,
+  data: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.shape({
     email: PropTypes.string.isRequired,
   }),
 };
 
 ProjectsSection.defaultProps = {
-  projects: null,
+  data: null,
+  isFetching: false,
   user: null,
 };
 

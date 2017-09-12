@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
+import { denormalizeCollection } from './ProjectReducers';
 import ProjectsSection from '../../../ui/app/projects/ProjectsSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -10,6 +11,7 @@ import { getNotifications } from '../utils';
 class ProjectsSectionContainer extends Component {
 
   componentDidMount() {
+    if (this.props.projects.isFetched) return;
     this.props.actions.getProjects();
   }
 
@@ -21,7 +23,8 @@ class ProjectsSectionContainer extends Component {
         <ProjectsSection
           addProject={this.props.actions.addProject}
           error={error}
-          projects={this.props.projects.data}
+          isFetching={this.props.projects.isFetching}
+          data={this.props.projects.list}
           user={this.props.user}
         />
         <Notifications notifications={getNotifications(error, isFetching)} />
@@ -38,9 +41,10 @@ ProjectsSectionContainer.propTypes = {
   }).isRequired,
 
   projects: PropTypes.shape({
-    data: PropTypes.arrayOf(PropTypes.object),
+    list: PropTypes.arrayOf(PropTypes.object),
     error: PropTypes.object,
     isFetching: PropTypes.bool,
+    isFetched: PropTypes.bool,
   }),
 
   user: PropTypes.shape({
@@ -54,7 +58,12 @@ ProjectsSectionContainer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  projects: state.projects,
+  projects: {
+    list: denormalizeCollection(state.projects.byId),
+    error: state.projects.error,
+    isFetching: state.projects.isFetching,
+    isFetched: state.projects.isFetched,
+  },
 });
 
 const mapDispatchToProps = dispatch => ({

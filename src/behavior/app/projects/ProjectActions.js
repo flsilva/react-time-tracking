@@ -1,3 +1,5 @@
+import normalize from 'json-api-normalizer';
+import { denormalizeItem } from './ProjectReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
@@ -48,8 +50,13 @@ export const addProject = data => (
 
     const successHandler = (json) => {
       // console.log('Projects.Actions::addProject().successHandler() - json: ', json);
-      dispatch(addProjectSuccess(json));
-      return json;
+
+      const normalizedData = normalize(json).projects;
+      const normalizedItem = Object.values(normalizedData)[0];
+
+      dispatch(addProjectSuccess(normalizedItem));
+      const denormalizedItem = denormalizeItem(normalizedItem);
+      return denormalizedItem;
     };
 
     const opts = {
@@ -81,8 +88,9 @@ export const getProjects = () => (
 
     const successHandler = (json) => {
       // console.log('Projects.Actions::getProjects().successHandler() - json: ', json);
-      dispatch(getProjectsSuccess(json));
-      return json;
+      const normalizedData = normalize(json);
+      dispatch(getProjectsSuccess(normalizedData.projects));
+      return normalizedData;
     };
 
     const opts = {
@@ -114,8 +122,12 @@ export const getProject = id => (
 
     const successHandler = (json) => {
       // console.log('Projects.Actions::getProject().successHandler() - json: ', json);
-      dispatch(getProjectSuccess(json));
-      return json;
+      const normalizedData = normalize(json).projects;
+      const normalizedItem = Object.values(normalizedData)[0];
+
+      dispatch(getProjectSuccess(normalizedItem));
+      const denormalizedItem = denormalizeItem(normalizedItem);
+      return denormalizedItem;
     };
 
     const opts = {
@@ -148,8 +160,12 @@ export const updateProject = (id, data) => (
 
     const successHandler = (json) => {
       // console.log('Projects.Actions::updateProject().successHandler() - json: ', json);
-      dispatch(updateProjectSuccess(json));
-      return json;
+      const normalizedData = normalize(json).projects;
+      const normalizedItem = Object.values(normalizedData)[0];
+
+      dispatch(updateProjectSuccess(normalizedItem));
+      const denormalizedItem = denormalizeItem(normalizedItem);
+      return denormalizedItem;
     };
 
     const opts = {
