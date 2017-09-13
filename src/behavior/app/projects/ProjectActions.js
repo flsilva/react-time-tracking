@@ -14,6 +14,7 @@ export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
 export const GET_PROJECT_ERROR = 'GET_PROJECT_ERROR';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
 export const SELECT_PROJECT_SUCCESS = 'SELECT_PROJECT_SUCCESS';
+export const SELECT_PROJECT_ERROR = 'SELECT_PROJECT_ERROR';
 
 export const GET_PROJECTS_START = 'GET_PROJECTS_START';
 export const GET_PROJECTS_SUCCESS = 'GET_PROJECTS_SUCCESS';
@@ -33,6 +34,7 @@ const getProjectSuccess = payload => ({ type: GET_PROJECT_SUCCESS, payload });
 const getProjectError = payload => ({ type: GET_PROJECT_ERROR, payload });
 export const selectProject = id => ({ type: SELECT_PROJECT, payload: { id } });
 const selectProjectSuccess = payload => ({ type: SELECT_PROJECT_SUCCESS, payload });
+const selectProjectError = payload => ({ type: SELECT_PROJECT_ERROR, payload });
 
 const getProjectsStart = () => ({ type: GET_PROJECTS_START });
 const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
@@ -114,9 +116,6 @@ export const getProjects = () => (
 );
 
 const getProjectPromise = (id) => {
-  console.log('ProjectActions().getProjectPromise() - id: ', id);
-  if (!id) throw new Error(`Argument <id> must not be null. Received: ${id}`);
-
   const opts = {
     method: 'GET',
   };
@@ -131,17 +130,13 @@ const getProjectPromise = (id) => {
   return getFetcher().fetch(payload);
 };
 
-function* selectProjectSaga(action) {
-  const cachedProject = yield select(getProjectById, action.payload.id);
-  if (cachedProject) {
-    yield put(selectProjectSuccess(denormalizeItem(cachedProject)));
-    return;
+function* getProjectSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!action.payload.id) {
+    throw new Error('Argument <action.payload.id> must not be null.');
   }
 
-  yield put(getProject(action.payload.id));
-}
-
-function* getProjectSaga(action) {
   let normalizedItem;
 
   try {
@@ -153,14 +148,33 @@ function* getProjectSaga(action) {
     normalizedItem = Object.values(normalizedData)[0];
 
     yield put(getProjectSuccess(normalizedItem));
-
-    const denormalizedItem = denormalizeItem(normalizedItem);
-    yield put(selectProjectSuccess(denormalizedItem));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }
 
-  return denormalizeItem(normalizedItem);
+  return normalizedItem;
+}
+
+function* selectProjectSaga(action) {
+  const cachedProject = yield select(getProjectById, action.payload.id);
+
+  if (cachedProject) {
+    yield put(selectProjectSuccess(denormalizeItem(cachedProject)));
+    return;
+  }
+
+  try {
+    const project = yield call(getProjectSaga, action);
+
+    if (project) {
+      const denormalizedProject = denormalizeItem(project);
+      yield put(selectProjectSuccess(denormalizedProject));
+    } else {
+      yield put(selectProjectError(`Project with ID ${action.payload.id} not found.`));
+    }
+  } catch (error) {
+    yield put(selectProjectError(error));
+  }
 }
 
 export function* bindActionsToSagas() {
