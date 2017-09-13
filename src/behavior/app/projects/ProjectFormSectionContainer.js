@@ -12,10 +12,14 @@ class ProjectFormSectionContainer extends Component {
 
   componentDidMount() {
     const id = this.props.params.projectId;
-    this.getProject(id);
+    this.selectProject(id);
   }
 
-  getProject = (id) => {
+  getSubmitHandler = () => (
+    (this.props.projects.data) ? this.updateProject : this.addProject
+  )
+
+  selectProject = (id) => {
     if (!id) return;
 
     /*
@@ -26,12 +30,8 @@ class ProjectFormSectionContainer extends Component {
     }
     */
 
-    this.props.actions.getProject(id);
+    this.props.actions.selectProject(id);
   }
-
-  getSubmitHandler = () => (
-    (this.props.projects.data) ? this.updateProject : this.addProject
-  )
 
   addProject = data => (
     new Promise((resolve, reject) => {
@@ -89,7 +89,7 @@ class ProjectFormSectionContainer extends Component {
 ProjectFormSectionContainer.propTypes = {
   actions: PropTypes.shape({
     addProject: PropTypes.func.isRequired,
-    getProject: PropTypes.func.isRequired,
+    selectProject: PropTypes.func.isRequired,
     updateProject: PropTypes.func.isRequired,
   }).isRequired,
 

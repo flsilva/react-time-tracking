@@ -9,7 +9,7 @@ import {
   GET_PROJECT_START,
   GET_PROJECT_SUCCESS,
   GET_PROJECT_ERROR,
-  SELECT_PROJECT,
+  SELECT_PROJECT_SUCCESS,
   UPDATE_PROJECT_START,
   UPDATE_PROJECT_SUCCESS,
   UPDATE_PROJECT_ERROR,
@@ -95,13 +95,15 @@ const isFetched = (state = false, action) => {
 
 const selectedEntity = (state = null, action) => {
   switch (action.type) {
-    case SELECT_PROJECT:
+    case SELECT_PROJECT_SUCCESS:
       return action.payload || null;
 
     default:
       return state;
   }
 };
+
+export const getProjectById = (state, id) => state.projects.byId[id];
 
 export const denormalizeItem = (project) => {
   if (!project) return null;

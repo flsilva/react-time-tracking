@@ -1,6 +1,6 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import normalize from 'json-api-normalizer';
-import { denormalizeItem } from './ProjectReducers';
+import { getProjectById, denormalizeItem } from './ProjectReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
@@ -13,6 +13,7 @@ export const GET_PROJECT_START = 'GET_PROJECT_START';
 export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
 export const GET_PROJECT_ERROR = 'GET_PROJECT_ERROR';
 export const SELECT_PROJECT = 'SELECT_PROJECT';
+export const SELECT_PROJECT_SUCCESS = 'SELECT_PROJECT_SUCCESS';
 
 export const GET_PROJECTS_START = 'GET_PROJECTS_START';
 export const GET_PROJECTS_SUCCESS = 'GET_PROJECTS_SUCCESS';
@@ -30,7 +31,8 @@ export const getProject = id => ({ type: GET_PROJECT_REQUESTED, payload: { id } 
 const getProjectStart = () => ({ type: GET_PROJECT_START });
 const getProjectSuccess = payload => ({ type: GET_PROJECT_SUCCESS, payload });
 const getProjectError = payload => ({ type: GET_PROJECT_ERROR, payload });
-const selectProject = payload => ({ type: SELECT_PROJECT, payload });
+export const selectProject = id => ({ type: SELECT_PROJECT, payload: { id } });
+const selectProjectSuccess = payload => ({ type: SELECT_PROJECT_SUCCESS, payload });
 
 const getProjectsStart = () => ({ type: GET_PROJECTS_START });
 const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
@@ -129,9 +131,17 @@ const getProjectPromise = (id) => {
   return getFetcher().fetch(payload);
 };
 
-function* getProjectSaga(action) {
-  console.log('ProjectActions().getProjectSaga() - action: ', action);
+function* selectProjectSaga(action) {
+  const cachedProject = yield select(getProjectById, action.payload.id);
+  if (cachedProject) {
+    yield put(selectProjectSuccess(denormalizeItem(cachedProject)));
+    return;
+  }
 
+  yield put(getProject(action.payload.id));
+}
+
+function* getProjectSaga(action) {
   let normalizedItem;
 
   try {
@@ -145,7 +155,7 @@ function* getProjectSaga(action) {
     yield put(getProjectSuccess(normalizedItem));
 
     const denormalizedItem = denormalizeItem(normalizedItem);
-    yield put(selectProject(denormalizedItem));
+    yield put(selectProjectSuccess(denormalizedItem));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }
@@ -153,8 +163,9 @@ function* getProjectSaga(action) {
   return denormalizeItem(normalizedItem);
 }
 
-export function* getProjectSagaWatcher() {
+export function* bindActionsToSagas() {
   yield takeLatest(GET_PROJECT_REQUESTED, getProjectSaga);
+  yield takeLatest(SELECT_PROJECT, selectProjectSaga);
 }
 
 /*
