@@ -8,7 +8,7 @@ export const ADD_PROJECT_START = 'ADD_PROJECT_START';
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
 export const ADD_PROJECT_ERROR = 'ADD_PROJECT_ERROR';
 
-export const GET_PROJECT_REQUESTED = 'GET_PROJECT_REQUESTED';
+export const GET_PROJECT = 'GET_PROJECT';
 export const GET_PROJECT_START = 'GET_PROJECT_START';
 export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
 export const GET_PROJECT_ERROR = 'GET_PROJECT_ERROR';
@@ -28,13 +28,10 @@ const addProjectStart = () => ({ type: ADD_PROJECT_START });
 const addProjectSuccess = payload => ({ type: ADD_PROJECT_SUCCESS, payload });
 const addProjectError = payload => ({ type: ADD_PROJECT_ERROR, payload });
 
-export const getProject = id => ({ type: GET_PROJECT_REQUESTED, payload: { id } });
+export const getProject = id => ({ type: GET_PROJECT, payload: { id } });
 const getProjectStart = () => ({ type: GET_PROJECT_START });
 const getProjectSuccess = payload => ({ type: GET_PROJECT_SUCCESS, payload });
 const getProjectError = payload => ({ type: GET_PROJECT_ERROR, payload });
-export const selectProject = id => ({ type: SELECT_PROJECT, payload: { id } });
-const selectProjectSuccess = payload => ({ type: SELECT_PROJECT_SUCCESS, payload });
-const selectProjectError = payload => ({ type: SELECT_PROJECT_ERROR, payload });
 
 const getProjectsStart = () => ({ type: GET_PROJECTS_START });
 const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
@@ -137,7 +134,13 @@ function* getProjectSaga(action) {
     throw new Error('Argument <action.payload.id> must not be null.');
   }
 
-  let normalizedItem;
+  if (!action.payload.killCache) {
+    const cachedProject = yield select(getProjectById, action.payload.id);
+
+    if (cachedProject) {
+      yield put(getProjectSuccess(cachedProject));
+    }
+  }
 
   try {
     yield put(getProjectStart());
@@ -145,41 +148,16 @@ function* getProjectSaga(action) {
     const data = yield call(getProjectPromise, action.payload.id);
 
     const normalizedData = normalize(data).projects;
-    normalizedItem = Object.values(normalizedData)[0];
+    const normalizedItem = Object.values(normalizedData)[0];
 
     yield put(getProjectSuccess(normalizedItem));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }
-
-  return normalizedItem;
-}
-
-function* selectProjectSaga(action) {
-  const cachedProject = yield select(getProjectById, action.payload.id);
-
-  if (cachedProject) {
-    yield put(selectProjectSuccess(denormalizeItem(cachedProject)));
-    return;
-  }
-
-  try {
-    const project = yield call(getProjectSaga, action);
-
-    if (project) {
-      const denormalizedProject = denormalizeItem(project);
-      yield put(selectProjectSuccess(denormalizedProject));
-    } else {
-      yield put(selectProjectError(`Project with ID ${action.payload.id} not found.`));
-    }
-  } catch (error) {
-    yield put(selectProjectError(error));
-  }
 }
 
 export function* bindActionsToSagas() {
-  yield takeLatest(GET_PROJECT_REQUESTED, getProjectSaga);
-  yield takeLatest(SELECT_PROJECT, selectProjectSaga);
+  yield takeLatest(GET_PROJECT, getProjectSaga);
 }
 
 /*

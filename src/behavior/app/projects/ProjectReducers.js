@@ -9,7 +9,6 @@ import {
   GET_PROJECT_START,
   GET_PROJECT_SUCCESS,
   GET_PROJECT_ERROR,
-  SELECT_PROJECT_SUCCESS,
   UPDATE_PROJECT_START,
   UPDATE_PROJECT_SUCCESS,
   UPDATE_PROJECT_ERROR,
@@ -93,26 +92,20 @@ const isFetched = (state = false, action) => {
   }
 };
 
-const selectedEntity = (state = null, action) => {
-  switch (action.type) {
-    case SELECT_PROJECT_SUCCESS:
-      return action.payload || null;
-
-    default:
-      return state;
-  }
-};
-
-export const getProjectById = (state, id) => state.projects.byId[id];
-
 export const denormalizeItem = (project) => {
   if (!project) return null;
   return { id: project.id, ...project.attributes };
 };
 
-export const denormalizeCollection = projects => (
+const denormalizeCollection = projects => (
   Object.keys(projects).map(key => projects[key])
     .map(value => denormalizeItem(value))
+);
+
+export const getCollection = state => denormalizeCollection(state.projects.byId);
+
+export const getProjectById = (state, id) => (
+  denormalizeItem(state.projects.byId[id])
 );
 
 export default combineReducers({
@@ -120,5 +113,4 @@ export default combineReducers({
   error,
   isFetching,
   isFetched,
-  selectedEntity,
 });

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
-import { denormalizeCollection } from './ProjectReducers';
+import { getCollection } from './ProjectReducers';
 import ProjectsSection from '../../../ui/app/projects/ProjectsSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -59,7 +59,7 @@ ProjectsSectionContainer.defaultProps = {
 
 const mapStateToProps = state => ({
   projects: {
-    list: denormalizeCollection(state.projects.byId),
+    list: getCollection(state),
     error: state.projects.error,
     isFetching: state.projects.isFetching,
     isFetched: state.projects.isFetched,

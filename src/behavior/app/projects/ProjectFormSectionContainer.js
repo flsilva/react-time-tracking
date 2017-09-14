@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
+import { getProjectById } from './ProjectReducers';
 import ProjectFormSection from '../../../ui/app/projects/ProjectFormSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -11,8 +12,10 @@ import { getNotifications } from '../utils';
 class ProjectFormSectionContainer extends Component {
 
   componentDidMount() {
-    const id = this.props.params.projectId;
-    this.selectProject(id);
+    if (!this.props.projects.data) {
+      const id = this.props.params.projectId;
+      this.props.actions.getProject(id);
+    }
   }
 
   getSubmitHandler = () => (
@@ -21,16 +24,7 @@ class ProjectFormSectionContainer extends Component {
 
   selectProject = (id) => {
     if (!id) return;
-
-    /*
-    const cachedProject = denormalizeItem(this.props.projects.byId[id]);
-    if (cachedProject) {
-      this.setState({ project: cachedProject });
-      return;
-    }
-    */
-
-    this.props.actions.selectProject(id);
+    this.props.actions.getProject(id);
   }
 
   addProject = data => (
@@ -89,7 +83,7 @@ class ProjectFormSectionContainer extends Component {
 ProjectFormSectionContainer.propTypes = {
   actions: PropTypes.shape({
     addProject: PropTypes.func.isRequired,
-    selectProject: PropTypes.func.isRequired,
+    getProject: PropTypes.func.isRequired,
     updateProject: PropTypes.func.isRequired,
   }).isRequired,
 
@@ -114,9 +108,9 @@ ProjectFormSectionContainer.defaultProps = {
   },
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, { params }) => ({
   projects: {
-    data: state.projects.selectedEntity,
+    data: getProjectById(state, params.projectId),
     error: state.projects.error,
     isFetching: state.projects.isFetching,
   },
