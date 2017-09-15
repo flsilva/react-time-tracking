@@ -19,14 +19,12 @@ const byId = (state = {}, action) => {
   switch (action.type) {
     case ADD_PROJECT_SUCCESS:
     case GET_PROJECT_SUCCESS:
+    case GET_PROJECTS_SUCCESS:
     case UPDATE_PROJECT_SUCCESS:
       return {
         ...state,
-        [action.payload.id]: action.payload,
+        ...action.payload,
       };
-
-    case GET_PROJECTS_SUCCESS:
-      return action.payload || null;
 
     case SIGN_OUT_SUCCESS:
       return null;

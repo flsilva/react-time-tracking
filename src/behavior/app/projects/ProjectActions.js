@@ -139,6 +139,7 @@ function* getProjectSaga(action) {
 
     if (cachedProject) {
       yield put(getProjectSuccess(cachedProject));
+      return;
     }
   }
 
@@ -146,11 +147,9 @@ function* getProjectSaga(action) {
     yield put(getProjectStart());
 
     const data = yield call(getProjectPromise, action.payload.id);
-
     const normalizedData = normalize(data).projects;
-    const normalizedItem = Object.values(normalizedData)[0];
 
-    yield put(getProjectSuccess(normalizedItem));
+    yield put(getProjectSuccess(normalizedData));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }
