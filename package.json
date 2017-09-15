@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "json-api-normalizer": "^0.4.1",
+    "lodash": "^4.17.4",
     "material-ui": "^0.19.1",
     "prop-types": "^15.5.10",
     "react": "^15.3.2",

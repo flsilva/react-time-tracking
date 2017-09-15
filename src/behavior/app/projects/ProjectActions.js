@@ -1,6 +1,10 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import normalize from 'json-api-normalizer';
-import { getProjectById, denormalizeItem } from './ProjectReducers';
+import {
+  getProjectById,
+  getCollectionByQueries,
+  denormalizeItem,
+} from './ProjectReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
@@ -16,6 +20,7 @@ export const SELECT_PROJECT = 'SELECT_PROJECT';
 export const SELECT_PROJECT_SUCCESS = 'SELECT_PROJECT_SUCCESS';
 export const SELECT_PROJECT_ERROR = 'SELECT_PROJECT_ERROR';
 
+export const GET_PROJECTS = 'GET_PROJECTS';
 export const GET_PROJECTS_START = 'GET_PROJECTS_START';
 export const GET_PROJECTS_SUCCESS = 'GET_PROJECTS_SUCCESS';
 export const GET_PROJECTS_ERROR = 'GET_PROJECTS_ERROR';
@@ -28,11 +33,16 @@ const addProjectStart = () => ({ type: ADD_PROJECT_START });
 const addProjectSuccess = payload => ({ type: ADD_PROJECT_SUCCESS, payload });
 const addProjectError = payload => ({ type: ADD_PROJECT_ERROR, payload });
 
-export const getProject = id => ({ type: GET_PROJECT, payload: { id } });
+export const getProject = (id, killCache) => (
+  { type: GET_PROJECT, payload: { id, killCache } }
+);
 const getProjectStart = () => ({ type: GET_PROJECT_START });
 const getProjectSuccess = payload => ({ type: GET_PROJECT_SUCCESS, payload });
 const getProjectError = payload => ({ type: GET_PROJECT_ERROR, payload });
 
+export const getProjects = (query, killCache) => (
+  { type: GET_PROJECTS, payload: { query, killCache } }
+);
 const getProjectsStart = () => ({ type: GET_PROJECTS_START });
 const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
 const getProjectsError = payload => ({ type: GET_PROJECTS_ERROR, payload });
@@ -79,9 +89,53 @@ export const addProject = data => (
   }
 );
 
-export const getProjects = () => (
+const getProjectsPromise = (query) => {
+  const opts = {
+    method: 'GET',
+  };
+
+  const path = `projects/${query}`;
+
+  const payload = {
+    opts,
+    path,
+  };
+
+  return getFetcher().fetch(payload);
+};
+
+function* getProjectsSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!action.payload.query) {
+    throw new Error('Argument <action.payload.query> must not be null.');
+  }
+
+  if (!action.payload.killCache) {
+    const cachedProjects = yield select(
+      getCollectionByQueries,
+      [action.payload.query],
+    );
+
+    if (cachedProjects && cachedProjects.length) return;
+  }
+
+  try {
+    yield put(getProjectsStart());
+
+    const data = yield call(getProjectsPromise, action.payload.query);
+
+    yield put({ type: 'READ_ENTITIES_SUCCESS', payload: { data } });
+    yield put(getProjectsSuccess({ data, query: action.payload.query }));
+  } catch (error) {
+    yield put(getProjectsError(extractApiErrors(error)));
+  }
+}
+
+/*
+export const getProjects = query => (
   (dispatch) => {
-    // console.log('Projects.actions().getProjects()');
+    console.log('Projects.actions().getProjects()');
 
     dispatch(getProjectsStart());
 
@@ -94,9 +148,12 @@ export const getProjects = () => (
 
     const successHandler = (json) => {
       // console.log('Projects.Actions::getProjects().successHandler() - json: ', json);
-      const normalizedData = normalize(json);
-      dispatch(getProjectsSuccess(normalizedData.projects));
-      return normalizedData;
+      // const normalizedData = normalize(json);
+      // dispatch(getProjectsSuccess(normalizedData.projects));
+      dispatch({ type: 'READ_ENTITIES_SUCCESS', payload: { data: json } });
+      dispatch(getProjectsSuccess({ data: json, query }));
+      //return normalizedData;
+      return json;
     };
 
     const opts = {
@@ -105,12 +162,15 @@ export const getProjects = () => (
 
     const payload = {
       opts,
-      path: 'projects',
+      // path: 'projects',
+      // path: 'projects?page[number]=1&page[size]=3&sort=-created-at',
+      path: `projects${query}`,
     };
 
     return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
   }
 );
+*/
 
 const getProjectPromise = (id) => {
   const opts = {
@@ -147,9 +207,10 @@ function* getProjectSaga(action) {
     yield put(getProjectStart());
 
     const data = yield call(getProjectPromise, action.payload.id);
-    const normalizedData = normalize(data).projects;
+    // const normalizedData = normalize(data).projects;
 
-    yield put(getProjectSuccess(normalizedData));
+    yield put({ type: 'READ_ENTITIES_SUCCESS', payload: { data } });
+    // yield put(getProjectSuccess(normalizedData));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }
@@ -157,6 +218,7 @@ function* getProjectSaga(action) {
 
 export function* bindActionsToSagas() {
   yield takeLatest(GET_PROJECT, getProjectSaga);
+  yield takeLatest(GET_PROJECTS, getProjectsSaga);
 }
 
 /*

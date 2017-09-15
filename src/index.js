@@ -25,6 +25,7 @@ import SignOutSectionContainer from './behavior/app/auth/SignOutSectionContainer
 import DashboardSectionContainer from './behavior/app/dashboard/DashboardSectionContainer';
 import ProjectsSectionContainer from './behavior/app/projects/ProjectsSectionContainer';
 import ProjectFormSectionContainer from './behavior/app/projects/ProjectFormSectionContainer';
+import withPagination from './behavior/app/utils/withPagination';
 
 import './index.css';
 
@@ -110,7 +111,9 @@ export const routes = {
           component: AuthenticatedAppContainer,
           childRoutes: [
             { path: '/app', component: DashboardSectionContainer },
-            { path: '/app/projects', component: ProjectsSectionContainer },
+            { path: '/app/projects',
+              component: withPagination(ProjectsSectionContainer),
+            },
             { path: '/app/projects/new', component: ProjectFormSectionContainer },
             { path: '/app/projects/:projectId', component: ProjectFormSectionContainer },
           ],

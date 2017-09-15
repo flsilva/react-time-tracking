@@ -1,3 +1,5 @@
+import normalize from 'json-api-normalizer';
+import flatten from 'lodash/flatten';
 import { combineReducers } from 'redux';
 import {
   ADD_PROJECT_START,
@@ -15,7 +17,7 @@ import {
 } from './ProjectActions';
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 
-const byId = (state = {}, action) => {
+export const byId = (state = {}, action) => {
   switch (action.type) {
     case ADD_PROJECT_SUCCESS:
     case GET_PROJECT_SUCCESS:
@@ -23,11 +25,27 @@ const byId = (state = {}, action) => {
     case UPDATE_PROJECT_SUCCESS:
       return {
         ...state,
-        ...action.payload,
+        ...normalize(action.payload.data).projects,
       };
 
     case SIGN_OUT_SUCCESS:
       return null;
+
+    default:
+      return state;
+  }
+};
+
+const queries = (state = {}, action) => {
+  switch (action.type) {
+    case GET_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        [action.payload.query]: {
+          ids: action.payload.data.data.map(entity => entity.id),
+          links: action.payload.data.links,
+        },
+      };
 
     default:
       return state;
@@ -96,19 +114,45 @@ export const denormalizeItem = (project) => {
 };
 
 const denormalizeCollection = projects => (
-  Object.keys(projects).map(key => projects[key])
-    .map(value => denormalizeItem(value))
+  projects ?
+    Object.keys(projects).map(key => projects[key])
+      .map(value => denormalizeItem(value))
+    : null
 );
 
-export const getCollection = state => denormalizeCollection(state.projects.byId);
-
 export const getProjectById = (state, id) => (
-  denormalizeItem(state.projects.byId[id])
+  state.database && state.database.projects ?
+    denormalizeItem(state.database.projects[id]) : null
+);
+
+// export const getCollection = state => denormalizeCollection(state.projects.byId);
+export const getCollectionByQueries = (state, queries = []) => {
+  console.log('ProjectReducers().getCollectionByQueries() - queries: ', queries);
+
+  // if (!state.projects || !state.projects.idsByQuery[query]) return null;
+  if (!state.projects || !queries.length) return null;
+
+  // return state.projects.idsByQuery[query].map(id => getProjectById(state, id));
+  const collection = flatten(queries.filter(query => state.projects.queries[query])
+    .map(query => {
+      console.log('ProjectReducers().getCollectionByQueries() - query: ', query);
+      return state.projects.queries[query].ids.map(id => getProjectById(state, id));
+  }));
+
+  console.log('ProjectReducers().getCollectionByQueries() - collection: ', collection);
+
+  return collection;
+};
+
+export const getCollectionLinksByQuery = (state, query) => (
+  state.projects && state.projects.queries && state.projects.queries[query] ?
+    state.projects.queries[query].links : null
 );
 
 export default combineReducers({
-  byId,
+  // byId,
   error,
+  queries,
   isFetching,
   isFetched,
 });
