@@ -20,8 +20,8 @@ class ProjectFormSection extends Component {
   }
 
   render() {
-    const { isFetching, project } = this.props;
-    const title = (isFetching || project) ? 'Edit Project' : 'New Project';
+    const { isEditing, isFetching, project } = this.props;
+    const title = isEditing ? 'Edit Project' : 'New Project';
 
     const BackButton = (
       <IconButton onClick={this.backHandler}>
@@ -56,6 +56,8 @@ class ProjectFormSection extends Component {
 }
 
 ProjectFormSection.propTypes = {
+  isEditing: PropTypes.bool,
+
   isFetching: PropTypes.bool,
 
   project: PropTypes.shape({
@@ -66,6 +68,7 @@ ProjectFormSection.propTypes = {
 };
 
 ProjectFormSection.defaultProps = {
+  isEditing: false,
   isFetching: false,
   project: null,
 };

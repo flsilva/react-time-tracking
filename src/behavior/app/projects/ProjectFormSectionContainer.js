@@ -61,6 +61,7 @@ class ProjectFormSectionContainer extends Component {
         <ProjectFormSection
           submitHandler={this.getSubmitHandler()}
           error={this.props.projects.error}
+          isEditing={this.props.params.projectId != null}
           isFetching={isFetching}
           project={data}
           user={this.props.user}

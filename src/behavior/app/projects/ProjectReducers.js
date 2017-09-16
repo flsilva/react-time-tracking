@@ -14,6 +14,7 @@ import {
   UPDATE_PROJECT_START,
   UPDATE_PROJECT_SUCCESS,
   UPDATE_PROJECT_ERROR,
+  CLEAR_DATABASE,
   UPDATE_DATABASE,
 } from './ProjectActions';
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
@@ -29,8 +30,9 @@ export const byId = (state = {}, action) => {
     case UPDATE_DATABASE:
       return merge(state, action.payload);
 
+    case CLEAR_DATABASE:
     case SIGN_OUT_SUCCESS:
-      return null;
+      return {};
 
     default:
       return state;
@@ -47,6 +49,9 @@ const fetchedQueries = (state = {}, action) => {
           links: action.payload.data.links,
         },
       };
+
+    case CLEAR_DATABASE:
+      return {};
 
     default:
       return state;

@@ -27,6 +27,7 @@ export const UPDATE_PROJECT_START = 'UPDATE_PROJECT_START';
 export const UPDATE_PROJECT_SUCCESS = 'UPDATE_PROJECT_SUCCESS';
 export const UPDATE_PROJECT_ERROR = 'UPDATE_PROJECT_ERROR';
 
+export const CLEAR_DATABASE = 'projects/CLEAR_DATABASE';
 export const UPDATE_DATABASE = 'UPDATE_DATABASE';
 
 export const addProject = (data, successCb) => ({
@@ -66,6 +67,7 @@ const updateProjectStart = () => ({ type: UPDATE_PROJECT_START });
 const updateProjectSuccess = payload => ({ type: UPDATE_PROJECT_SUCCESS, payload });
 const updateProjectError = payload => ({ type: UPDATE_PROJECT_ERROR, payload });
 
+const clearDatabase = () => ({ type: CLEAR_DATABASE });
 const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 const addProjectPromise = (data, userId) => {
@@ -112,6 +114,7 @@ function* addProjectSaga(action) {
     const user = yield select(getUser);
     const data = yield call(addProjectPromise, action.payload.data, user.id);
 
+    yield put(clearDatabase());
     yield put(updateDatabase({ data }));
     yield put(addProjectSuccess({ data }));
     if (action.meta.successCb) action.meta.successCb();
