@@ -1,13 +1,13 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
-import normalize from 'json-api-normalizer';
 import {
   getProjectById,
   getCollectionByQueries,
-  denormalizeItem,
 } from './ProjectReducers';
+import { getUser } from '../auth/AuthReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
+export const ADD_PROJECT = 'ADD_PROJECT';
 export const ADD_PROJECT_START = 'ADD_PROJECT_START';
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
 export const ADD_PROJECT_ERROR = 'ADD_PROJECT_ERROR';
@@ -29,6 +29,13 @@ export const UPDATE_PROJECT_ERROR = 'UPDATE_PROJECT_ERROR';
 
 export const UPDATE_DATABASE = 'UPDATE_DATABASE';
 
+export const addProject = (data, successCb) => ({
+  type: ADD_PROJECT,
+  payload: {
+    data,
+  },
+  meta: { successCb },
+});
 const addProjectStart = () => ({ type: ADD_PROJECT_START });
 const addProjectSuccess = payload => ({ type: ADD_PROJECT_SUCCESS, payload });
 const addProjectError = payload => ({ type: ADD_PROJECT_ERROR, payload });
@@ -61,43 +68,57 @@ const updateProjectError = payload => ({ type: UPDATE_PROJECT_ERROR, payload });
 
 const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
-export const addProject = data => (
-  (dispatch) => {
-    // console.log('Projects.actions().addProject() - data: ', data);
+const addProjectPromise = (data, userId) => {
+  const normalizedData = {
+    data: {
+      type: 'projects',
+      attributes: data,
+      relationships: {
+        author: {
+          data: {
+            id: userId,
+            type: 'users',
+          },
+        },
+      },
+    },
+  };
 
-    dispatch(addProjectStart());
+  const opts = {
+    body: JSON.stringify(normalizedData),
+    method: 'POST',
+  };
 
-    const errorHandler = (error) => {
-      // console.log('Project.Actions::addProject().errorHandler() - error: ', error);
-      const errors = extractApiErrors(error);
-      dispatch(addProjectError(errors));
-      return new Promise((resolve, reject) => reject(error));
-    };
+  const path = 'projects';
 
-    const successHandler = (json) => {
-      // console.log('Projects.Actions::addProject().successHandler() - json: ', json);
+  const payload = {
+    opts,
+    path,
+  };
 
-      const normalizedData = normalize(json).projects;
-      const normalizedItem = Object.values(normalizedData)[0];
+  return getFetcher().fetch(payload);
+};
 
-      dispatch(addProjectSuccess(normalizedItem));
-      const denormalizedItem = denormalizeItem(normalizedItem);
-      return denormalizedItem;
-    };
-
-    const opts = {
-      body: JSON.stringify(data),
-      method: 'POST',
-    };
-
-    const payload = {
-      opts,
-      path: 'projects',
-    };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
+function* addProjectSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!action.payload.data) {
+    throw new Error('Argument <action.payload.data> must not be null.');
   }
-);
+
+  try {
+    yield put(addProjectStart());
+
+    const user = yield select(getUser);
+    const data = yield call(addProjectPromise, action.payload.data, user.id);
+
+    yield put(updateDatabase({ data }));
+    yield put(addProjectSuccess({ data }));
+    if (action.meta.successCb) action.meta.successCb();
+  } catch (error) {
+    yield put(addProjectError(extractApiErrors(error)));
+  }
+}
 
 const getProjectsPromise = (query) => {
   const opts = {
@@ -233,6 +254,7 @@ function* updateProjectSaga(action) {
 }
 
 export function* bindActionsToSagas() {
+  yield takeLatest(ADD_PROJECT, addProjectSaga);
   yield takeLatest(GET_PROJECT, getProjectSaga);
   yield takeLatest(GET_PROJECTS, getProjectsSaga);
   yield takeLatest(UPDATE_PROJECT, updateProjectSaga);

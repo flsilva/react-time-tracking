@@ -105,7 +105,7 @@ export const denormalizeItem = (project) => {
 };
 
 export const getProjectById = (state, id) => (
-  state.database && state.database.projects ?
+  state.database && state.database.projects && state.database.projects[id] ?
     denormalizeItem(state.database.projects[id]) : null
 );
 

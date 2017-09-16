@@ -12,22 +12,18 @@ import { getNotifications } from '../utils';
 class ProjectFormSectionContainer extends Component {
 
   componentDidMount() {
-    if (!this.props.projects.data) {
-      const id = this.props.params.projectId;
-      this.props.actions.getProject(id);
-    }
+    const id = this.props.params.projectId;
+    if (id) this.props.actions.getProject(id);
   }
 
   getSubmitHandler = () => (
     (this.props.projects.data) ? this.updateProject : this.addProject
   )
 
-  selectProject = (id) => {
-    if (!id) return;
-    this.props.actions.getProject(id);
-  }
+  addProject = (data) => {
+    this.props.actions.addProject(data, this.redirectToList);
 
-  addProject = data => (
+    /*
     new Promise((resolve, reject) => {
       this.props.actions.addProject(data)
         .then((responseData) => {
@@ -37,7 +33,8 @@ class ProjectFormSectionContainer extends Component {
           reject(error);
         });
     })
-  );
+    */
+  }
 
   updateProject = (data) => {
     // this is needed to fix an issue with UI.
@@ -47,13 +44,12 @@ class ProjectFormSectionContainer extends Component {
     // this.setState({
     //  project: Object.assign({}, this.state.project, data),
     // });
-    //
 
     const id = this.props.projects.data.id;
-    this.props.actions.updateProject(id, data, this.updateProjectSuccess);
+    this.props.actions.updateProject(id, data, this.redirectToList);
   }
 
-  updateProjectSuccess = () => {
+  redirectToList = () => {
     browserHistory.push('/app/projects');
   }
 
