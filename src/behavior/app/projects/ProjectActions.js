@@ -7,7 +7,6 @@ import {
 } from './ProjectReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
-import { UPDATE_DATABASE } from '../DatabaseReducers';
 
 export const ADD_PROJECT_START = 'ADD_PROJECT_START';
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
@@ -29,6 +28,8 @@ export const GET_PROJECTS_ERROR = 'GET_PROJECTS_ERROR';
 export const UPDATE_PROJECT_START = 'UPDATE_PROJECT_START';
 export const UPDATE_PROJECT_SUCCESS = 'UPDATE_PROJECT_SUCCESS';
 export const UPDATE_PROJECT_ERROR = 'UPDATE_PROJECT_ERROR';
+
+export const UPDATE_DATABASE = 'UPDATE_DATABASE';
 
 const addProjectStart = () => ({ type: ADD_PROJECT_START });
 const addProjectSuccess = payload => ({ type: ADD_PROJECT_SUCCESS, payload });

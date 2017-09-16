@@ -1,4 +1,4 @@
-import normalize from 'json-api-normalizer';
+import merge from 'lodash/merge';
 import flatten from 'lodash/flatten';
 import { combineReducers } from 'redux';
 import {
@@ -14,19 +14,21 @@ import {
   UPDATE_PROJECT_START,
   UPDATE_PROJECT_SUCCESS,
   UPDATE_PROJECT_ERROR,
+  UPDATE_DATABASE,
 } from './ProjectActions';
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 
 export const byId = (state = {}, action) => {
+  console.log('byId() - state: ', state);
+  console.log('byId() - action: ', action);
+
   switch (action.type) {
     case ADD_PROJECT_SUCCESS:
     case GET_PROJECT_SUCCESS:
     case GET_PROJECTS_SUCCESS:
     case UPDATE_PROJECT_SUCCESS:
-      return {
-        ...state,
-        ...normalize(action.payload.data).projects,
-      };
+    case UPDATE_DATABASE:
+      return merge(state, action.payload);
 
     case SIGN_OUT_SUCCESS:
       return null;
