@@ -16,15 +16,13 @@ export const GET_PROJECT = 'GET_PROJECT';
 export const GET_PROJECT_START = 'GET_PROJECT_START';
 export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
 export const GET_PROJECT_ERROR = 'GET_PROJECT_ERROR';
-export const SELECT_PROJECT = 'SELECT_PROJECT';
-export const SELECT_PROJECT_SUCCESS = 'SELECT_PROJECT_SUCCESS';
-export const SELECT_PROJECT_ERROR = 'SELECT_PROJECT_ERROR';
 
 export const GET_PROJECTS = 'GET_PROJECTS';
 export const GET_PROJECTS_START = 'GET_PROJECTS_START';
 export const GET_PROJECTS_SUCCESS = 'GET_PROJECTS_SUCCESS';
 export const GET_PROJECTS_ERROR = 'GET_PROJECTS_ERROR';
 
+export const UPDATE_PROJECT = 'UPDATE_PROJECT';
 export const UPDATE_PROJECT_START = 'UPDATE_PROJECT_START';
 export const UPDATE_PROJECT_SUCCESS = 'UPDATE_PROJECT_SUCCESS';
 export const UPDATE_PROJECT_ERROR = 'UPDATE_PROJECT_ERROR';
@@ -49,6 +47,14 @@ const getProjectsStart = () => ({ type: GET_PROJECTS_START });
 const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
 const getProjectsError = payload => ({ type: GET_PROJECTS_ERROR, payload });
 
+export const updateProject = (id, data, successCb) => ({
+  type: UPDATE_PROJECT,
+  payload: {
+    id,
+    data,
+  },
+  meta: { successCb },
+});
 const updateProjectStart = () => ({ type: UPDATE_PROJECT_START });
 const updateProjectSuccess = payload => ({ type: UPDATE_PROJECT_SUCCESS, payload });
 const updateProjectError = payload => ({ type: UPDATE_PROJECT_ERROR, payload });
@@ -171,7 +177,6 @@ function* getProjectSaga(action) {
     yield put(getProjectStart());
 
     const data = yield call(getProjectPromise, action.payload.id);
-    // const normalizedData = normalize(data).projects;
 
     yield put(updateDatabase({ data }));
     yield put(getProjectSuccess({ data }));
@@ -180,54 +185,55 @@ function* getProjectSaga(action) {
   }
 }
 
-export const updateProject = (id, data) => (
-  (dispatch) => {
-    // console.log('Projects.actions().updateProject() - data: ', data);
+const updateProjectPromise = (id, data) => {
+  const normalizedData = {
+    data: {
+      id,
+      type: 'projects',
+      attributes: data,
+    },
+  };
 
-    dispatch(updateProjectStart());
+  const opts = {
+    body: JSON.stringify(normalizedData),
+    method: 'PATCH',
+  };
 
-    const errorHandler = (error) => {
-      // console.log('Project.Actions::updateProject().errorHandler() - error: ', error);
-      const errors = extractApiErrors(error);
-      dispatch(updateProjectError(errors));
-      return new Promise((resolve, reject) => reject(error));
-    };
+  const path = `projects/${id}`;
 
-    const successHandler = (json) => {
-      // console.log('Projects.Actions::updateProject().successHandler() - json: ', json);
-      const normalizedData = normalize(json).projects;
-      const normalizedItem = Object.values(normalizedData)[0];
+  const payload = {
+    opts,
+    path,
+  };
 
-      dispatch(updateProjectSuccess(normalizedItem));
-      dispatch(updateDatabase({ data: json }));
-      const denormalizedItem = denormalizeItem(normalizedItem);
-      return denormalizedItem;
-    };
+  return getFetcher().fetch(payload);
+};
 
-    const normalizedData = {
-      data: {
-        id,
-        type: 'projects',
-        attributes: data,
-      },
-    };
-
-    const opts = {
-      body: JSON.stringify(normalizedData),
-      method: 'PATCH',
-    };
-
-    const path = `projects/${id}`;
-    const payload = {
-      opts,
-      path,
-    };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
+function* updateProjectSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!action.payload.id) {
+    throw new Error('Argument <action.payload.id> must not be null.');
   }
-);
+  if (!action.payload.data) {
+    throw new Error('Argument <action.payload.data> must not be null.');
+  }
+
+  try {
+    yield put(updateProjectStart());
+
+    const data = yield call(updateProjectPromise, action.payload.id, action.payload.data);
+
+    yield put(updateDatabase({ data }));
+    yield put(updateProjectSuccess({ data }));
+    if (action.meta.successCb) action.meta.successCb();
+  } catch (error) {
+    yield put(updateProjectError(extractApiErrors(error)));
+  }
+}
 
 export function* bindActionsToSagas() {
   yield takeLatest(GET_PROJECT, getProjectSaga);
   yield takeLatest(GET_PROJECTS, getProjectsSaga);
+  yield takeLatest(UPDATE_PROJECT, updateProjectSaga);
 }

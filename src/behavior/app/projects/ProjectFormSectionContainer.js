@@ -50,16 +50,11 @@ class ProjectFormSectionContainer extends Component {
     //
 
     const id = this.props.projects.data.id;
+    this.props.actions.updateProject(id, data, this.updateProjectSuccess);
+  }
 
-    return new Promise((resolve, reject) => {
-      this.props.actions.updateProject(id, data)
-        .then((responseData) => {
-          resolve(responseData);
-          browserHistory.push('/app/projects');
-        }).catch((error) => {
-          reject(error);
-        });
-    });
+  updateProjectSuccess = () => {
+    browserHistory.push('/app/projects');
   }
 
   render() {
