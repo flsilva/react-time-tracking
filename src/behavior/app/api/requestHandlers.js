@@ -11,7 +11,7 @@ export const addContentTypeJsonToRequest = (config, request, next) => (
       request.opts.headers = new Headers();
     }
 
-    request.opts.headers.append('Content-Type', 'application/json');
+    request.opts.headers.append('Content-Type', 'application/vnd.api+json');
     next();
   }
 );

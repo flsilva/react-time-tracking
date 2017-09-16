@@ -281,12 +281,21 @@ export const updateProject = (id, data) => (
       const normalizedItem = Object.values(normalizedData)[0];
 
       dispatch(updateProjectSuccess(normalizedItem));
+      dispatch({ type: 'READ_ENTITIES_SUCCESS', payload: { data: json } });
       const denormalizedItem = denormalizeItem(normalizedItem);
       return denormalizedItem;
     };
 
+    const normalizedData = {
+      data: {
+        id,
+        type: 'projects',
+        attributes: data,
+      },
+    };
+
     const opts = {
-      body: JSON.stringify(data),
+      body: JSON.stringify(normalizedData),
       method: 'PUT',
     };
 
