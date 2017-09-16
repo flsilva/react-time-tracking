@@ -15,8 +15,10 @@ class ProjectsSectionContainer extends Component {
     this.readMore();
   }
 
+  itemsPerPage = 3;
+
   readMore = () => {
-    this.props.actions.getProjects(this.props.getNextPageQuery());
+    this.props.actions.getProjects(this.props.getNextPageQuery(this.itemsPerPage));
   }
 
   shouldDisplayLoadButton = () => {
