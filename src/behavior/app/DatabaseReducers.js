@@ -15,8 +15,7 @@ export default (state = {}, action) => {
   switch (action.type) {
     case UPDATE_DATABASE: {
       const normalizedData = normalize(action.payload.data);
-      console.log('DatabaseReducers() - UPDATE_DATABASE - action.payload.data: ', action.payload.data);
-      console.log('DatabaseReducers() - UPDATE_DATABASE - normalizedData: ', normalizedData);
+      // console.log('DatabaseReducers() - UPDATE_DATABASE - normalizedData: ', normalizedData);
 
       return Object.keys(normalizedData)
         .reduce((database, entityType) => ({

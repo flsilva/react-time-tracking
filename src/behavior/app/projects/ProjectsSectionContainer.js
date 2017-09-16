@@ -70,7 +70,6 @@ ProjectsSectionContainer.propTypes = {
     }),
     error: PropTypes.object,
     isFetching: PropTypes.bool,
-    isFetched: PropTypes.bool,
   }),
 
   user: PropTypes.shape({
@@ -95,7 +94,6 @@ const mapStateToProps = (state, { queries }) => {
       listLinks,
       error: state.projects.error,
       isFetching: state.projects.isFetching,
-      isFetched: state.projects.isFetched,
     },
   });
 };

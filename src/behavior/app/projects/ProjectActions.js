@@ -174,7 +174,7 @@ function* getProjectSaga(action) {
     // const normalizedData = normalize(data).projects;
 
     yield put(updateDatabase({ data }));
-    // yield put(getProjectSuccess(normalizedData));
+    yield put(getProjectSuccess({ data }));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }

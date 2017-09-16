@@ -19,14 +19,13 @@ import {
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 
 export const byId = (state = {}, action) => {
-  console.log('byId() - state: ', state);
-  console.log('byId() - action: ', action);
-
   switch (action.type) {
+    /*
     case ADD_PROJECT_SUCCESS:
     case GET_PROJECT_SUCCESS:
     case GET_PROJECTS_SUCCESS:
     case UPDATE_PROJECT_SUCCESS:
+    */
     case UPDATE_DATABASE:
       return merge(state, action.payload);
 
@@ -38,7 +37,7 @@ export const byId = (state = {}, action) => {
   }
 };
 
-const queries = (state = {}, action) => {
+const fetchedQueries = (state = {}, action) => {
   switch (action.type) {
     case GET_PROJECTS_SUCCESS:
       return {
@@ -100,61 +99,37 @@ const isFetching = (state = false, action) => {
   }
 };
 
-const isFetched = (state = false, action) => {
-  switch (action.type) {
-    case GET_PROJECTS_SUCCESS:
-      return true;
-
-    default:
-      return state;
-  }
-};
-
 export const denormalizeItem = (project) => {
   if (!project) return null;
   return { id: project.id, ...project.attributes };
 };
-
-const denormalizeCollection = projects => (
-  projects ?
-    Object.keys(projects).map(key => projects[key])
-      .map(value => denormalizeItem(value))
-    : null
-);
 
 export const getProjectById = (state, id) => (
   state.database && state.database.projects ?
     denormalizeItem(state.database.projects[id]) : null
 );
 
-// export const getCollection = state => denormalizeCollection(state.projects.byId);
 export const getCollectionByQueries = (state, queries = []) => {
-  console.log('ProjectReducers().getCollectionByQueries() - queries: ', queries);
-
-  // if (!state.projects || !state.projects.idsByQuery[query]) return null;
   if (!state.projects || !queries.length) return null;
 
-  // return state.projects.idsByQuery[query].map(id => getProjectById(state, id));
-  const collection = flatten(queries.filter(query => state.projects.queries[query])
-    .map(query => {
-      console.log('ProjectReducers().getCollectionByQueries() - query: ', query);
-      return state.projects.queries[query].ids.map(id => getProjectById(state, id));
-  }));
-
-  console.log('ProjectReducers().getCollectionByQueries() - collection: ', collection);
-
-  return collection;
+  return flatten(
+    // filter out requested queries not stored
+    queries.filter(query => state.projects.fetchedQueries[query])
+    // map an array of queries (String objects)
+    // to an array of arrays of entity IDs
+    .map(query => state.projects.fetchedQueries[query].ids
+      // map an array of entity IDs to entity Objects
+      .map(id => getProjectById(state, id)),
+    ));
 };
 
 export const getCollectionLinksByQuery = (state, query) => (
-  state.projects && state.projects.queries && state.projects.queries[query] ?
-    state.projects.queries[query].links : null
+  state.projects && state.projects.fetchedQueries && state.projects.fetchedQueries[query] ?
+    state.projects.fetchedQueries[query].links : null
 );
 
 export default combineReducers({
-  // byId,
   error,
-  queries,
+  fetchedQueries,
   isFetching,
-  isFetched,
 });
