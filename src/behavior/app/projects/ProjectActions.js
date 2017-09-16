@@ -7,6 +7,7 @@ import {
 } from './ProjectReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
+import { UPDATE_DATABASE } from '../DatabaseReducers';
 
 export const ADD_PROJECT_START = 'ADD_PROJECT_START';
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
@@ -50,6 +51,8 @@ const getProjectsError = payload => ({ type: GET_PROJECTS_ERROR, payload });
 const updateProjectStart = () => ({ type: UPDATE_PROJECT_START });
 const updateProjectSuccess = payload => ({ type: UPDATE_PROJECT_SUCCESS, payload });
 const updateProjectError = payload => ({ type: UPDATE_PROJECT_ERROR, payload });
+
+const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 export const addProject = data => (
   (dispatch) => {
@@ -125,52 +128,12 @@ function* getProjectsSaga(action) {
 
     const data = yield call(getProjectsPromise, action.payload.query);
 
-    yield put({ type: 'READ_ENTITIES_SUCCESS', payload: { data } });
+    yield put(updateDatabase({ data }));
     yield put(getProjectsSuccess({ data, query: action.payload.query }));
   } catch (error) {
     yield put(getProjectsError(extractApiErrors(error)));
   }
 }
-
-/*
-export const getProjects = query => (
-  (dispatch) => {
-    console.log('Projects.actions().getProjects()');
-
-    dispatch(getProjectsStart());
-
-    const errorHandler = (error) => {
-      // console.log('Project.Actions::getProjects().errorHandler() - error: ', error);
-      const errors = extractApiErrors(error);
-      dispatch(getProjectsError(errors));
-      return new Promise((resolve, reject) => reject(error));
-    };
-
-    const successHandler = (json) => {
-      // console.log('Projects.Actions::getProjects().successHandler() - json: ', json);
-      // const normalizedData = normalize(json);
-      // dispatch(getProjectsSuccess(normalizedData.projects));
-      dispatch({ type: 'READ_ENTITIES_SUCCESS', payload: { data: json } });
-      dispatch(getProjectsSuccess({ data: json, query }));
-      //return normalizedData;
-      return json;
-    };
-
-    const opts = {
-      method: 'GET',
-    };
-
-    const payload = {
-      opts,
-      // path: 'projects',
-      // path: 'projects?page[number]=1&page[size]=3&sort=-created-at',
-      path: `projects${query}`,
-    };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
-  }
-);
-*/
 
 const getProjectPromise = (id) => {
   const opts = {
@@ -209,58 +172,12 @@ function* getProjectSaga(action) {
     const data = yield call(getProjectPromise, action.payload.id);
     // const normalizedData = normalize(data).projects;
 
-    yield put({ type: 'READ_ENTITIES_SUCCESS', payload: { data } });
+    yield put(updateDatabase({ data }));
     // yield put(getProjectSuccess(normalizedData));
   } catch (error) {
     yield put(getProjectError(extractApiErrors(error)));
   }
 }
-
-export function* bindActionsToSagas() {
-  yield takeLatest(GET_PROJECT, getProjectSaga);
-  yield takeLatest(GET_PROJECTS, getProjectsSaga);
-}
-
-/*
-export const getProject = id => (
-  (dispatch) => {
-    // console.log('Projects.actions().getProject() - id: ' + id);
-    if (!id) throw new Error(`Argument <id> must not be null. Received: ${id}`);
-
-    dispatch(getProjectStart());
-
-    const errorHandler = (error) => {
-      // console.log('Project.Actions::getProject().errorHandler() - error: ', error);
-      const errors = extractApiErrors(error);
-      dispatch(getProjectError(errors));
-      return new Promise((resolve, reject) => reject(error));
-    };
-
-    const successHandler = (json) => {
-      // console.log('Projects.Actions::getProject().successHandler() - json: ', json);
-      const normalizedData = normalize(json).projects;
-      const normalizedItem = Object.values(normalizedData)[0];
-
-      dispatch(getProjectSuccess(normalizedItem));
-      const denormalizedItem = denormalizeItem(normalizedItem);
-      return denormalizedItem;
-    };
-
-    const opts = {
-      method: 'GET',
-    };
-
-    const path = `projects/${id}`;
-
-    const payload = {
-      opts,
-      path,
-    };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
-  }
-);
-*/
 
 export const updateProject = (id, data) => (
   (dispatch) => {
@@ -281,7 +198,7 @@ export const updateProject = (id, data) => (
       const normalizedItem = Object.values(normalizedData)[0];
 
       dispatch(updateProjectSuccess(normalizedItem));
-      dispatch({ type: 'READ_ENTITIES_SUCCESS', payload: { data: json } });
+      dispatch(updateDatabase({ data: json }));
       const denormalizedItem = denormalizeItem(normalizedItem);
       return denormalizedItem;
     };
@@ -296,7 +213,7 @@ export const updateProject = (id, data) => (
 
     const opts = {
       body: JSON.stringify(normalizedData),
-      method: 'PUT',
+      method: 'PATCH',
     };
 
     const path = `projects/${id}`;
@@ -308,3 +225,8 @@ export const updateProject = (id, data) => (
     return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
   }
 );
+
+export function* bindActionsToSagas() {
+  yield takeLatest(GET_PROJECT, getProjectSaga);
+  yield takeLatest(GET_PROJECTS, getProjectsSaga);
+}
