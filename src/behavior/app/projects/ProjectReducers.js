@@ -1,6 +1,7 @@
 import merge from 'lodash/merge';
 import flatten from 'lodash/flatten';
 import { combineReducers } from 'redux';
+import build from 'redux-object';
 import {
   ADD_PROJECT_START,
   ADD_PROJECT_SUCCESS,
@@ -104,14 +105,8 @@ const isFetching = (state = false, action) => {
   }
 };
 
-export const denormalizeItem = (project) => {
-  if (!project) return null;
-  return { id: project.id, ...project.attributes };
-};
-
 export const getProjectById = (state, id) => (
-  state.database && state.database.projects && state.database.projects[id] ?
-    denormalizeItem(state.database.projects[id]) : null
+  build(state.database, 'projects', id, { eager: true, ignoreLinks: true })
 );
 
 export const getCollectionByQueries = (state, queries = []) => {

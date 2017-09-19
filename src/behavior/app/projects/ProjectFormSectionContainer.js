@@ -13,7 +13,7 @@ class ProjectFormSectionContainer extends Component {
 
   componentDidMount() {
     const id = this.props.params.projectId;
-    if (id) this.props.actions.getProject(id);
+    if (id) this.props.actions.getProject(id, '?include=author');
   }
 
   getSubmitHandler = () => (

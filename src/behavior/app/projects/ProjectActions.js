@@ -41,15 +41,15 @@ const addProjectStart = () => ({ type: ADD_PROJECT_START });
 const addProjectSuccess = payload => ({ type: ADD_PROJECT_SUCCESS, payload });
 const addProjectError = payload => ({ type: ADD_PROJECT_ERROR, payload });
 
-export const getProject = (id, killCache) => (
-  { type: GET_PROJECT, payload: { id, killCache } }
+export const getProject = (id, query, killCache) => (
+  { type: GET_PROJECT, payload: { id, query }, meta: { killCache } }
 );
 const getProjectStart = () => ({ type: GET_PROJECT_START });
 const getProjectSuccess = payload => ({ type: GET_PROJECT_SUCCESS, payload });
 const getProjectError = payload => ({ type: GET_PROJECT_ERROR, payload });
 
 export const getProjects = (query, killCache) => (
-  { type: GET_PROJECTS, payload: { query, killCache } }
+  { type: GET_PROJECTS, payload: { query }, meta: { killCache } }
 );
 const getProjectsStart = () => ({ type: GET_PROJECTS_START });
 const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
@@ -145,7 +145,7 @@ function* getProjectsSaga(action) {
     throw new Error('Argument <action.payload.query> must not be null.');
   }
 
-  if (!action.payload.killCache) {
+  if (!action.meta.killCache) {
     const cachedProjects = yield select(
       getCollectionByQueries,
       [action.payload.query],
@@ -166,12 +166,12 @@ function* getProjectsSaga(action) {
   }
 }
 
-const getProjectPromise = (id) => {
+const getProjectPromise = (id, query = '') => {
   const opts = {
     method: 'GET',
   };
 
-  const path = `projects/${id}`;
+  const path = `projects/${id}${query}`;
 
   const payload = {
     opts,
@@ -188,8 +188,8 @@ function* getProjectSaga(action) {
     throw new Error('Argument <action.payload.id> must not be null.');
   }
 
-  if (!action.payload.killCache) {
-    const cachedProject = yield select(getProjectById, action.payload.id);
+  if (!action.meta.killCache) {
+    const cachedProject = yield select(getProjectById, action.payload.id, action.payload.query);
 
     if (cachedProject) {
       yield put(getProjectSuccess(cachedProject));
@@ -200,7 +200,7 @@ function* getProjectSaga(action) {
   try {
     yield put(getProjectStart());
 
-    const data = yield call(getProjectPromise, action.payload.id);
+    const data = yield call(getProjectPromise, action.payload.id, action.payload.query);
 
     yield put(updateDatabase({ data }));
     yield put(getProjectSuccess({ data }));

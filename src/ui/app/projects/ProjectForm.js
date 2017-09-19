@@ -8,7 +8,7 @@ class ProjectForm extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    console.log('ProjectForm().componentWillReceiveProps() - nextProps: ', nextProps);
+    // console.log('ProjectForm().componentWillReceiveProps() - nextProps: ', nextProps);
 
     if (!nextProps.project) return;
 
@@ -38,6 +38,9 @@ class ProjectForm extends Component {
           type="text"
           value={this.state.name}
         />
+        {this.props.project && this.props.project.author &&
+          <p>Author: {this.props.project.author.email}</p>
+        }
       </div>
     );
   }
@@ -46,6 +49,9 @@ class ProjectForm extends Component {
 ProjectForm.propTypes = {
   project: PropTypes.shape({
     name: PropTypes.string,
+    author: PropTypes.shape({
+      email: PropTypes.string,
+    }),
   }),
   submitHandler: PropTypes.func.isRequired,
 };

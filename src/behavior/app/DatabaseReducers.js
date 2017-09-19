@@ -18,8 +18,8 @@ export default (state = {}, action) => {
       // console.log('DatabaseReducers() - UPDATE_DATABASE - normalizedData: ', normalizedData);
 
       return Object.keys(normalizedData)
+        .filter(entityType => entityReducers[entityType])
         .reduce((database, entityType) => ({
-          ...state,
           ...database,
           ...{
             [entityType]:
@@ -31,7 +31,7 @@ export default (state = {}, action) => {
     }
 
     case CLEAR_DATABASE:
-      return null;
+      return {};
 
     default:
       return state;
