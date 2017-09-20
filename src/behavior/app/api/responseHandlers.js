@@ -85,7 +85,8 @@ export const returnJsonResponse = (request, response, resolve, reject, next) => 
         } else {
           reject(json);
         }
-      });
+      })
+      .catch(error => resolve());
 
     return null;
   }

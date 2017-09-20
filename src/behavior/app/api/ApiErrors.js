@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export const extractApiErrors = (error) => {
   if (!error) {
-    return ['There was an error trying to connect to our servers, please try again.'];
+    return [{ detail: 'There was an error trying to connect to our servers, please try again.' }];
   }
 
   let errors;

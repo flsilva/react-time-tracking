@@ -12,7 +12,7 @@ const styles = {
 };
 
 const joinNotifications = notifications => (
-  notifications && notifications.length ? notifications.join('.\n') : ''
+  notifications && notifications.length ? notifications.map(error => error.detail).join('.\n') : ''
 );
 
 const Notifications = ({ notifications }) => (
@@ -25,7 +25,9 @@ const Notifications = ({ notifications }) => (
 );
 
 Notifications.propTypes = {
-  notifications: PropTypes.arrayOf(PropTypes.string),
+  notifications: PropTypes.arrayOf(PropTypes.shape({
+    detail: PropTypes.string,
+  })),
 };
 
 Notifications.defaultProps = {

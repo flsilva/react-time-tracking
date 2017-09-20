@@ -36,6 +36,10 @@ class ProjectFormSectionContainer extends Component {
     */
   }
 
+  deleteHandler = (id) => {
+    this.props.actions.deleteProject(id, this.redirectToList);
+  }
+
   updateProject = (data) => {
     // this is needed to fix an issue with UI.
     // due to the use of ref={} in child component,
@@ -59,6 +63,7 @@ class ProjectFormSectionContainer extends Component {
     return (
       <div>
         <ProjectFormSection
+          delete={this.deleteHandler}
           submitHandler={this.getSubmitHandler()}
           error={this.props.projects.error}
           isEditing={this.props.params.projectId != null}
@@ -75,6 +80,7 @@ class ProjectFormSectionContainer extends Component {
 ProjectFormSectionContainer.propTypes = {
   actions: PropTypes.shape({
     addProject: PropTypes.func.isRequired,
+    deleteProject: PropTypes.func.isRequired,
     getProject: PropTypes.func.isRequired,
     updateProject: PropTypes.func.isRequired,
   }).isRequired,

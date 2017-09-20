@@ -68,7 +68,7 @@ ProjectsSectionContainer.propTypes = {
     listLinks: PropTypes.shape({
       next: PropTypes.string,
     }),
-    error: PropTypes.object,
+    error: PropTypes.arrayOf(PropTypes.object),
     isFetching: PropTypes.bool,
   }),
 

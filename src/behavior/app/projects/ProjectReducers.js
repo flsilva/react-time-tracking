@@ -6,6 +6,9 @@ import {
   ADD_PROJECT_START,
   ADD_PROJECT_SUCCESS,
   ADD_PROJECT_ERROR,
+  DELETE_PROJECT_START,
+  DELETE_PROJECT_SUCCESS,
+  DELETE_PROJECT_ERROR,
   GET_PROJECTS_START,
   GET_PROJECTS_SUCCESS,
   GET_PROJECTS_ERROR,
@@ -62,6 +65,7 @@ const fetchedQueries = (state = {}, action) => {
 const error = (state = null, action) => {
   switch (action.type) {
     case ADD_PROJECT_ERROR:
+    case DELETE_PROJECT_ERROR:
     case GET_PROJECTS_ERROR:
     case GET_PROJECT_ERROR:
     case UPDATE_PROJECT_ERROR:
@@ -69,6 +73,8 @@ const error = (state = null, action) => {
 
     case ADD_PROJECT_START:
     case ADD_PROJECT_SUCCESS:
+    case DELETE_PROJECT_START:
+    case DELETE_PROJECT_SUCCESS:
     case GET_PROJECTS_START:
     case GET_PROJECTS_SUCCESS:
     case GET_PROJECT_START:
@@ -86,6 +92,8 @@ const isFetching = (state = false, action) => {
   switch (action.type) {
     case ADD_PROJECT_SUCCESS:
     case ADD_PROJECT_ERROR:
+    case DELETE_PROJECT_SUCCESS:
+    case DELETE_PROJECT_ERROR:
     case GET_PROJECTS_SUCCESS:
     case GET_PROJECTS_ERROR:
     case GET_PROJECT_SUCCESS:
@@ -95,6 +103,7 @@ const isFetching = (state = false, action) => {
       return false;
 
     case ADD_PROJECT_START:
+    case DELETE_PROJECT_START:
     case GET_PROJECTS_START:
     case GET_PROJECT_START:
     case UPDATE_PROJECT_START:

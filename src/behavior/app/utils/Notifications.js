@@ -1,6 +1,6 @@
 const getNotifications = (messages, isFetching) => {
   if (isFetching) {
-    return ['Connecting, please wait...'];
+    return [{ detail: 'Connecting, please wait...' }];
   } else if (messages) {
     return messages;
   }

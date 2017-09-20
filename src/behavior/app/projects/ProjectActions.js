@@ -12,6 +12,11 @@ export const ADD_PROJECT_START = 'ADD_PROJECT_START';
 export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
 export const ADD_PROJECT_ERROR = 'ADD_PROJECT_ERROR';
 
+export const DELETE_PROJECT = 'DELETE_PROJECT';
+export const DELETE_PROJECT_START = 'DELETE_PROJECT_START';
+export const DELETE_PROJECT_SUCCESS = 'DELETE_PROJECT_SUCCESS';
+export const DELETE_PROJECT_ERROR = 'DELETE_PROJECT_ERROR';
+
 export const GET_PROJECT = 'GET_PROJECT';
 export const GET_PROJECT_START = 'GET_PROJECT_START';
 export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
@@ -67,6 +72,13 @@ const updateProjectStart = () => ({ type: UPDATE_PROJECT_START });
 const updateProjectSuccess = payload => ({ type: UPDATE_PROJECT_SUCCESS, payload });
 const updateProjectError = payload => ({ type: UPDATE_PROJECT_ERROR, payload });
 
+export const deleteProject = (id, successCb) => (
+  { type: DELETE_PROJECT, payload: { id }, meta: { successCb } }
+);
+const deleteProjectStart = () => ({ type: DELETE_PROJECT_START });
+const deleteProjectSuccess = payload => ({ type: DELETE_PROJECT_SUCCESS, payload });
+const deleteProjectError = payload => ({ type: DELETE_PROJECT_ERROR, payload });
+
 const clearDatabase = () => ({ type: CLEAR_DATABASE });
 const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
@@ -120,6 +132,41 @@ function* addProjectSaga(action) {
     if (action.meta.successCb) action.meta.successCb();
   } catch (error) {
     yield put(addProjectError(extractApiErrors(error)));
+  }
+}
+
+const deleteProjectPromise = (id) => {
+  const opts = {
+    method: 'DELETE',
+  };
+
+  const path = `projects/${id}`;
+
+  const payload = {
+    opts,
+    path,
+  };
+
+  return getFetcher().fetch(payload);
+};
+
+function* deleteProjectSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!action.payload.id) {
+    throw new Error('Argument <action.payload.id> must not be null.');
+  }
+
+  try {
+    yield put(deleteProjectStart());
+
+    const data = yield call(deleteProjectPromise, action.payload.id);
+
+    yield put(clearDatabase());
+    yield put(deleteProjectSuccess({ data }));
+    if (action.meta.successCb) action.meta.successCb();
+  } catch (error) {
+    yield put(deleteProjectError(extractApiErrors(error)));
   }
 }
 
@@ -257,6 +304,7 @@ function* updateProjectSaga({ payload, meta }) {
 
 export function* bindActionsToSagas() {
   yield takeLatest(ADD_PROJECT, addProjectSaga);
+  yield takeLatest(DELETE_PROJECT, deleteProjectSaga);
   yield takeLatest(GET_PROJECT, getProjectSaga);
   yield takeLatest(GET_PROJECTS, getProjectsSaga);
   yield takeLatest(UPDATE_PROJECT, updateProjectSaga);
