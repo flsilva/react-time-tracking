@@ -233,24 +233,23 @@ const updateProjectPromise = (id, data) => {
   return getFetcher().fetch(payload);
 };
 
-function* updateProjectSaga(action) {
-  if (!action) throw new Error('Argument <action> must not be null.');
-  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
-  if (!action.payload.id) {
+function* updateProjectSaga({ payload, meta }) {
+  if (!payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!payload.id) {
     throw new Error('Argument <action.payload.id> must not be null.');
   }
-  if (!action.payload.data) {
+  if (!payload.data) {
     throw new Error('Argument <action.payload.data> must not be null.');
   }
 
   try {
     yield put(updateProjectStart());
 
-    const data = yield call(updateProjectPromise, action.payload.id, action.payload.data);
+    const data = yield call(updateProjectPromise, payload.id, payload.data);
 
     yield put(updateDatabase({ data }));
     yield put(updateProjectSuccess({ data }));
-    if (action.meta.successCb) action.meta.successCb();
+    if (meta.successCb) meta.successCb();
   } catch (error) {
     yield put(updateProjectError(extractApiErrors(error)));
   }
