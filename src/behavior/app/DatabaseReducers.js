@@ -20,6 +20,7 @@ export default (state = {}, action) => {
       return Object.keys(normalizedData)
         .filter(entityType => entityReducers[entityType])
         .reduce((database, entityType) => ({
+          ...state,
           ...database,
           ...{
             [entityType]:
