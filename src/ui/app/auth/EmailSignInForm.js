@@ -25,7 +25,7 @@ class EmailSignInForm extends Component {
 
   render() {
     const submitButtonAttrs = {};
-    if (this.props.isFetching) {
+    if (this.props.isConnecting) {
       submitButtonAttrs.disabled = 'disabled';
     }
 
@@ -46,7 +46,7 @@ class EmailSignInForm extends Component {
         <RaisedButton
           primary
           fullWidth
-          disabled={this.props.isFetching}
+          disabled={this.props.isConnecting}
           style={{ marginTop: 20 }}
           label="Sign In"
           onClick={this.submitHandler}
@@ -58,13 +58,13 @@ class EmailSignInForm extends Component {
 
 EmailSignInForm.propTypes = {
   email: PropTypes.string,
-  isFetching: PropTypes.bool,
+  isConnecting: PropTypes.bool,
   submitHandler: PropTypes.func.isRequired,
 };
 
 EmailSignInForm.defaultProps = {
   email: '',
-  isFetching: false,
+  isConnecting: false,
 };
 
 export default EmailSignInForm;

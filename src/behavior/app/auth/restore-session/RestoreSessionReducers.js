@@ -5,7 +5,7 @@ import {
   RESTORE_SESSION_ERROR,
 } from './RestoreSessionActions';
 
-const isFetching = (state = null, action) => {
+const isConnecting = (state = null, action) => {
   switch (action.type) {
     case RESTORE_SESSION_START:
       return true;
@@ -34,6 +34,6 @@ const error = (state = null, action) => {
 };
 
 export default combineReducers({
-  isFetching,
+  isConnecting,
   error,
 });

@@ -19,16 +19,16 @@ class SignUpSectionContainer extends Component {
   }
 
   render() {
-    const { isFetching, error } = this.props.auth.emailSignUp;
+    const { isConnecting, error } = this.props.auth.emailSignUp;
 
     return (
       <div>
         <SignUpSection
-          isFetching={isFetching}
+          isConnecting={isConnecting}
           submitHandler={this.submitHandler}
           user={this.props.auth.user}
         />
-        <Notifications notifications={getNotifications(error, isFetching)} />
+        <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
     );
   }
@@ -41,7 +41,7 @@ SignUpSectionContainer.propTypes = {
   auth: PropTypes.shape({
     emailSignUp: PropTypes.shape({
       error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
-      isFetching: PropTypes.bool,
+      isConnecting: PropTypes.bool,
     }).isRequired,
     user: PropTypes.object,
   }).isRequired,

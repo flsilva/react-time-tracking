@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as ProjectActions from './ProjectActions';
-import { getCollectionByQueries, getCollectionLinksByQuery } from './ProjectReducers';
+import { readEntitiesByQueries, getCollectionLinksByQuery } from './ProjectReducers';
 import ProjectsSection from '../../../ui/app/projects/ProjectsSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -18,23 +18,23 @@ class ProjectsSectionContainer extends Component {
   itemsPerPage = 3;
 
   readMore = () => {
-    this.props.actions.getProjects(this.props.getNextPageQuery(this.itemsPerPage));
+    this.props.actions.readEntities(this.props.getNextPageQuery(this.itemsPerPage));
   }
 
   shouldDisplayLoadButton = () => {
-    const { listLinks, isFetching } = this.props.projects;
-    return listLinks && listLinks.next && !isFetching;
+    const { listLinks, isConnecting } = this.props.projects;
+    return listLinks && listLinks.next && !isConnecting;
   };
 
   render() {
-    const { isFetching, error } = this.props.projects;
+    const { isConnecting, error } = this.props.projects;
 
     return (
       <div>
         <ProjectsSection
-          addProject={this.props.actions.addProject}
+          createEntity={this.props.actions.createEntity}
           error={error}
-          isFetching={this.props.projects.isFetching}
+          isConnecting={this.props.projects.isConnecting}
           data={this.props.projects.list}
           user={this.props.user}
         />
@@ -42,13 +42,13 @@ class ProjectsSectionContainer extends Component {
           <RaisedButton
             primary
             fullWidth
-            disabled={this.props.projects.isFetching}
+            disabled={this.props.projects.isConnecting}
             style={{ marginTop: 20 }}
             label="Load More"
             onClick={this.readMore}
           />
         }
-        <Notifications notifications={getNotifications(error, isFetching)} />
+        <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
     );
   }
@@ -59,8 +59,8 @@ ProjectsSectionContainer.propTypes = {
   getNextPageQuery: PropTypes.func.isRequired,
 
   actions: PropTypes.shape({
-    addProject: PropTypes.func.isRequired,
-    getProjects: PropTypes.func.isRequired,
+    createEntity: PropTypes.func.isRequired,
+    readEntities: PropTypes.func.isRequired,
   }).isRequired,
 
   projects: PropTypes.shape({
@@ -69,7 +69,7 @@ ProjectsSectionContainer.propTypes = {
       next: PropTypes.string,
     }),
     error: PropTypes.arrayOf(PropTypes.object),
-    isFetching: PropTypes.bool,
+    isConnecting: PropTypes.bool,
   }),
 
   user: PropTypes.shape({
@@ -90,10 +90,10 @@ const mapStateToProps = (state, { queries }) => {
 
   return ({
     projects: {
-      list: getCollectionByQueries(state, queries),
+      list: readEntitiesByQueries(state, queries),
       listLinks,
       error: state.projects.error,
-      isFetching: state.projects.isFetching,
+      isConnecting: state.projects.isConnecting,
     },
   });
 };

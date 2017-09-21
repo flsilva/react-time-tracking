@@ -1,8 +1,10 @@
 import merge from 'lodash/merge';
-import { USER_LOGGED_IN, USER_LOGGED_OUT } from './User.Actions';
+import {
+  USER_LOGGED_IN,
+  USER_LOGGED_OUT,
+  UPDATE_DATABASE,
+} from './User.Actions';
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
-
-export const UPDATE_DATABASE = 'UPDATE_DATABASE';
 
 export const entities = (state = {}, action) => {
   switch (action.type) {

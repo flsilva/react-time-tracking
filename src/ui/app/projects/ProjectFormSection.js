@@ -31,7 +31,7 @@ class ProjectFormSection extends Component {
   }
 
   render() {
-    const { isEditing, isFetching, project } = this.props;
+    const { isEditing, isConnecting, project } = this.props;
     const title = isEditing ? 'Edit Project' : 'New Project';
     const { palette } = this.context.muiTheme;
     const toolbarStyles = {
@@ -49,7 +49,7 @@ class ProjectFormSection extends Component {
             <ToolbarTitle text={title} style={{ color: palette.alternateTextColor }} />
           </ToolbarGroup>
           <ToolbarGroup lastChild>
-            <IconButton onClick={this.submitHandler} disabled={isFetching}>
+            <IconButton onClick={this.submitHandler} disabled={isConnecting}>
               <FontIcon className="material-icons" color={palette.alternateTextColor}>done</FontIcon>
             </IconButton>
             <IconMenu
@@ -66,7 +66,7 @@ class ProjectFormSection extends Component {
         <div style={bodyStyles}>
           <ProjectForm
             ref={(node) => { this.projectForm = node; }}
-            isFetching={isFetching}
+            isConnecting={isConnecting}
             project={project}
             submitHandler={this.props.submitHandler}
           />
@@ -87,7 +87,7 @@ ProjectFormSection.propTypes = {
 
   isEditing: PropTypes.bool,
 
-  isFetching: PropTypes.bool,
+  isConnecting: PropTypes.bool,
 
   project: PropTypes.shape({
     id: PropTypes.string,
@@ -99,7 +99,7 @@ ProjectFormSection.propTypes = {
 
 ProjectFormSection.defaultProps = {
   isEditing: false,
-  isFetching: false,
+  isConnecting: false,
   project: null,
 };
 

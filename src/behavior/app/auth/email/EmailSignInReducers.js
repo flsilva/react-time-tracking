@@ -5,7 +5,7 @@ import {
   EMAIL_SIGN_IN_ERROR,
 } from './EmailSignInActions';
 
-const isFetching = (state = null, action) => {
+const isConnecting = (state = null, action) => {
   switch (action.type) {
     case EMAIL_SIGN_IN_START:
       return true;
@@ -34,6 +34,6 @@ const error = (state = null, action) => {
 };
 
 export default combineReducers({
-  isFetching,
+  isConnecting,
   error,
 });

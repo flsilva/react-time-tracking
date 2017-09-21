@@ -13,14 +13,14 @@ const SignUpSection = props => (
     <div style={bodyStyles}>
       <EmailSignUpForm
         submitHandler={props.submitHandler}
-        isFetching={props.isFetching}
+        isConnecting={props.isConnecting}
       />
     </div>
   </div>
 );
 
 SignUpSection.propTypes = {
-  isFetching: PropTypes.bool,
+  isConnecting: PropTypes.bool,
   submitHandler: PropTypes.func.isRequired,
   user: PropTypes.shape({
     name: PropTypes.string,
@@ -28,7 +28,7 @@ SignUpSection.propTypes = {
 };
 
 SignUpSection.defaultProps = {
-  isFetching: false,
+  isConnecting: false,
   user: null,
 };
 

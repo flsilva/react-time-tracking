@@ -16,18 +16,18 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const SignInSectionContainer = (props) => {
-  const { isFetching, error } = props.auth.emailSignIn;
+  const { isConnecting, error } = props.auth.emailSignIn;
 
   return (
     <div>
       <SignInSection
         email={props.location.query.email}
         error={props.auth.emailSignIn.error}
-        isFetching={props.auth.emailSignIn.isFetching}
+        isConnecting={props.auth.emailSignIn.isConnecting}
         submitHandler={props.actions.emailSignIn}
         user={props.auth.user}
       />
-      <Notifications notifications={getNotifications(error, isFetching)} />
+      <Notifications notifications={getNotifications(error, isConnecting)} />
     </div>
   );
 };
@@ -40,7 +40,7 @@ SignInSectionContainer.propTypes = {
   auth: PropTypes.shape({
     emailSignIn: PropTypes.shape({
       error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
-      isFetching: PropTypes.bool,
+      isConnecting: PropTypes.bool,
     }),
     user: PropTypes.object,
   }).isRequired,

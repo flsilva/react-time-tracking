@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
-import { getProjectById } from './ProjectReducers';
+import { readEntityById } from './ProjectReducers';
 import ProjectFormSection from '../../../ui/app/projects/ProjectFormSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -13,19 +13,19 @@ class ProjectFormSectionContainer extends Component {
 
   componentDidMount() {
     const id = this.props.params.projectId;
-    if (id) this.props.actions.getProject(id, '?include=author');
+    if (id) this.props.actions.readEntity(id, '?include=author');
   }
 
   getSubmitHandler = () => (
-    (this.props.projects.data) ? this.updateProject : this.addProject
+    (this.props.projects.data) ? this.updateEntity : this.createEntity
   )
 
-  addProject = (data) => {
-    this.props.actions.addProject(data, this.redirectToList);
+  createEntity = (data) => {
+    this.props.actions.createEntity(data, this.redirectToList);
 
     /*
     new Promise((resolve, reject) => {
-      this.props.actions.addProject(data)
+      this.props.actions.createEntity(data)
         .then((responseData) => {
           resolve(responseData);
           browserHistory.push('/app/projects');
@@ -37,10 +37,10 @@ class ProjectFormSectionContainer extends Component {
   }
 
   deleteHandler = (id) => {
-    this.props.actions.deleteProject(id, this.redirectToList);
+    this.props.actions.deleteEntity(id, this.redirectToList);
   }
 
-  updateProject = (data) => {
+  updateEntity = (data) => {
     // this is needed to fix an issue with UI.
     // due to the use of ref={} in child component,
     // form component gets outdated when editing a project
@@ -50,7 +50,7 @@ class ProjectFormSectionContainer extends Component {
     // });
 
     const id = this.props.projects.data.id;
-    this.props.actions.updateProject(id, data, this.redirectToList);
+    this.props.actions.updateEntity(id, data, this.redirectToList);
   }
 
   redirectToList = () => {
@@ -58,7 +58,7 @@ class ProjectFormSectionContainer extends Component {
   }
 
   render() {
-    const { error, isFetching, data } = this.props.projects;
+    const { error, isConnecting, data } = this.props.projects;
 
     return (
       <div>
@@ -67,11 +67,11 @@ class ProjectFormSectionContainer extends Component {
           submitHandler={this.getSubmitHandler()}
           error={this.props.projects.error}
           isEditing={this.props.params.projectId != null}
-          isFetching={isFetching}
+          isConnecting={isConnecting}
           project={data}
           user={this.props.user}
         />
-        <Notifications notifications={getNotifications(error, isFetching)} />
+        <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
     );
   }
@@ -79,10 +79,10 @@ class ProjectFormSectionContainer extends Component {
 
 ProjectFormSectionContainer.propTypes = {
   actions: PropTypes.shape({
-    addProject: PropTypes.func.isRequired,
-    deleteProject: PropTypes.func.isRequired,
-    getProject: PropTypes.func.isRequired,
-    updateProject: PropTypes.func.isRequired,
+    createEntity: PropTypes.func.isRequired,
+    deleteEntity: PropTypes.func.isRequired,
+    readEntity: PropTypes.func.isRequired,
+    updateEntity: PropTypes.func.isRequired,
   }).isRequired,
 
   params: PropTypes.shape({
@@ -92,7 +92,7 @@ ProjectFormSectionContainer.propTypes = {
   projects: PropTypes.shape({
     data: PropTypes.object,
     error: PropTypes.array,
-    isFetching: PropTypes.bool,
+    isConnecting: PropTypes.bool,
   }).isRequired,
 
   user: PropTypes.shape({
@@ -108,9 +108,9 @@ ProjectFormSectionContainer.defaultProps = {
 
 const mapStateToProps = (state, { params }) => ({
   projects: {
-    data: getProjectById(state, params.projectId),
+    data: readEntityById(state, params.projectId),
     error: state.projects.error,
-    isFetching: state.projects.isFetching,
+    isConnecting: state.projects.isConnecting,
   },
 });
 

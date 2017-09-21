@@ -1,88 +1,85 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
-import {
-  getProjectById,
-  getCollectionByQueries,
-} from './ProjectReducers';
+import { readEntityById, readEntitiesByQueries } from './ProjectReducers';
 import { getUser } from '../auth/AuthReducers';
 import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
-export const ADD_PROJECT = 'ADD_PROJECT';
-export const ADD_PROJECT_START = 'ADD_PROJECT_START';
-export const ADD_PROJECT_SUCCESS = 'ADD_PROJECT_SUCCESS';
-export const ADD_PROJECT_ERROR = 'ADD_PROJECT_ERROR';
+export const CLEAR_DATABASE = 'app/projects/clear/database';
+export const UPDATE_DATABASE = 'app/projects/update/database';
 
-export const DELETE_PROJECT = 'DELETE_PROJECT';
-export const DELETE_PROJECT_START = 'DELETE_PROJECT_START';
-export const DELETE_PROJECT_SUCCESS = 'DELETE_PROJECT_SUCCESS';
-export const DELETE_PROJECT_ERROR = 'DELETE_PROJECT_ERROR';
+export const CREATE_ENTITY_REQUESTED = 'app/projects/create/entity/requested';
+export const CREATE_ENTITY_STARTED = 'app/projects/create/entity/started';
+export const CREATE_ENTITY_SUCCEEDED = 'app/projects/create/entity/succeeded';
+export const CREATE_ENTITY_FAILED = 'app/projects/create/entity/failed';
 
-export const GET_PROJECT = 'GET_PROJECT';
-export const GET_PROJECT_START = 'GET_PROJECT_START';
-export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
-export const GET_PROJECT_ERROR = 'GET_PROJECT_ERROR';
+export const READ_ENTITY_REQUESTED = 'app/projects/read/entity/requested';
+export const READ_ENTITY_STARTED = 'app/projects/read/entity/started';
+export const READ_ENTITY_SUCCEEDED = 'app/projects/read/entity/succeeded';
+export const READ_ENTITY_FAILED = 'app/projects/read/entity/failed';
 
-export const GET_PROJECTS = 'GET_PROJECTS';
-export const GET_PROJECTS_START = 'GET_PROJECTS_START';
-export const GET_PROJECTS_SUCCESS = 'GET_PROJECTS_SUCCESS';
-export const GET_PROJECTS_ERROR = 'GET_PROJECTS_ERROR';
+export const READ_ENTITIES_REQUESTED = 'app/projects/read/entities/requested';
+export const READ_ENTITIES_STARTED = 'app/projects/read/entities/started';
+export const READ_ENTITIES_SUCCEEDED = 'app/projects/read/entities/succeeded';
+export const READ_ENTITIES_FAILED = 'app/projects/read/entities/failed';
 
-export const UPDATE_PROJECT = 'UPDATE_PROJECT';
-export const UPDATE_PROJECT_START = 'UPDATE_PROJECT_START';
-export const UPDATE_PROJECT_SUCCESS = 'UPDATE_PROJECT_SUCCESS';
-export const UPDATE_PROJECT_ERROR = 'UPDATE_PROJECT_ERROR';
+export const UPDATE_ENTITY_REQUESTED = 'app/projects/update/entity/requested';
+export const UPDATE_ENTITY_STARTED = 'app/projects/update/entity/started';
+export const UPDATE_ENTITY_SUCCEEDED = 'app/projects/update/entity/succeeded';
+export const UPDATE_ENTITY_FAILED = 'app/projects/update/entity/failed';
 
-export const CLEAR_DATABASE = 'projects/CLEAR_DATABASE';
-export const UPDATE_DATABASE = 'UPDATE_DATABASE';
+export const DELETE_ENTITY_REQUESTED = 'app/projects/delete/entity/requested';
+export const DELETE_ENTITY_STARTED = 'app/projects/delete/entity/started';
+export const DELETE_ENTITY_SUCCEEDED = 'app/projects/delete/entity/succeeded';
+export const DELETE_ENTITY_FAILED = 'app/projects/delete/entity/failed';
 
-export const addProject = (data, successCb) => ({
-  type: ADD_PROJECT,
+const clearDatabase = () => ({ type: CLEAR_DATABASE });
+const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
+
+export const createEntity = (data, successCb) => ({
+  type: CREATE_ENTITY_REQUESTED,
   payload: {
     data,
   },
   meta: { successCb },
 });
-const addProjectStart = () => ({ type: ADD_PROJECT_START });
-const addProjectSuccess = payload => ({ type: ADD_PROJECT_SUCCESS, payload });
-const addProjectError = payload => ({ type: ADD_PROJECT_ERROR, payload });
+const createEntityStarted = () => ({ type: CREATE_ENTITY_STARTED });
+const createEntitySucceeded = payload => ({ type: CREATE_ENTITY_SUCCEEDED, payload });
+const createEntityFailed = payload => ({ type: CREATE_ENTITY_FAILED, payload });
 
-export const getProject = (id, query, killCache) => (
-  { type: GET_PROJECT, payload: { id, query }, meta: { killCache } }
+export const readEntity = (id, query, killCache) => (
+  { type: READ_ENTITY_REQUESTED, payload: { id, query }, meta: { killCache } }
 );
-const getProjectStart = () => ({ type: GET_PROJECT_START });
-const getProjectSuccess = payload => ({ type: GET_PROJECT_SUCCESS, payload });
-const getProjectError = payload => ({ type: GET_PROJECT_ERROR, payload });
+const readEntityStarted = () => ({ type: READ_ENTITY_STARTED });
+const readEntitySucceeded = payload => ({ type: READ_ENTITY_SUCCEEDED, payload });
+const readEntityFailed = payload => ({ type: READ_ENTITY_FAILED, payload });
 
-export const getProjects = (query, killCache) => (
-  { type: GET_PROJECTS, payload: { query }, meta: { killCache } }
+export const readEntities = (query, killCache) => (
+  { type: READ_ENTITIES_REQUESTED, payload: { query }, meta: { killCache } }
 );
-const getProjectsStart = () => ({ type: GET_PROJECTS_START });
-const getProjectsSuccess = payload => ({ type: GET_PROJECTS_SUCCESS, payload });
-const getProjectsError = payload => ({ type: GET_PROJECTS_ERROR, payload });
+const readEntitiesStarted = () => ({ type: READ_ENTITIES_STARTED });
+const readEntitiesSucceeded = payload => ({ type: READ_ENTITIES_SUCCEEDED, payload });
+const readEntitiesFailed = payload => ({ type: READ_ENTITIES_FAILED, payload });
 
-export const updateProject = (id, data, successCb) => ({
-  type: UPDATE_PROJECT,
+export const updateEntity = (id, data, successCb) => ({
+  type: UPDATE_ENTITY_REQUESTED,
   payload: {
     id,
     data,
   },
   meta: { successCb },
 });
-const updateProjectStart = () => ({ type: UPDATE_PROJECT_START });
-const updateProjectSuccess = payload => ({ type: UPDATE_PROJECT_SUCCESS, payload });
-const updateProjectError = payload => ({ type: UPDATE_PROJECT_ERROR, payload });
+const updateEntityStarted = () => ({ type: UPDATE_ENTITY_STARTED });
+const updateEntitySucceeded = payload => ({ type: UPDATE_ENTITY_SUCCEEDED, payload });
+const updateEntityFailed = payload => ({ type: UPDATE_ENTITY_FAILED, payload });
 
-export const deleteProject = (id, successCb) => (
-  { type: DELETE_PROJECT, payload: { id }, meta: { successCb } }
+export const deleteEntity = (id, successCb) => (
+  { type: DELETE_ENTITY_REQUESTED, payload: { id }, meta: { successCb } }
 );
-const deleteProjectStart = () => ({ type: DELETE_PROJECT_START });
-const deleteProjectSuccess = payload => ({ type: DELETE_PROJECT_SUCCESS, payload });
-const deleteProjectError = payload => ({ type: DELETE_PROJECT_ERROR, payload });
+const deleteEntityStarted = () => ({ type: DELETE_ENTITY_STARTED });
+const deleteEntitySucceeded = payload => ({ type: DELETE_ENTITY_SUCCEEDED, payload });
+const deleteEntityFailed = payload => ({ type: DELETE_ENTITY_FAILED, payload });
 
-const clearDatabase = () => ({ type: CLEAR_DATABASE });
-const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
-
-const addProjectPromise = (data, userId) => {
+const createEntityPromise = (data, userId) => {
   const normalizedData = {
     data: {
       type: 'projects',
@@ -113,7 +110,7 @@ const addProjectPromise = (data, userId) => {
   return getFetcher().fetch(payload);
 };
 
-function* addProjectSaga(action) {
+function* createEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
   if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
   if (!action.payload.data) {
@@ -121,21 +118,21 @@ function* addProjectSaga(action) {
   }
 
   try {
-    yield put(addProjectStart());
+    yield put(createEntityStarted());
 
     const user = yield select(getUser);
-    const data = yield call(addProjectPromise, action.payload.data, user.id);
+    const data = yield call(createEntityPromise, action.payload.data, user.id);
 
     yield put(clearDatabase());
     yield put(updateDatabase({ data }));
-    yield put(addProjectSuccess({ data }));
+    yield put(createEntitySucceeded({ data }));
     if (action.meta.successCb) action.meta.successCb();
   } catch (error) {
-    yield put(addProjectError(extractApiErrors(error)));
+    yield put(createEntityFailed(extractApiErrors(error)));
   }
 }
 
-const deleteProjectPromise = (id) => {
+const deleteEntityPromise = (id) => {
   const opts = {
     method: 'DELETE',
   };
@@ -150,7 +147,7 @@ const deleteProjectPromise = (id) => {
   return getFetcher().fetch(payload);
 };
 
-function* deleteProjectSaga(action) {
+function* deleteEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
   if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
   if (!action.payload.id) {
@@ -158,19 +155,19 @@ function* deleteProjectSaga(action) {
   }
 
   try {
-    yield put(deleteProjectStart());
+    yield put(deleteEntityStarted());
 
-    const data = yield call(deleteProjectPromise, action.payload.id);
+    const data = yield call(deleteEntityPromise, action.payload.id);
 
     yield put(clearDatabase());
-    yield put(deleteProjectSuccess({ data }));
+    yield put(deleteEntitySucceeded({ data }));
     if (action.meta.successCb) action.meta.successCb();
   } catch (error) {
-    yield put(deleteProjectError(extractApiErrors(error)));
+    yield put(deleteEntityFailed(extractApiErrors(error)));
   }
 }
 
-const getProjectsPromise = (query) => {
+const readEntitiesPromise = (query) => {
   const opts = {
     method: 'GET',
   };
@@ -185,7 +182,7 @@ const getProjectsPromise = (query) => {
   return getFetcher().fetch(payload);
 };
 
-function* getProjectsSaga(action) {
+function* readEntitiesSaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
   if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
   if (!action.payload.query) {
@@ -194,7 +191,7 @@ function* getProjectsSaga(action) {
 
   if (!action.meta.killCache) {
     const cachedProjects = yield select(
-      getCollectionByQueries,
+      readEntitiesByQueries,
       [action.payload.query],
     );
 
@@ -202,18 +199,18 @@ function* getProjectsSaga(action) {
   }
 
   try {
-    yield put(getProjectsStart());
+    yield put(readEntitiesStarted());
 
-    const data = yield call(getProjectsPromise, action.payload.query);
+    const data = yield call(readEntitiesPromise, action.payload.query);
 
     yield put(updateDatabase({ data }));
-    yield put(getProjectsSuccess({ data, query: action.payload.query }));
+    yield put(readEntitiesSucceeded({ data, query: action.payload.query }));
   } catch (error) {
-    yield put(getProjectsError(extractApiErrors(error)));
+    yield put(readEntitiesFailed(extractApiErrors(error)));
   }
 }
 
-const getProjectPromise = (id, query = '') => {
+const readEntityPromise = (id, query = '') => {
   const opts = {
     method: 'GET',
   };
@@ -228,7 +225,7 @@ const getProjectPromise = (id, query = '') => {
   return getFetcher().fetch(payload);
 };
 
-function* getProjectSaga(action) {
+function* readEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
   if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
   if (!action.payload.id) {
@@ -236,27 +233,27 @@ function* getProjectSaga(action) {
   }
 
   if (!action.meta.killCache) {
-    const cachedProject = yield select(getProjectById, action.payload.id, action.payload.query);
+    const cachedProject = yield select(readEntityById, action.payload.id, action.payload.query);
 
     if (cachedProject) {
-      yield put(getProjectSuccess(cachedProject));
+      yield put(readEntitySucceeded(cachedProject));
       return;
     }
   }
 
   try {
-    yield put(getProjectStart());
+    yield put(readEntityStarted());
 
-    const data = yield call(getProjectPromise, action.payload.id, action.payload.query);
+    const data = yield call(readEntityPromise, action.payload.id, action.payload.query);
 
     yield put(updateDatabase({ data }));
-    yield put(getProjectSuccess({ data }));
+    yield put(readEntitySucceeded({ data }));
   } catch (error) {
-    yield put(getProjectError(extractApiErrors(error)));
+    yield put(readEntityFailed(extractApiErrors(error)));
   }
 }
 
-const updateProjectPromise = (id, data) => {
+const updateEntityPromise = (id, data) => {
   const normalizedData = {
     data: {
       id,
@@ -280,7 +277,7 @@ const updateProjectPromise = (id, data) => {
   return getFetcher().fetch(payload);
 };
 
-function* updateProjectSaga({ payload, meta }) {
+function* updateEntitySaga({ payload, meta }) {
   if (!payload) throw new Error('Argument <action.payload> must not be null.');
   if (!payload.id) {
     throw new Error('Argument <action.payload.id> must not be null.');
@@ -290,22 +287,22 @@ function* updateProjectSaga({ payload, meta }) {
   }
 
   try {
-    yield put(updateProjectStart());
+    yield put(updateEntityStarted());
 
-    const data = yield call(updateProjectPromise, payload.id, payload.data);
+    const data = yield call(updateEntityPromise, payload.id, payload.data);
 
     yield put(updateDatabase({ data }));
-    yield put(updateProjectSuccess({ data }));
+    yield put(updateEntitySucceeded({ data }));
     if (meta.successCb) meta.successCb();
   } catch (error) {
-    yield put(updateProjectError(extractApiErrors(error)));
+    yield put(updateEntityFailed(extractApiErrors(error)));
   }
 }
 
 export function* bindActionsToSagas() {
-  yield takeLatest(ADD_PROJECT, addProjectSaga);
-  yield takeLatest(DELETE_PROJECT, deleteProjectSaga);
-  yield takeLatest(GET_PROJECT, getProjectSaga);
-  yield takeLatest(GET_PROJECTS, getProjectsSaga);
-  yield takeLatest(UPDATE_PROJECT, updateProjectSaga);
+  yield takeLatest(CREATE_ENTITY_REQUESTED, createEntitySaga);
+  yield takeLatest(READ_ENTITY_REQUESTED, readEntitySaga);
+  yield takeLatest(READ_ENTITIES_REQUESTED, readEntitiesSaga);
+  yield takeLatest(UPDATE_ENTITY_REQUESTED, updateEntitySaga);
+  yield takeLatest(DELETE_ENTITY_REQUESTED, deleteEntitySaga);
 }

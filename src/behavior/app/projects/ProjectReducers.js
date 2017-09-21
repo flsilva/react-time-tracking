@@ -3,34 +3,28 @@ import flatten from 'lodash/flatten';
 import { combineReducers } from 'redux';
 import build from 'redux-object';
 import {
-  ADD_PROJECT_START,
-  ADD_PROJECT_SUCCESS,
-  ADD_PROJECT_ERROR,
-  DELETE_PROJECT_START,
-  DELETE_PROJECT_SUCCESS,
-  DELETE_PROJECT_ERROR,
-  GET_PROJECTS_START,
-  GET_PROJECTS_SUCCESS,
-  GET_PROJECTS_ERROR,
-  GET_PROJECT_START,
-  GET_PROJECT_SUCCESS,
-  GET_PROJECT_ERROR,
-  UPDATE_PROJECT_START,
-  UPDATE_PROJECT_SUCCESS,
-  UPDATE_PROJECT_ERROR,
+  CREATE_ENTITY_STARTED,
+  CREATE_ENTITY_SUCCEEDED,
+  CREATE_ENTITY_FAILED,
+  READ_ENTITIES_STARTED,
+  READ_ENTITIES_SUCCEEDED,
+  READ_ENTITIES_FAILED,
+  READ_ENTITY_STARTED,
+  READ_ENTITY_SUCCEEDED,
+  READ_ENTITY_FAILED,
+  UPDATE_ENTITY_STARTED,
+  UPDATE_ENTITY_SUCCEEDED,
+  UPDATE_ENTITY_FAILED,
+  DELETE_ENTITY_STARTED,
+  DELETE_ENTITY_SUCCEEDED,
+  DELETE_ENTITY_FAILED,
   CLEAR_DATABASE,
   UPDATE_DATABASE,
 } from './ProjectActions';
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 
-export const byId = (state = {}, action) => {
+export const entities = (state = {}, action) => {
   switch (action.type) {
-    /*
-    case ADD_PROJECT_SUCCESS:
-    case GET_PROJECT_SUCCESS:
-    case GET_PROJECTS_SUCCESS:
-    case UPDATE_PROJECT_SUCCESS:
-    */
     case UPDATE_DATABASE:
       return merge(state, action.payload);
 
@@ -45,7 +39,7 @@ export const byId = (state = {}, action) => {
 
 const fetchedQueries = (state = {}, action) => {
   switch (action.type) {
-    case GET_PROJECTS_SUCCESS:
+    case READ_ENTITIES_SUCCEEDED:
       return {
         ...state,
         [action.payload.query]: {
@@ -64,23 +58,23 @@ const fetchedQueries = (state = {}, action) => {
 
 const error = (state = null, action) => {
   switch (action.type) {
-    case ADD_PROJECT_ERROR:
-    case DELETE_PROJECT_ERROR:
-    case GET_PROJECTS_ERROR:
-    case GET_PROJECT_ERROR:
-    case UPDATE_PROJECT_ERROR:
+    case CREATE_ENTITY_FAILED:
+    case DELETE_ENTITY_FAILED:
+    case READ_ENTITIES_FAILED:
+    case READ_ENTITY_FAILED:
+    case UPDATE_ENTITY_FAILED:
       return action.payload || null;
 
-    case ADD_PROJECT_START:
-    case ADD_PROJECT_SUCCESS:
-    case DELETE_PROJECT_START:
-    case DELETE_PROJECT_SUCCESS:
-    case GET_PROJECTS_START:
-    case GET_PROJECTS_SUCCESS:
-    case GET_PROJECT_START:
-    case GET_PROJECT_SUCCESS:
-    case UPDATE_PROJECT_START:
-    case UPDATE_PROJECT_SUCCESS:
+    case CREATE_ENTITY_STARTED:
+    case CREATE_ENTITY_SUCCEEDED:
+    case DELETE_ENTITY_STARTED:
+    case DELETE_ENTITY_SUCCEEDED:
+    case READ_ENTITIES_STARTED:
+    case READ_ENTITIES_SUCCEEDED:
+    case READ_ENTITY_STARTED:
+    case READ_ENTITY_SUCCEEDED:
+    case UPDATE_ENTITY_STARTED:
+    case UPDATE_ENTITY_SUCCEEDED:
       return null;
 
     default:
@@ -88,25 +82,25 @@ const error = (state = null, action) => {
   }
 };
 
-const isFetching = (state = false, action) => {
+const isConnecting = (state = false, action) => {
   switch (action.type) {
-    case ADD_PROJECT_SUCCESS:
-    case ADD_PROJECT_ERROR:
-    case DELETE_PROJECT_SUCCESS:
-    case DELETE_PROJECT_ERROR:
-    case GET_PROJECTS_SUCCESS:
-    case GET_PROJECTS_ERROR:
-    case GET_PROJECT_SUCCESS:
-    case GET_PROJECT_ERROR:
-    case UPDATE_PROJECT_SUCCESS:
-    case UPDATE_PROJECT_ERROR:
+    case CREATE_ENTITY_SUCCEEDED:
+    case CREATE_ENTITY_FAILED:
+    case DELETE_ENTITY_SUCCEEDED:
+    case DELETE_ENTITY_FAILED:
+    case READ_ENTITIES_SUCCEEDED:
+    case READ_ENTITIES_FAILED:
+    case READ_ENTITY_SUCCEEDED:
+    case READ_ENTITY_FAILED:
+    case UPDATE_ENTITY_SUCCEEDED:
+    case UPDATE_ENTITY_FAILED:
       return false;
 
-    case ADD_PROJECT_START:
-    case DELETE_PROJECT_START:
-    case GET_PROJECTS_START:
-    case GET_PROJECT_START:
-    case UPDATE_PROJECT_START:
+    case CREATE_ENTITY_STARTED:
+    case DELETE_ENTITY_STARTED:
+    case READ_ENTITIES_STARTED:
+    case READ_ENTITY_STARTED:
+    case UPDATE_ENTITY_STARTED:
       return true;
 
     default:
@@ -114,12 +108,12 @@ const isFetching = (state = false, action) => {
   }
 };
 
-export const getProjectById = (state, id) => {
+export const readEntityById = (state, id) => {
   if (!id) return null;
   return build(state.database, 'projects', id, { eager: true, ignoreLinks: true });
 };
 
-export const getCollectionByQueries = (state, queries = []) => {
+export const readEntitiesByQueries = (state, queries = []) => {
   if (!state.projects || !queries.length) return null;
 
   return flatten(
@@ -129,7 +123,7 @@ export const getCollectionByQueries = (state, queries = []) => {
     // to an array of arrays of entity IDs
     .map(query => state.projects.fetchedQueries[query].ids
       // map an array of entity IDs to entity Objects
-      .map(id => getProjectById(state, id)),
+      .map(id => readEntityById(state, id)),
     ));
 };
 
@@ -141,5 +135,5 @@ export const getCollectionLinksByQuery = (state, query) => (
 export default combineReducers({
   error,
   fetchedQueries,
-  isFetching,
+  isConnecting,
 });

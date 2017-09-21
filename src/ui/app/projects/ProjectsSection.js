@@ -20,7 +20,7 @@ const ProjectsSection = props => (
   <div className="ProjectsSection">
     <AppHeader title="Projects" user={props.user} />
     <ProjectList data={props.data} />
-    {!props.isFetching &&
+    {!props.isConnecting &&
       <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
         <ContentAdd />
       </FloatingActionButton>
@@ -29,7 +29,7 @@ const ProjectsSection = props => (
 );
 
 ProjectsSection.propTypes = {
-  isFetching: PropTypes.bool,
+  isConnecting: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.shape({
     email: PropTypes.string.isRequired,
@@ -38,7 +38,7 @@ ProjectsSection.propTypes = {
 
 ProjectsSection.defaultProps = {
   data: null,
-  isFetching: false,
+  isConnecting: false,
   user: null,
 };
 

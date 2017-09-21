@@ -5,7 +5,7 @@ import {
   SIGN_OUT_ERROR,
 } from './SignOutActions';
 
-const isFetching = (state = null, action) => {
+const isConnecting = (state = null, action) => {
   switch (action.type) {
     case SIGN_OUT_START:
       return true;
@@ -34,6 +34,6 @@ const error = (state = null, action) => {
 };
 
 export default combineReducers({
-  isFetching,
+  isConnecting,
   error,
 });
