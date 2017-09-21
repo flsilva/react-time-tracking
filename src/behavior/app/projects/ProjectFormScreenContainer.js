@@ -5,11 +5,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
 import { readEntityById } from './ProjectReducers';
-import ProjectFormSection from '../../../ui/app/projects/ProjectFormSection';
+import ProjectFormScreen from '../../../ui/app/projects/ProjectFormScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-class ProjectFormSectionContainer extends Component {
+class ProjectFormScreenContainer extends Component {
 
   componentDidMount() {
     const id = this.props.params.projectId;
@@ -62,7 +62,7 @@ class ProjectFormSectionContainer extends Component {
 
     return (
       <div>
-        <ProjectFormSection
+        <ProjectFormScreen
           delete={this.deleteHandler}
           submitHandler={this.getSubmitHandler()}
           error={this.props.projects.error}
@@ -77,7 +77,7 @@ class ProjectFormSectionContainer extends Component {
   }
 }
 
-ProjectFormSectionContainer.propTypes = {
+ProjectFormScreenContainer.propTypes = {
   actions: PropTypes.shape({
     createEntity: PropTypes.func.isRequired,
     deleteEntity: PropTypes.func.isRequired,
@@ -100,7 +100,7 @@ ProjectFormSectionContainer.propTypes = {
   }).isRequired,
 };
 
-ProjectFormSectionContainer.defaultProps = {
+ProjectFormScreenContainer.defaultProps = {
   projects: {
     data: {},
   },
@@ -121,4 +121,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ProjectFormSectionContainer);
+)(ProjectFormScreenContainer);

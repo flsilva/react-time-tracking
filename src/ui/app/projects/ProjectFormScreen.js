@@ -15,7 +15,7 @@ const bodyStyles = {
   margin: '20px',
 };
 
-class ProjectFormSection extends Component {
+class ProjectFormScreen extends Component {
   backHandler = () => {
     browserHistory.goBack();
   }
@@ -40,7 +40,7 @@ class ProjectFormSection extends Component {
     };
 
     return (
-      <div className="ProjectFormSection">
+      <div className="ProjectFormScreen">
         <Toolbar style={toolbarStyles}>
           <ToolbarGroup firstChild>
             <IconButton onClick={this.backHandler}>
@@ -76,13 +76,13 @@ class ProjectFormSection extends Component {
   }
 }
 
-ProjectFormSection.contextTypes = {
+ProjectFormScreen.contextTypes = {
   muiTheme: PropTypes.shape({
     palette: PropTypes.object,
   }),
 };
 
-ProjectFormSection.propTypes = {
+ProjectFormScreen.propTypes = {
   delete: PropTypes.func.isRequired,
 
   isEditing: PropTypes.bool,
@@ -97,10 +97,10 @@ ProjectFormSection.propTypes = {
   submitHandler: PropTypes.func.isRequired,
 };
 
-ProjectFormSection.defaultProps = {
+ProjectFormScreen.defaultProps = {
   isEditing: false,
   isConnecting: false,
   project: null,
 };
 
-export default ProjectFormSection;
+export default ProjectFormScreen;

@@ -16,8 +16,8 @@ const navToNewProject = () => {
   browserHistory.push('/app/projects/new');
 };
 
-const ProjectsSection = props => (
-  <div className="ProjectsSection">
+const ProjectListScreen = props => (
+  <div className="ProjectListScreen">
     <AppHeader title="Projects" user={props.user} />
     <ProjectList data={props.data} />
     {!props.isConnecting &&
@@ -28,7 +28,7 @@ const ProjectsSection = props => (
   </div>
 );
 
-ProjectsSection.propTypes = {
+ProjectListScreen.propTypes = {
   isConnecting: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.shape({
@@ -36,10 +36,10 @@ ProjectsSection.propTypes = {
   }),
 };
 
-ProjectsSection.defaultProps = {
+ProjectListScreen.defaultProps = {
   data: null,
   isConnecting: false,
   user: null,
 };
 
-export default ProjectsSection;
+export default ProjectListScreen;

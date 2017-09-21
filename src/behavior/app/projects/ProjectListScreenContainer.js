@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as ProjectActions from './ProjectActions';
 import { readEntitiesByQueries, getEntitiesPaginationByQuery } from './ProjectReducers';
-import ProjectsSection from '../../../ui/app/projects/ProjectsSection';
+import ProjectListScreen from '../../../ui/app/projects/ProjectListScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-class ProjectsSectionContainer extends Component {
+class ProjectListScreenContainer extends Component {
 
   componentDidMount() {
     this.readMore();
@@ -31,7 +31,7 @@ class ProjectsSectionContainer extends Component {
 
     return (
       <div>
-        <ProjectsSection
+        <ProjectListScreen
           createEntity={this.props.actions.createEntity}
           error={error}
           isConnecting={this.props.projects.isConnecting}
@@ -55,7 +55,7 @@ class ProjectsSectionContainer extends Component {
 
 }
 
-ProjectsSectionContainer.propTypes = {
+ProjectListScreenContainer.propTypes = {
   getNextPageQuery: PropTypes.func.isRequired,
 
   actions: PropTypes.shape({
@@ -77,7 +77,7 @@ ProjectsSectionContainer.propTypes = {
   }),
 };
 
-ProjectsSectionContainer.defaultProps = {
+ProjectListScreenContainer.defaultProps = {
   projects: null,
   user: null,
 };
@@ -103,4 +103,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ProjectsSectionContainer);
+)(ProjectListScreenContainer);

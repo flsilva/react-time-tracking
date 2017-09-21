@@ -23,8 +23,8 @@ import SignUpConfirmationContainer from './behavior/app/auth/SignUpConfirmationC
 import SignInSectionContainer from './behavior/app/auth/SignInSectionContainer';
 import SignOutSectionContainer from './behavior/app/auth/SignOutSectionContainer';
 import DashboardSectionContainer from './behavior/app/dashboard/DashboardSectionContainer';
-import ProjectsSectionContainer from './behavior/app/projects/ProjectsSectionContainer';
-import ProjectFormSectionContainer from './behavior/app/projects/ProjectFormSectionContainer';
+import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
+import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import withPagination from './behavior/app/utils/withPagination';
 
 import './index.css';
@@ -112,10 +112,10 @@ export const routes = {
           childRoutes: [
             { path: '/app', component: DashboardSectionContainer },
             { path: '/app/projects',
-              component: withPagination(ProjectsSectionContainer),
+              component: withPagination(ProjectListScreenContainer),
             },
-            { path: '/app/projects/new', component: ProjectFormSectionContainer },
-            { path: '/app/projects/:projectId', component: ProjectFormSectionContainer },
+            { path: '/app/projects/new', component: ProjectFormScreenContainer },
+            { path: '/app/projects/:projectId', component: ProjectFormScreenContainer },
           ],
         },
       ],
