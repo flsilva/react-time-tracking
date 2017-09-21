@@ -114,9 +114,10 @@ const isFetching = (state = false, action) => {
   }
 };
 
-export const getProjectById = (state, id) => (
-  build(state.database, 'projects', id, { eager: true, ignoreLinks: true })
-);
+export const getProjectById = (state, id) => {
+  if (!id) return null;
+  return build(state.database, 'projects', id, { eager: true, ignoreLinks: true });
+};
 
 export const getCollectionByQueries = (state, queries = []) => {
   if (!state.projects || !queries.length) return null;
