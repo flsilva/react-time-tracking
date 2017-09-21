@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from '../projects/ProjectActions';
-import DashboardSection from '../../../ui/app/dashboard/DashboardSection';
+import TimerScreen from '../../../ui/app/timer/TimerScreen';
 
 const mapStateToProps = state => ({
   projects: state.projects,
@@ -14,4 +14,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DashboardSection);
+)(TimerScreen);
