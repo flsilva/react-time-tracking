@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import SignUpConfirmationSection from '../../../ui/app/auth/SignUpConfirmationSection';
+import SignUpConfirmationScreen from '../../../ui/app/auth/SignUpConfirmationScreen';
 
-class SignUpConfirmationContainer extends Component {
+class SignUpConfirmationScreenContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -39,7 +39,7 @@ class SignUpConfirmationContainer extends Component {
 
   render() {
     return (
-      <SignUpConfirmationSection
+      <SignUpConfirmationScreen
         success={this.state.success}
         seconds={this.state.seconds}
       />
@@ -47,7 +47,7 @@ class SignUpConfirmationContainer extends Component {
   }
 }
 
-SignUpConfirmationContainer.propTypes = {
+SignUpConfirmationScreenContainer.propTypes = {
   location: PropTypes.shape({
     query: PropTypes.shape({
       uid: PropTypes.string,
@@ -56,4 +56,4 @@ SignUpConfirmationContainer.propTypes = {
   }).isRequired,
 };
 
-export default SignUpConfirmationContainer;
+export default SignUpConfirmationScreenContainer;

@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(SignOutActions, dispatch),
 });
 
-class SignOutSectionContainer extends Component {
+class SignOutScreenContainer extends Component {
   componentDidMount() {
     this.props.actions.signOut().then(() => browserHistory.push('/'));
   }
@@ -23,7 +23,7 @@ class SignOutSectionContainer extends Component {
   }
 }
 
-SignOutSectionContainer.propTypes = {
+SignOutScreenContainer.propTypes = {
   actions: PropTypes.shape({
     signOut: PropTypes.func.isRequired,
   }).isRequired,
@@ -32,4 +32,4 @@ SignOutSectionContainer.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SignOutSectionContainer);
+)(SignOutScreenContainer);

@@ -7,8 +7,8 @@ const bodyStyles = {
   margin: '20px',
 };
 
-const SignUpSection = props => (
-  <div className="SignUpSection">
+const SignUpScreen = props => (
+  <div className="SignUpScreen">
     <AppHeader title="Sign Up" user={props.user} />
     <div style={bodyStyles}>
       <EmailSignUpForm
@@ -19,7 +19,7 @@ const SignUpSection = props => (
   </div>
 );
 
-SignUpSection.propTypes = {
+SignUpScreen.propTypes = {
   isConnecting: PropTypes.bool,
   submitHandler: PropTypes.func.isRequired,
   user: PropTypes.shape({
@@ -27,9 +27,9 @@ SignUpSection.propTypes = {
   }),
 };
 
-SignUpSection.defaultProps = {
+SignUpScreen.defaultProps = {
   isConnecting: false,
   user: null,
 };
 
-export default SignUpSection;
+export default SignUpScreen;

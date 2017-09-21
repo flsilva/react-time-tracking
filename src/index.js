@@ -13,15 +13,15 @@ import appReducers from './behavior/app/reducers';
 import appSagas from './behavior/app/sagas';
 import Layout from './ui/Layout';
 import WebsiteLayout from './behavior/website/WebsiteLayout';
-import FaqSection from './ui/website/faq/FaqSection';
-import LandingSectionContainer from './behavior/website/landing/LandingSectionContainer';
+import FaqScreen from './ui/website/faq/FaqScreen';
+import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
 import AppLayout from './behavior/app/AppLayout';
-import SignUpSectionContainer from './behavior/app/auth/SignUpSectionContainer';
+import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
 import { restoreSession } from './behavior/app/auth/restore-session/RestoreSessionActions';
-import SignUpSuccessSection from './ui/app/auth/SignUpSuccessSection';
-import SignUpConfirmationContainer from './behavior/app/auth/SignUpConfirmationContainer';
-import SignInSectionContainer from './behavior/app/auth/SignInSectionContainer';
-import SignOutSectionContainer from './behavior/app/auth/SignOutSectionContainer';
+import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
+import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirmationScreenContainer';
+import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
+import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import DashboardSectionContainer from './behavior/app/dashboard/DashboardSectionContainer';
 import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
@@ -89,22 +89,22 @@ export const routes = {
     {
       path: '/',
       component: WebsiteLayout,
-      indexRoute: { component: LandingSectionContainer },
+      indexRoute: { component: LandingScreenContainer },
       childRoutes: [
-        { path: '/faq', component: FaqSection },
+        { path: '/faq', component: FaqScreen },
       ],
     },
     {
       component: AppLayout,
       childRoutes: [
-        { path: '/sign-out', component: SignOutSectionContainer },
+        { path: '/sign-out', component: SignOutScreenContainer },
         {
           component: NotAuthenticatedAppContainer,
           childRoutes: [
-            { path: '/sign-up', component: SignUpSectionContainer },
-            { path: '/sign-up/success', component: SignUpSuccessSection },
-            { path: '/sign-up/confirmation', component: SignUpConfirmationContainer },
-            { path: '/sign-in', component: SignInSectionContainer },
+            { path: '/sign-up', component: SignUpScreenContainer },
+            { path: '/sign-up/success', component: SignUpSuccessScreen },
+            { path: '/sign-up/confirmation', component: SignUpConfirmationScreenContainer },
+            { path: '/sign-in', component: SignInScreenContainer },
           ],
         },
         {

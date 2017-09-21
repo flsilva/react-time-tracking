@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as EmailSignInActions from './email/EmailSignInActions';
-import SignInSection from '../../../ui/app/auth/SignInSection';
+import SignInScreen from '../../../ui/app/auth/SignInScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
@@ -15,12 +15,12 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(EmailSignInActions, dispatch),
 });
 
-const SignInSectionContainer = (props) => {
+const SignInScreenContainer = (props) => {
   const { isConnecting, error } = props.auth.emailSignIn;
 
   return (
     <div>
-      <SignInSection
+      <SignInScreen
         email={props.location.query.email}
         error={props.auth.emailSignIn.error}
         isConnecting={props.auth.emailSignIn.isConnecting}
@@ -32,7 +32,7 @@ const SignInSectionContainer = (props) => {
   );
 };
 
-SignInSectionContainer.propTypes = {
+SignInScreenContainer.propTypes = {
   actions: PropTypes.shape({
     emailSignIn: PropTypes.func.isRequired,
   }).isRequired,
@@ -55,4 +55,4 @@ SignInSectionContainer.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SignInSectionContainer);
+)(SignInScreenContainer);

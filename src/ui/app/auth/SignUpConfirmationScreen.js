@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SignUpConfirmationSection = (props) => {
+const SignUpConfirmationScreen = (props) => {
   let heading;
   let body;
 
@@ -15,7 +15,7 @@ const SignUpConfirmationSection = (props) => {
   }
 
   return (
-    <div className="SignUpConfirmationSection">
+    <div className="SignUpConfirmationScreen">
       <h2>
         {heading}
       </h2>
@@ -26,9 +26,9 @@ const SignUpConfirmationSection = (props) => {
   );
 };
 
-SignUpConfirmationSection.propTypes = {
+SignUpConfirmationScreen.propTypes = {
   seconds: PropTypes.number.isRequired,
   success: PropTypes.bool.isRequired,
 };
 
-export default SignUpConfirmationSection;
+export default SignUpConfirmationScreen;

@@ -1,13 +1,13 @@
 import React from 'react';
 
-const SignUpSuccessSection = () => {
+const SignUpSuccessScreen = () => {
   const copy = 'Yay!\n\n' +
       "You're almost there.\n" +
       "We've received your data and sent you a confirmation email. " +
       'Please follow instructions in that email to confirm your registration.';
 
   return (
-    <div className="SignUpSuccessSection">
+    <div className="SignUpSuccessScreen">
       <p>
         { copy }
       </p>
@@ -15,4 +15,4 @@ const SignUpSuccessSection = () => {
   );
 };
 
-export default SignUpSuccessSection;
+export default SignUpSuccessScreen;

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import LandingSection from '../../../ui/website/landing/LandingSection';
+import LandingScreen from '../../../ui/website/landing/LandingScreen';
 
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -7,4 +7,4 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-)(LandingSection);
+)(LandingScreen);

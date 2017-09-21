@@ -4,11 +4,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import * as EmailSignUpActions from './email/EmailSignUpActions';
-import SignUpSection from '../../../ui/app/auth/SignUpSection';
+import SignUpScreen from '../../../ui/app/auth/SignUpScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-class SignUpSectionContainer extends Component {
+class SignUpScreenContainer extends Component {
   submitHandler = (email, password, confirmPassword) => {
     this.props.actions.emailSignUp(email, password, confirmPassword)
       .then(this.submitHandlerSuccess);
@@ -23,7 +23,7 @@ class SignUpSectionContainer extends Component {
 
     return (
       <div>
-        <SignUpSection
+        <SignUpScreen
           isConnecting={isConnecting}
           submitHandler={this.submitHandler}
           user={this.props.auth.user}
@@ -34,7 +34,7 @@ class SignUpSectionContainer extends Component {
   }
 }
 
-SignUpSectionContainer.propTypes = {
+SignUpScreenContainer.propTypes = {
   actions: PropTypes.shape({
     emailSignUp: PropTypes.func.isRequired,
   }).isRequired,
@@ -58,4 +58,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SignUpSectionContainer);
+)(SignUpScreenContainer);
