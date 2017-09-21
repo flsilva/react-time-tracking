@@ -3,7 +3,7 @@ import {
   USER_LOGGED_IN,
   USER_LOGGED_OUT,
   UPDATE_DATABASE,
-} from './User.Actions';
+} from './UserActions';
 import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 
 export const entities = (state = {}, action) => {
@@ -20,7 +20,7 @@ export const entities = (state = {}, action) => {
 };
 
 export default (state = {}, action) => {
-  console.log('User.Reducers().users()');
+  console.log('UserReducers().users()');
   console.log('state:', state);
   console.log('action:', action);
 

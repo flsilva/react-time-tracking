@@ -1,8 +1,8 @@
 import normalize from 'json-api-normalizer';
 import { entities as projectEntitiesReducer } from './projects/ProjectReducers';
 import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectActions';
-import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/User.Actions';
-import { entities as userEntitiesReducer } from './users/User.Reducers';
+import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
+import { entities as userEntitiesReducer } from './users/UserReducers';
 
 // export const CLEAR_DATABASE = 'CLEAR_DATABASE';
 // export const UPDATE_DATABASE = 'UPDATE_DATABASE';
