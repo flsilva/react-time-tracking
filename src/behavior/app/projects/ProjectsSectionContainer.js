@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as ProjectActions from './ProjectActions';
-import { readEntitiesByQueries, getCollectionLinksByQuery } from './ProjectReducers';
+import { readEntitiesByQueries, getEntitiesPaginationByQuery } from './ProjectReducers';
 import ProjectsSection from '../../../ui/app/projects/ProjectsSection';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -22,8 +22,8 @@ class ProjectsSectionContainer extends Component {
   }
 
   shouldDisplayLoadButton = () => {
-    const { listLinks, isConnecting } = this.props.projects;
-    return listLinks && listLinks.next && !isConnecting;
+    const { pagination, isConnecting } = this.props.projects;
+    return pagination && pagination.next && !isConnecting;
   };
 
   render() {
@@ -65,7 +65,7 @@ ProjectsSectionContainer.propTypes = {
 
   projects: PropTypes.shape({
     list: PropTypes.arrayOf(PropTypes.object),
-    listLinks: PropTypes.shape({
+    pagination: PropTypes.shape({
       next: PropTypes.string,
     }),
     error: PropTypes.arrayOf(PropTypes.object),
@@ -82,16 +82,14 @@ ProjectsSectionContainer.defaultProps = {
   user: null,
 };
 
-const mapStateToProps = (state, { queries }) => {
-  const totalQueries = queries ? queries.length : 0;
-
-  const listLinks = totalQueries ?
-    getCollectionLinksByQuery(state, queries[totalQueries - 1]) : null;
+const mapStateToProps = (state, { queries = [] }) => {
+  const pagination = queries.length ?
+    getEntitiesPaginationByQuery(state, queries[queries.length - 1]) : null;
 
   return ({
     projects: {
       list: readEntitiesByQueries(state, queries),
-      listLinks,
+      pagination,
       error: state.projects.error,
       isConnecting: state.projects.isConnecting,
     },

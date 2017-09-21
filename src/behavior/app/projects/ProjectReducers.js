@@ -127,7 +127,7 @@ export const readEntitiesByQueries = (state, queries = []) => {
     ));
 };
 
-export const getCollectionLinksByQuery = (state, query) => (
+export const getEntitiesPaginationByQuery = (state, query) => (
   state.projects && state.projects.fetchedQueries && state.projects.fetchedQueries[query] ?
     state.projects.fetchedQueries[query].links : null
 );
