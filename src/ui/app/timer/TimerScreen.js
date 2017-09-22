@@ -4,6 +4,7 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import PlayIcon from 'material-ui/svg-icons/av/play-circle-filled';
@@ -28,24 +29,33 @@ const fabStyles = {
   top: 240,
 };
 
-const trackTime = () => {
-  console.log('TimerScreen().trackTIme()');
+const submitLog = () => {
 };
 
 class TimerScreen extends Component {
 
   state = {
     menuActive: false,
+    isPlaying: false,
   }
 
   toggleMenu = () => {
     this.setState({ menuActive: !this.state.menuActive });
   }
 
+  togglePlay = () => {
+    console.log('TimerScreen().togglePlay()');
+    this.setState({ isPlaying: !this.state.isPlaying });
+  }
+
   iconMenuItemClickHandler = (event, child) => {
     if (child.props.value === RESET_TIMER) {
       console.log('TimerScreen().iconMenuItemClickHandler() - RESET TIMER');
     }
+  }
+
+  submit = () => {
+    console.log('TimerScreen().submit()');
   }
 
   render() {
@@ -91,16 +101,23 @@ class TimerScreen extends Component {
         >
           <MainNav user={this.props.user} />
         </Drawer>
-        <PlayPauseControls />
+        <PlayPauseControls isPlaying={this.state.isPlaying} togglePlay={this.togglePlay} />
         <TimeTracked />
         <div style={{ margin: 10 }}>
           <LogDatePicker />
           <ProjectListDropDown />
           <LogDescription />
         </div>
-        <FloatingActionButton style={fabStyles} onClick={trackTime}>
+        {/*
+        <FloatingActionButton style={fabStyles} onClick={this.submit}>
           <ContentAdd />
-        </FloatingActionButton>
+        </FloatingActionButton>*/}
+        <FlatButton
+          label="Save"
+          primary
+          onClick={this.submit}
+          style={{ position: 'fixed', bottom: 10, right: 0 }}
+        />
       </div>
     );
   }
@@ -128,18 +145,13 @@ const timeTrackedStyles = {
     display: 'flex',
     justifyContent: 'center',
   },
-  container2: {
-    alignItems: 'baseline',
-    display: 'flex',
-    justifyContent: 'center',
-    marginRight: 20,
-  },
   num: {
     color: 'white',
     fontFamily: 'Roboto',
     fontSize: 50,
     fontWeight: 300,
     margin: 0,
+    padding: '5px 12px',
   },
   numSeconds: {
     color: 'white',
@@ -147,6 +159,7 @@ const timeTrackedStyles = {
     fontSize: 20,
     fontWeight: 400,
     margin: 0,
+    padding: '5px 12px',
   },
   letter: {
     color: 'white',
@@ -164,19 +177,67 @@ const timeTrackedStyles = {
   },
 };
 
-const togglePlay = () => {
-  console.log('TimerScreen().togglePlay()');
-};
-
 const PlayPauseControls = props => (
   <div style={{ backgroundColor: '#3f2da5', display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
     <IconButton
-      onClick={togglePlay}
-      iconStyle={{ color: 'rgb(0, 188, 212)', height: 100, width: 100 }}
+      onClick={props.togglePlay}
+      iconStyle={{ color: "rgb(0, 188, 212)", height: 100, width: 100 }}
       style={{ height: 125, width: 125 }}
     >
-      <PauseIcon />
+      {props.isPlaying ? <PauseIcon /> : <PlayIcon />}
     </IconButton>
+  </div>
+);
+
+const hours = [];
+for (let i = 0; i < 25; i++) {
+  const label = i < 10 ? `0${i}` : i;
+  hours.push(<MenuItem value={i} key={i} primaryText={label} />);
+}
+
+const minutes = [];
+for (let i = 0; i < 60; i++) {
+  const label = i < 10 ? `0${i}` : i;
+  minutes.push(<MenuItem value={i} key={i} primaryText={label} />);
+}
+
+console.log('minutes.length', minutes.length);
+
+const TimeTracked = props => (
+  <div style={{ backgroundColor: '#3f2da5', paddingBottom: 20 }}>
+    <div style={timeTrackedStyles.container}>
+      <div style={timeTrackedStyles.container}>
+        {/*<h1 style={timeTrackedStyles.num}>02</h1>*/}
+        <DropDownMenu
+          maxHeight={300}
+          value={2}
+          onChange={this.handleChange}
+          iconStyle={{ display: 'none' }}
+          menuItemStyle={{ fontSize: 40, padding: '20px 0' }}
+          labelStyle={timeTrackedStyles.num}
+          underlineStyle={{ display: 'none' }}
+        >
+          {hours}
+        </DropDownMenu>
+      </div>
+      <div style={timeTrackedStyles.container}>
+        {/*<h1 style={timeTrackedStyles.num}>27</h1>*/}
+        <DropDownMenu
+          maxHeight={300}
+          value={27}
+          onChange={this.handleChange}
+          iconStyle={{ display: 'none' }}
+          menuItemStyle={{ fontSize: 40, padding: '20px 0' }}
+          labelStyle={timeTrackedStyles.num}
+          underlineStyle={{ display: 'none' }}
+        >
+          {minutes}
+        </DropDownMenu>
+      </div>
+      <div style={timeTrackedStyles.container}>
+        <h1 style={timeTrackedStyles.numSeconds}>12</h1>
+      </div>
+    </div>
   </div>
 );
 
@@ -184,64 +245,6 @@ const items = [];
 for (let i = 0; i < 100; i++ ) {
   items.push(<MenuItem value={i} key={i} primaryText={`Awesome Super Project ${i}`} />);
 }
-
-const TimeTracked = props => (
-  <div style={{ backgroundColor: '#3f2da5', paddingBottom: 20 }}>
-    <div style={timeTrackedStyles.container}>
-      <div style={timeTrackedStyles.container2}>
-        <h1 style={timeTrackedStyles.num}>02</h1>
-      </div>
-      <div style={timeTrackedStyles.container2}>
-        <h1 style={timeTrackedStyles.num}>27</h1>
-      </div>
-      <div style={timeTrackedStyles.container2}>
-        <h1 style={timeTrackedStyles.numSeconds}>12</h1>
-      </div>
-    </div>
-  </div>
-);
-
-/*
-const TimeTracked = props => (
-  <div>
-    <div style={timeTrackedStyles.container}>
-      <div style={timeTrackedStyles.container2}>
-        <h1 style={timeTrackedStyles.num}>02</h1>
-        <p style={timeTrackedStyles.letter}>h</p>
-      </div>
-      <div style={timeTrackedStyles.container2}>
-        <h1 style={timeTrackedStyles.num}>27</h1>
-        <p style={timeTrackedStyles.letter}>m</p>
-      </div>
-      <div style={timeTrackedStyles.container2}>
-        <h1 style={timeTrackedStyles.numSeconds}>12</h1>
-        <p style={timeTrackedStyles.letter}>s</p>
-      </div>
-    </div>
-  </div>
-);
-*/
-
-/*
-const TimeTracked = props => (
-  <div>
-    <div style={timeTrackedStyles.container}>
-      <div style={{ marginRight: 20 }}>
-        <h1 style={timeTrackedStyles.num}>02</h1>
-        <p style={timeTrackedStyles.letter}>hours</p>
-      </div>
-      <div style={{ marginRight: 20 }}>
-        <h1 style={timeTrackedStyles.num}>27</h1>
-        <p style={timeTrackedStyles.letter}>min</p>
-      </div>
-      <div>
-        <h1 style={timeTrackedStyles.num}>12</h1>
-        <p style={timeTrackedStyles.letter}>sec</p>
-      </div>
-    </div>
-  </div>
-);
-*/
 
 class ProjectListDropDown extends Component {
 
