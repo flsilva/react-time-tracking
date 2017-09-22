@@ -28,9 +28,17 @@ class AppHeader extends Component {
         <Toolbar style={toolbarStyles}>
           <ToolbarGroup firstChild>
             <IconButton onClick={this.toggleMenu}>
-              <FontIcon className="material-icons" color={palette.alternateTextColor}>menu</FontIcon>
+              <FontIcon
+                className="material-icons"
+                color={palette.alternateTextColor}
+              >
+                menu
+              </FontIcon>
             </IconButton>
-            <ToolbarTitle text={this.props.title} style={{ color: palette.alternateTextColor }} />
+            <ToolbarTitle
+              text={this.props.title}
+              style={{ color: palette.alternateTextColor }}
+            />
           </ToolbarGroup>
         </Toolbar>
         <Drawer
