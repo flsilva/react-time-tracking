@@ -26,7 +26,7 @@ import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
 export const entities = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_DATABASE:
-      return merge(state, action.payload);
+      return merge({ ...state }, action.payload);
 
     case CLEAR_DATABASE:
     case SIGN_OUT_SUCCESS:
