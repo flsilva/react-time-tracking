@@ -167,7 +167,7 @@ function* deleteEntitySaga(action) {
   }
 }
 
-const readEntitiesPromise = (query) => {
+const readEntitiesPromise = (query = '') => {
   const opts = {
     method: 'GET',
   };

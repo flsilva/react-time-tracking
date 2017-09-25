@@ -22,18 +22,6 @@ class ProjectFormScreenContainer extends Component {
 
   createEntity = (data) => {
     this.props.actions.createEntity(data, this.redirectToList);
-
-    /*
-    new Promise((resolve, reject) => {
-      this.props.actions.createEntity(data)
-        .then((responseData) => {
-          resolve(responseData);
-          browserHistory.push('/app/projects');
-        }).catch((error) => {
-          reject(error);
-        });
-    })
-    */
   }
 
   deleteHandler = (id) => {
@@ -80,9 +68,9 @@ class ProjectFormScreenContainer extends Component {
 ProjectFormScreenContainer.propTypes = {
   actions: PropTypes.shape({
     createEntity: PropTypes.func.isRequired,
-    deleteEntity: PropTypes.func.isRequired,
     readEntity: PropTypes.func.isRequired,
     updateEntity: PropTypes.func.isRequired,
+    deleteEntity: PropTypes.func.isRequired,
   }).isRequired,
 
   params: PropTypes.shape({
