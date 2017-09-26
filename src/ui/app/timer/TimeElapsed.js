@@ -53,10 +53,11 @@ class TimeElapsed extends Component {
     const { restartedAt, totalTime } = nextProps;
 
     if (nextProps.isRunning && !this.interval) {
-      this.createInterval(restartedAt, totalTime);
+      this.createInterval();
     } else if (!nextProps.isRunning) {
       this.killInterval();
-      this.updateTime(restartedAt, totalTime);
+      const time = this.getTime(restartedAt, totalTime);
+      this.setState(time);
     }
   }
 
@@ -64,29 +65,12 @@ class TimeElapsed extends Component {
     this.killInterval();
   }
 
-  getHours = () => {
-    const { restartedAt } = this.props;
-    if (!restartedAt) return 0;
-    return Math.floor(this.getTotalElapsedSeconds() / 3600);
-  }
-
-  getMinutes = () => {
-    const { restartedAt } = this.props;
-    if (!restartedAt) return 0;
-    return Math.floor(this.getTotalElapsedSeconds() / 60) - (this.getHours() * 60);
-  }
-
-  getSeconds = () => {
-    const { restartedAt } = this.props;
-    if (!restartedAt) return 0;
-    return this.getTotalElapsedSeconds() - (this.getMinutes() * 60) - (this.getHours() * 3600);
-  }
-
   getTime = (restartedAt, totalTime) => {
     const totalElapsedSeconds = this.getTotalElapsedSeconds(restartedAt, totalTime);
     const hours = Math.floor(totalElapsedSeconds / 3600);
     const minutes = Math.floor(totalElapsedSeconds / 60) - (hours * 60);
-    const seconds = totalElapsedSeconds - (minutes * 60) - (hours * 3600);
+    let seconds = totalElapsedSeconds - (minutes * 60) - (hours * 3600);
+    if (seconds < 10) seconds = `0${seconds}`;
 
     return { hours, minutes, seconds };
   }
@@ -96,8 +80,8 @@ class TimeElapsed extends Component {
       differenceInSeconds(addSeconds(new Date(), totalTime), restartedAt) : totalTime
   );
 
-  createInterval = (restartedAt, totalTime) => {
-    this.interval = setInterval(this.updateTime, 1000, restartedAt, totalTime);
+  createInterval = () => {
+    this.interval = setInterval(this.updateTime, 1000);
   }
 
   killInterval = () => {
@@ -105,13 +89,9 @@ class TimeElapsed extends Component {
     this.interval = null;
   }
 
-  updateTime = (restartedAt, totalTime) => {
-    console.log('TimeElapsed().updateTime() - restartedAt: ', restartedAt);
-    console.log('TimeElapsed().updateTime() - totalTime: ', totalTime);
-
+  updateTime = () => {
+    const { restartedAt, totalTime } = this.props;
     const time = this.getTime(restartedAt, totalTime);
-    if (time.seconds < 10) time.seconds = `0${time.seconds}`;
-
     this.setState(time);
   }
 
