@@ -11,18 +11,18 @@ const PlayPauseControls = props => (
       iconStyle={{ color: 'rgb(0, 188, 212)', height: 100, width: 100 }}
       style={{ height: 125, width: 125 }}
     >
-      {props.isPlaying ? <PauseIcon /> : <PlayIcon />}
+      {props.isRunning ? <PauseIcon /> : <PlayIcon />}
     </IconButton>
   </div>
 );
 
 PlayPauseControls.propTypes = {
-  isPlaying: PropTypes.bool,
+  isRunning: PropTypes.bool,
   toggle: PropTypes.func.isRequired,
 };
 
 PlayPauseControls.defaultProps = {
-  isPlaying: false,
+  isRunning: false,
 };
 
 export default PlayPauseControls;

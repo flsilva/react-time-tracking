@@ -36,6 +36,7 @@ class TimerScreen extends Component {
 
   render() {
     const { palette } = this.context.muiTheme;
+    const { data } = this.props;
     const toolbarStyles = {
       backgroundColor: palette.primary1Color,
       boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
@@ -78,12 +79,15 @@ class TimerScreen extends Component {
           <MainNav user={this.props.user} />
         </Drawer>
         <PlayPauseControls
-          isPlaying={this.props.isPlaying}
+          isRunning={data.isRunning}
           toggle={this.props.toggle}
         />
         <TimeElapsed
           hourPicked={this.props.hourPicked}
+          isRunning={data.isRunning}
           minutePicked={this.props.minutePicked}
+          restartedAt={this.props.data.restartedAt}
+          totalTime={this.props.data.totalTime}
         />
         <div style={{ margin: 10 }}>
           <DatePicker datePicked={this.props.datePicked} />
@@ -121,7 +125,12 @@ TimerScreen.contextTypes = {
 };
 
 TimerScreen.propTypes = {
-  isPlaying: PropTypes.bool,
+  data: PropTypes.shape({
+    date: PropTypes.instanceOf(Date),
+    isRunning: PropTypes.bool,
+    restartedAt: PropTypes.instanceOf(Date),
+    totalTime: PropTypes.number,
+  }),
   datePicked: PropTypes.func.isRequired,
   hourPicked: PropTypes.func.isRequired,
   minutePicked: PropTypes.func.isRequired,
@@ -135,7 +144,7 @@ TimerScreen.propTypes = {
 };
 
 TimerScreen.defaultProps = {
-  isPlaying: false,
+  data: null,
   projects: null,
   user: null,
 };

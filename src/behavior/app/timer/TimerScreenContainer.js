@@ -34,6 +34,7 @@ class TimerScreenContainer extends Component {
           hourPicked={this.props.actions.pickHour}
           minutePicked={this.props.actions.pickMinute}
           projectPicked={this.props.actions.pickProject}
+          data={data}
           projects={this.props.projects}
           toggle={this.props.actions.toggle}
           submit={this.submit}
@@ -59,6 +60,9 @@ TimerScreenContainer.propTypes = {
 
   data: PropTypes.shape({
     date: PropTypes.instanceOf(Date),
+    isRunning: PropTypes.bool,
+    restartedAt: PropTypes.instanceOf(Date),
+    totalTime: PropTypes.number,
   }),
   error: PropTypes.arrayOf(PropTypes.string),
   isConnecting: PropTypes.bool,
@@ -78,8 +82,10 @@ TimerScreenContainer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  data: state.timer.data,
   projects: readEntitiesByQueries(state, ['?include=author']),
 });
+
 
 const mapDispatchToProps = dispatch => ({
   actions: {
