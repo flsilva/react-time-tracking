@@ -32,6 +32,8 @@ export const pickDate = () => ({ type: PICK_DATE });
 // export const pickHour = () => ({ type: PICK_HOUR });
 export const pickHour = hours => (dispatch, getState) => {
   const data = { ...getState().timer.data };
+  if (!data.totalTime) data.totalTime = 0;
+
   const currentHours = getTime(data.restartedAt, data.totalTime).hours;
 
   if (hours === currentHours) return;
@@ -48,6 +50,8 @@ export const pickHour = hours => (dispatch, getState) => {
 
 export const pickMinute = minutes => (dispatch, getState) => {
   const data = { ...getState().timer.data };
+  if (!data.totalTime) data.totalTime = 0;
+
   const currentMinutes = getTime(data.restartedAt, data.totalTime).minutes;
 
   if (minutes === currentMinutes) return;
