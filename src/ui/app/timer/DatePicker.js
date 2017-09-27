@@ -41,7 +41,7 @@ TimerDatePicker.propTypes = {
 };
 
 TimerDatePicker.defaultProps = {
-  date: null,
+  date: new Date(),
 };
 
 export default TimerDatePicker;
