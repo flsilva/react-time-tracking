@@ -6,8 +6,8 @@ import { getFetcher } from '../api/ApiConfig';
 import { getStopwatch } from './TimerReducers';
 
 export const PICK_DATE = 'app/timer/pick/date/requested';
-export const PICK_HOUR = 'app/timer/pick/hour/requested';
-export const PICK_MINUTE = 'app/timer/pick/minute/requested';
+export const SET_STOPWATCH_HOURS_REQUESTED = 'app/timer/set/hours/requested';
+export const SET_STOPWATCH_MINUTES_REQUESTED = 'app/timer/set/minutes/requested';
 export const PICK_PROJECT = 'app/timer/pick/project/requested';
 export const READ_STOPWATCH_REQUESTED = 'app/timer/read/requested';
 export const PAUSE_STOPWATCH_REQUESTED = 'app/timer/pause/requested';
@@ -17,6 +17,14 @@ export const UPDATE_DATABASE = 'app/timer/update/database';
 export const readStopwatch = () => ({ type: READ_STOPWATCH_REQUESTED });
 export const startStopwatch = () => ({ type: START_STOPWATCH_REQUESTED });
 export const pauseStopwatch = () => ({ type: PAUSE_STOPWATCH_REQUESTED });
+export const setStopwatchHours = payload => ({
+  type: SET_STOPWATCH_HOURS_REQUESTED,
+  payload,
+});
+export const setStopwatchMinutes = payload => ({
+  type: SET_STOPWATCH_MINUTES_REQUESTED,
+  payload,
+});
 
 const getTotalElapsedSeconds = (startedAt, activityTotalTime) => (
   startedAt ?
@@ -36,39 +44,36 @@ const getTime = (startedAt, activityTotalTime) => {
 const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 export const pickDate = () => ({ type: PICK_DATE });
-// export const pickHour = () => ({ type: PICK_HOUR });
-export const pickHour = hours => (dispatch, getState) => {
-  const data = { ...getState().timer.data };
-  const currentHours = getTime(data.startedAt, data.activityTotalTime).hours;
-
-  if (hours === currentHours) return;
-
-  if (hours > currentHours) {
-    data.activityTotalTime += (hours - currentHours) * 3600;
-  } else {
-    data.activityTotalTime -= (currentHours - hours) * 3600;
-  }
-
-  dispatch(updateDatabase(data));
-};
-// export const pickMinute = () => ({ type: PICK_MINUTE });
-
-export const pickMinute = minutes => (dispatch, getState) => {
-  const data = { ...getState().timer.data };
-  const currentMinutes = getTime(data.startedAt, data.activityTotalTime).minutes;
-
-  if (minutes === currentMinutes) return;
-
-  if (minutes > currentMinutes) {
-    data.activityTotalTime += (minutes - currentMinutes) * 60;
-  } else {
-    data.activityTotalTime -= (currentMinutes - minutes) * 60;
-  }
-
-  dispatch(updateDatabase(data));
-};
-
 export const pickProject = () => ({ type: PICK_PROJECT });
+
+const readStopwatchPromise = () => {
+  const opts = {
+    method: 'GET',
+  };
+
+  const path = 'stopwatch';
+
+  const payload = {
+    opts,
+    path,
+  };
+
+  return getFetcher().fetch(payload);
+};
+
+function* readStopwatchSaga() {
+  try {
+    // yield put(readStopwatchStarted());
+
+    const data = yield call(readStopwatchPromise);
+
+    yield put(updateDatabase(data.data));
+    // yield put(readStopwatchSucceeded({ data }));
+  } catch (error) {
+    console.log('readStopwatchSaga().catch() - error: ', error);
+    // yield put(readStopwatchFailed(extractApiErrors(error)));
+  }
+}
 
 const updateStopwatchPromise = (data) => {
   const opts = {
@@ -136,32 +141,83 @@ function* pauseStopwatchSaga() {
   }
 }
 
-const readStopwatchPromise = () => {
-  const opts = {
-    method: 'GET',
-  };
+function* setStopwatchHoursSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
 
-  const path = 'stopwatch';
+  const hours = action.payload;
 
-  const payload = {
-    opts,
-    path,
-  };
+  if (hours !== 0 && !hours) throw new Error('Argument <action.payload> must not be null.');
+  if (isNaN(hours)) {
+    throw new Error('Argument <action.payload> must be an integer.');
+  }
 
-  return getFetcher().fetch(payload);
-};
-
-function* readStopwatchSaga() {
   try {
-    // yield put(readStopwatchStarted());
+    // yield put(setStopwatchHourStarted());
 
-    const data = yield call(readStopwatchPromise);
+    // optimistic update
+    const stopwatch = yield select(getStopwatch);
+    const currentHours = getTime(stopwatch.startedAt, stopwatch.activityTotalTime).hours;
+
+    if (hours === currentHours) return;
+
+    if (hours > currentHours) {
+      stopwatch.activityTotalTime += (hours - currentHours) * 3600;
+    } else {
+      stopwatch.activityTotalTime -= (currentHours - hours) * 3600;
+    }
+
+    yield put(updateDatabase({ attributes: stopwatch }));
+    //
+
+    // const data = yield call(setStopwatchHourPromise);
+    const data = yield call(updateStopwatchPromise, {
+      activityTotalTime: stopwatch.activityTotalTime,
+    });
 
     yield put(updateDatabase(data.data));
-    // yield put(readStopwatchSucceeded({ data }));
+    // yield put(setStopwatchHourSucceeded({ data }));
   } catch (error) {
-    console.log('readStopwatchSaga().catch() - error: ', error);
-    // yield put(readStopwatchFailed(extractApiErrors(error)));
+    // yield put(setStopwatchHourFailed(extractApiErrors(error)));
+  }
+}
+
+function* setStopwatchMinutesSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+
+  const minutes = action.payload;
+
+  if (minutes !== 0 && !minutes) throw new Error('Argument <action.payload> must not be null.');
+  if (isNaN(minutes)) {
+    throw new Error('Argument <action.payload> must be an integer.');
+  }
+
+  try {
+    // yield put(setStopwatchMinutesStarted());
+
+    // optimistic update
+    const stopwatch = yield select(getStopwatch);
+    const currentMinutes = getTime(stopwatch.startedAt, stopwatch.activityTotalTime).minutes;
+
+    if (minutes === currentMinutes) return;
+
+    if (minutes > currentMinutes) {
+      stopwatch.activityTotalTime += (minutes - currentMinutes) * 60;
+    } else {
+      stopwatch.activityTotalTime -= (currentMinutes - minutes) * 60;
+    }
+
+    yield put(updateDatabase({ attributes: stopwatch }));
+    //
+
+    // const data = yield call(setStopwatchHourPromise);
+    const data = yield call(updateStopwatchPromise, {
+      activityTotalTime: stopwatch.activityTotalTime,
+    });
+
+    yield put(updateDatabase(data.data));
+    // yield put(setStopwatchHourSucceeded({ data }));
+  } catch (error) {
+    // yield put(setStopwatchHourFailed(extractApiErrors(error)));
   }
 }
 
@@ -169,4 +225,6 @@ export function* bindActionsToSagas() {
   yield takeLatest(READ_STOPWATCH_REQUESTED, readStopwatchSaga);
   yield takeLatest(START_STOPWATCH_REQUESTED, startStopwatchSaga);
   yield takeLatest(PAUSE_STOPWATCH_REQUESTED, pauseStopwatchSaga);
+  yield takeLatest(SET_STOPWATCH_HOURS_REQUESTED, setStopwatchHoursSaga);
+  yield takeLatest(SET_STOPWATCH_MINUTES_REQUESTED, setStopwatchMinutesSaga);
 }
