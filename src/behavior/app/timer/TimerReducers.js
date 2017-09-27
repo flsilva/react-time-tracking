@@ -10,8 +10,9 @@ export const data = (state = {}, action) => {
     case UPDATE_DATABASE: {
       console.log('TimerReducers().data() - UPDATE_DATABASE - action.payload: ', action.payload);
       const newState = humps.camelizeKeys(action.payload.attributes);
-      const { startedAt } = newState;
+      const { activityDate, startedAt } = newState;
 
+      if (activityDate) newState.activityDate = new Date(activityDate);
       if (startedAt) newState.startedAt = new Date(startedAt);
       return merge({ ...state }, newState);
     }

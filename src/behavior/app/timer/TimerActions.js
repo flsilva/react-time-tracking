@@ -1,11 +1,12 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import addSeconds from 'date-fns/add_seconds';
 import differenceInSeconds from 'date-fns/difference_in_seconds';
+import isDate from 'date-fns/is_date'
 import humps from 'humps';
 import { getFetcher } from '../api/ApiConfig';
 import { getStopwatch } from './TimerReducers';
 
-export const PICK_DATE = 'app/timer/pick/date/requested';
+export const SET_ACTIVITY_DATE_REQUESTED = 'app/timer/set/date/requested';
 export const SET_STOPWATCH_HOURS_REQUESTED = 'app/timer/set/hours/requested';
 export const SET_STOPWATCH_MINUTES_REQUESTED = 'app/timer/set/minutes/requested';
 export const PICK_PROJECT = 'app/timer/pick/project/requested';
@@ -26,6 +27,15 @@ export const setStopwatchMinutes = payload => ({
   payload,
 });
 
+export const setActivityDate = payload => ({
+  type: SET_ACTIVITY_DATE_REQUESTED,
+  payload,
+});
+
+export const pickProject = () => ({ type: PICK_PROJECT });
+
+const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
+
 const getTotalElapsedSeconds = (startedAt, activityTotalTime) => (
   startedAt ?
     differenceInSeconds(addSeconds(new Date(), activityTotalTime), startedAt) : activityTotalTime
@@ -41,10 +51,21 @@ const getTime = (startedAt, activityTotalTime) => {
   return { hours, minutes, seconds };
 };
 
-const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
+const updateStopwatchPromise = (data) => {
+  const opts = {
+    body: JSON.stringify(humps.decamelizeKeys({ stopwatch: data })),
+    method: 'PATCH',
+  };
 
-export const pickDate = () => ({ type: PICK_DATE });
-export const pickProject = () => ({ type: PICK_PROJECT });
+  const path = 'stopwatch';
+
+  const payload = {
+    opts,
+    path,
+  };
+
+  return getFetcher().fetch(payload);
+};
 
 const readStopwatchPromise = () => {
   const opts = {
@@ -74,22 +95,6 @@ function* readStopwatchSaga() {
     // yield put(readStopwatchFailed(extractApiErrors(error)));
   }
 }
-
-const updateStopwatchPromise = (data) => {
-  const opts = {
-    body: JSON.stringify(humps.decamelizeKeys({ stopwatch: data })),
-    method: 'PATCH',
-  };
-
-  const path = 'stopwatch';
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
 
 function* startStopwatchSaga() {
   try {
@@ -221,10 +226,37 @@ function* setStopwatchMinutesSaga(action) {
   }
 }
 
+function* setActivityDateSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!isDate(action.payload)) {
+    throw new Error('Argument <action.payload> must be a Date object.');
+  }
+
+  try {
+    // yield put(setActivityDateStarted());
+
+    // optimistic update
+    const stopwatch = yield select(getStopwatch);
+    stopwatch.activityDate = action.payload;
+
+    yield put(updateDatabase({ attributes: stopwatch }));
+    //
+
+    const data = yield call(updateStopwatchPromise, { activityDate: stopwatch.activityDate });
+
+    yield put(updateDatabase(data.data));
+    // yield put(setActivityDateSucceeded({ data }));
+  } catch (error) {
+    // yield put(setActivityDateFailed(extractApiErrors(error)));
+  }
+}
+
 export function* bindActionsToSagas() {
   yield takeLatest(READ_STOPWATCH_REQUESTED, readStopwatchSaga);
   yield takeLatest(START_STOPWATCH_REQUESTED, startStopwatchSaga);
   yield takeLatest(PAUSE_STOPWATCH_REQUESTED, pauseStopwatchSaga);
   yield takeLatest(SET_STOPWATCH_HOURS_REQUESTED, setStopwatchHoursSaga);
   yield takeLatest(SET_STOPWATCH_MINUTES_REQUESTED, setStopwatchMinutesSaga);
+  yield takeLatest(SET_ACTIVITY_DATE_REQUESTED, setActivityDateSaga);
 }

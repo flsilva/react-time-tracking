@@ -26,7 +26,7 @@ const TimerDatePicker = props => (
     <DatePicker
       autoOk
       hintText="Pick a date"
-      value={props.date}
+      value={props.date ? props.date : new Date()}
       onChange={(e, value) => props.datePicked(value)}
       formatDate={formatDate}
       textFieldStyle={{ width: 105 }}

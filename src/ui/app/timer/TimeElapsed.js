@@ -50,8 +50,6 @@ class TimeElapsed extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('TimeElapsed().componentWillReceiveProps() - nextProps: ', nextProps);
-
     const { startedAt, activityTotalTime } = nextProps;
 
     if (nextProps.isRunning && !this.interval) {

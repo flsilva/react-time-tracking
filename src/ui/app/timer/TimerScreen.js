@@ -91,7 +91,10 @@ class TimerScreen extends Component {
           activityTotalTime={this.props.data.activityTotalTime}
         />
         <div style={{ margin: 10 }}>
-          <DatePicker datePicked={this.props.datePicked} />
+          <DatePicker
+            date={this.props.data.activityDate}
+            datePicked={this.props.datePicked}
+          />
           <ProjectListDropDown
             itemPicked={this.props.projectPicked}
             projects={this.props.projects}
@@ -127,7 +130,7 @@ TimerScreen.contextTypes = {
 
 TimerScreen.propTypes = {
   data: PropTypes.shape({
-    date: PropTypes.instanceOf(Date),
+    activityDate: PropTypes.instanceOf(Date),
     isRunning: PropTypes.bool,
     startedAt: PropTypes.instanceOf(Date),
     activityTotalTime: PropTypes.number,
