@@ -4,7 +4,7 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import DescriptionIcon from 'material-ui/svg-icons/action/description';
@@ -107,11 +107,11 @@ class TimerScreen extends Component {
             />
           </div>
         </div>
-        <FlatButton
-          label="Save"
+        <RaisedButton
+          label="Finalize"
           primary
           onClick={this.props.submit}
-          style={{ position: 'fixed', bottom: 10, right: 0 }}
+          style={{ position: 'fixed', bottom: 10, right: 10 }}
         />
       </div>
     );
