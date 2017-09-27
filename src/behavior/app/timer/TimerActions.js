@@ -1,6 +1,7 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import addSeconds from 'date-fns/add_seconds';
 import differenceInSeconds from 'date-fns/difference_in_seconds';
+import humps from 'humps';
 import { getFetcher } from '../api/ApiConfig';
 import { getStopwatch } from './TimerReducers';
 
@@ -69,12 +70,13 @@ export const pickMinute = minutes => (dispatch, getState) => {
 
 export const pickProject = () => ({ type: PICK_PROJECT });
 
-const startStopwatchPromise = () => {
+const updateStopwatchPromise = (data) => {
   const opts = {
+    body: JSON.stringify(humps.decamelizeKeys({ stopwatch: data })),
     method: 'PATCH',
   };
 
-  const path = 'stopwatch/start';
+  const path = 'stopwatch';
 
   const payload = {
     opts,
@@ -97,7 +99,8 @@ function* startStopwatchSaga() {
     yield put(updateDatabase({ attributes: stopwatch }));
     //
 
-    const data = yield call(startStopwatchPromise);
+    // const data = yield call(startStopwatchPromise);
+    const data = yield call(updateStopwatchPromise, { startedAt: new Date() });
 
     yield put(updateDatabase(data.data));
     // yield put(readStopwatchSucceeded({ data }));
@@ -105,21 +108,6 @@ function* startStopwatchSaga() {
     // yield put(readStopwatchFailed(extractApiErrors(error)));
   }
 }
-
-const pauseStopwatchPromise = () => {
-  const opts = {
-    method: 'PATCH',
-  };
-
-  const path = 'stopwatch/pause';
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
 
 function* pauseStopwatchSaga() {
   try {
@@ -135,7 +123,11 @@ function* pauseStopwatchSaga() {
     yield put(updateDatabase({ attributes: stopwatch }));
     //
 
-    const data = yield call(pauseStopwatchPromise);
+    // const data = yield call(pauseStopwatchPromise);
+    const data = yield call(updateStopwatchPromise, {
+      activityTotalTime: stopwatch.activityTotalTime,
+      startedAt: null,
+    });
 
     yield put(updateDatabase(data.data));
     // yield put(pauseStopwatchSucceeded({ data }));
