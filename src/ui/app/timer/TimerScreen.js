@@ -80,14 +80,15 @@ class TimerScreen extends Component {
         </Drawer>
         <PlayPauseControls
           isRunning={data.isRunning}
-          toggle={this.props.toggle}
+          pause={this.props.pauseStopwatch}
+          start={this.props.startStopwatch}
         />
         <TimeElapsed
           hourPicked={this.props.hourPicked}
           isRunning={data.isRunning}
           minutePicked={this.props.minutePicked}
-          restartedAt={this.props.data.restartedAt}
-          totalTime={this.props.data.totalTime}
+          startedAt={this.props.data.startedAt}
+          activityTotalTime={this.props.data.activityTotalTime}
         />
         <div style={{ margin: 10 }}>
           <DatePicker datePicked={this.props.datePicked} />
@@ -128,8 +129,8 @@ TimerScreen.propTypes = {
   data: PropTypes.shape({
     date: PropTypes.instanceOf(Date),
     isRunning: PropTypes.bool,
-    restartedAt: PropTypes.instanceOf(Date),
-    totalTime: PropTypes.number,
+    startedAt: PropTypes.instanceOf(Date),
+    activityTotalTime: PropTypes.number,
   }),
   datePicked: PropTypes.func.isRequired,
   hourPicked: PropTypes.func.isRequired,
@@ -137,14 +138,15 @@ TimerScreen.propTypes = {
   projectPicked: PropTypes.func.isRequired,
   projects: PropTypes.arrayOf(PropTypes.object),
   submit: PropTypes.func.isRequired,
-  toggle: PropTypes.func.isRequired,
+  pauseStopwatch: PropTypes.func.isRequired,
+  startStopwatch: PropTypes.func.isRequired,
   user: PropTypes.shape({
     name: PropTypes.string,
   }),
 };
 
 TimerScreen.defaultProps = {
-  data: null,
+  data: {},
   projects: null,
   user: null,
 };

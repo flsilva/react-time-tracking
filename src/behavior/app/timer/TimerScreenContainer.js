@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { getStopwatch } from './TimerReducers';
 import * as TimerActions from './TimerActions';
 import { readEntities as readProjectEntities } from '../projects/ProjectActions';
 import { readEntitiesByQueries } from '../projects/ProjectReducers';
@@ -12,6 +13,8 @@ import { getNotifications } from '../utils';
 class TimerScreenContainer extends Component {
 
   componentDidMount() {
+    this.props.actions.readStopwatch();
+
     // TODO: refactor: make query optional,
     // and make fetchedQueries work with empty queries.
     // think about a constant QUERY_ALL exposed by ProjectActions,
@@ -36,7 +39,8 @@ class TimerScreenContainer extends Component {
           projectPicked={this.props.actions.pickProject}
           data={data}
           projects={this.props.projects}
-          toggle={this.props.actions.toggle}
+          pauseStopwatch={this.props.actions.pauseStopwatch}
+          startStopwatch={this.props.actions.startStopwatch}
           submit={this.submit}
           error={this.props.error}
           isConnecting={isConnecting}
@@ -50,19 +54,21 @@ class TimerScreenContainer extends Component {
 
 TimerScreenContainer.propTypes = {
   actions: PropTypes.shape({
+    readStopwatch: PropTypes.func.isRequired,
     readProjectEntities: PropTypes.func.isRequired,
     pickDate: PropTypes.func.isRequired,
     pickHour: PropTypes.func.isRequired,
     pickMinute: PropTypes.func.isRequired,
     pickProject: PropTypes.func.isRequired,
-    toggle: PropTypes.func.isRequired,
+    pauseStopwatch: PropTypes.func.isRequired,
+    startStopwatch: PropTypes.func.isRequired,
   }).isRequired,
 
   data: PropTypes.shape({
     date: PropTypes.instanceOf(Date),
     isRunning: PropTypes.bool,
-    restartedAt: PropTypes.instanceOf(Date),
-    totalTime: PropTypes.number,
+    startedAt: PropTypes.instanceOf(Date),
+    activityTotalTime: PropTypes.number,
   }),
   error: PropTypes.arrayOf(PropTypes.string),
   isConnecting: PropTypes.bool,
@@ -82,7 +88,7 @@ TimerScreenContainer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  data: state.timer.data,
+  data: getStopwatch(state),
   projects: readEntitiesByQueries(state, ['?include=author']),
 });
 

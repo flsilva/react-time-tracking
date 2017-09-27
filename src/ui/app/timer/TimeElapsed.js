@@ -50,13 +50,15 @@ class TimeElapsed extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { restartedAt, totalTime } = nextProps;
+    console.log('TimeElapsed().componentWillReceiveProps() - nextProps: ', nextProps);
+
+    const { startedAt, activityTotalTime } = nextProps;
 
     if (nextProps.isRunning && !this.interval) {
       this.createInterval();
     } else if (!nextProps.isRunning) {
       this.killInterval();
-      const time = this.getTime(restartedAt, totalTime);
+      const time = this.getTime(startedAt, activityTotalTime);
       this.setState(time);
     }
   }
@@ -65,8 +67,8 @@ class TimeElapsed extends Component {
     this.killInterval();
   }
 
-  getTime = (restartedAt, totalTime) => {
-    const totalElapsedSeconds = this.getTotalElapsedSeconds(restartedAt, totalTime);
+  getTime = (startedAt, activityTotalTime) => {
+    const totalElapsedSeconds = this.getTotalElapsedSeconds(startedAt, activityTotalTime);
     const hours = Math.floor(totalElapsedSeconds / 3600);
     const minutes = Math.floor(totalElapsedSeconds / 60) - (hours * 60);
     let seconds = totalElapsedSeconds - (minutes * 60) - (hours * 3600);
@@ -75,9 +77,9 @@ class TimeElapsed extends Component {
     return { hours, minutes, seconds };
   }
 
-  getTotalElapsedSeconds = (restartedAt, totalTime) => (
-    restartedAt ?
-      differenceInSeconds(addSeconds(new Date(), totalTime), restartedAt) : totalTime
+  getTotalElapsedSeconds = (startedAt, activityTotalTime) => (
+    startedAt ?
+      differenceInSeconds(addSeconds(new Date(), activityTotalTime), startedAt) : activityTotalTime
   );
 
   createInterval = () => {
@@ -90,8 +92,8 @@ class TimeElapsed extends Component {
   }
 
   updateTime = () => {
-    const { restartedAt, totalTime } = this.props;
-    const time = this.getTime(restartedAt, totalTime);
+    const { startedAt, activityTotalTime } = this.props;
+    const time = this.getTime(startedAt, activityTotalTime);
     this.setState(time);
   }
 
@@ -138,14 +140,14 @@ TimeElapsed.propTypes = {
   hourPicked: PropTypes.func.isRequired,
   isRunning: PropTypes.bool,
   minutePicked: PropTypes.func.isRequired,
-  restartedAt: PropTypes.instanceOf(Date),
-  totalTime: PropTypes.number,
+  startedAt: PropTypes.instanceOf(Date),
+  activityTotalTime: PropTypes.number,
 };
 
 TimeElapsed.defaultProps = {
   isRunning: false,
-  restartedAt: null,
-  totalTime: 0,
+  startedAt: null,
+  activityTotalTime: 0,
 };
 
 export default TimeElapsed;

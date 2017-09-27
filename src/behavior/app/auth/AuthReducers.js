@@ -8,7 +8,7 @@ import emailSignUp from './email/EmailSignUpReducers';
 import restoreSession from './restore-session/RestoreSessionReducers';
 import signOut from './sign-out/SignOutReducers';
 
-export const getUser = (state) => state.auth.user;
+export const getUser = state => state.auth.user;
 
 const user = (state = null, action) => {
   switch (action.type) {

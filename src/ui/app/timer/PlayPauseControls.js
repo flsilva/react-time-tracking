@@ -7,7 +7,7 @@ import IconButton from 'material-ui/IconButton';
 const PlayPauseControls = props => (
   <div style={{ backgroundColor: '#3f2da5', display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
     <IconButton
-      onClick={props.toggle}
+      onClick={() => (props.isRunning ? props.pause() : props.start())}
       iconStyle={{ color: 'rgb(0, 188, 212)', height: 100, width: 100 }}
       style={{ height: 125, width: 125 }}
     >
@@ -18,7 +18,8 @@ const PlayPauseControls = props => (
 
 PlayPauseControls.propTypes = {
   isRunning: PropTypes.bool,
-  toggle: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  start: PropTypes.func.isRequired,
 };
 
 PlayPauseControls.defaultProps = {
