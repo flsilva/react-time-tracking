@@ -46,7 +46,7 @@ class TimerScreenContainer extends Component {
           isConnecting={isConnecting}
           user={this.props.user}
         />
-        <Notifications notifications={getNotifications(error, isConnecting)} />
+        <Notifications notifications={getNotifications(error, false)} />
       </div>
     );
   }
@@ -90,8 +90,8 @@ TimerScreenContainer.defaultProps = {
 const mapStateToProps = state => ({
   data: getStopwatch(state),
   projects: readEntitiesByQueries(state, ['?include=author']),
+  isConnecting: state.stopwatches.isConnecting,
 });
-
 
 const mapDispatchToProps = dispatch => ({
   actions: {

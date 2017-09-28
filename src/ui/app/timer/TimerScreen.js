@@ -6,6 +6,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
+import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
 import DescriptionIcon from 'material-ui/svg-icons/action/description';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
@@ -80,11 +81,24 @@ class TimerScreen extends Component {
         >
           <MainNav user={this.props.user} />
         </Drawer>
-        <PlayPauseControls
-          isRunning={isRunning}
-          pause={this.props.pauseStopwatch}
-          start={this.props.startStopwatch}
-        />
+        <div
+          style={{
+            alignItems: 'center',
+            backgroundColor: '#3f2da5',
+            display: 'flex',
+            justifyContent: 'center',
+            height: 125,
+            paddingTop: 10 }}
+        >
+          {this.props.isConnecting ?
+            <CircularProgress color={'rgb(0, 188, 212)'} size={50} thickness={4} />
+            : <PlayPauseControls
+              isRunning={isRunning}
+              pause={this.props.pauseStopwatch}
+              start={this.props.startStopwatch}
+            />
+          }
+        </div>
         <TimeElapsed
           hourPicked={this.props.hourPicked}
           isRunning={isRunning}
@@ -115,6 +129,7 @@ class TimerScreen extends Component {
           </div>
         </div>
         <RaisedButton
+          disabled={this.props.isConnecting}
           label="Finalize"
           primary
           onClick={this.props.submit}
@@ -139,6 +154,7 @@ TimerScreen.propTypes = {
     projectId: PropTypes.string,
     startedAt: PropTypes.instanceOf(Date),
   }),
+  isConnecting: PropTypes.bool,
   datePicked: PropTypes.func.isRequired,
   hourPicked: PropTypes.func.isRequired,
   minutePicked: PropTypes.func.isRequired,
@@ -154,6 +170,7 @@ TimerScreen.propTypes = {
 
 TimerScreen.defaultProps = {
   data: {},
+  isConnecting: false,
   projects: null,
   user: null,
 };

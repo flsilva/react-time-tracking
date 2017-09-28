@@ -25,7 +25,7 @@ const ProjectListDropDown = props => (
     {props.projects &&
       <DropDownMenu
         maxHeight={200}
-        value={props.selectedItem ? props.selectedItem : ""}
+        value={props.selectedItem ? props.selectedItem : ''}
         onChange={(e, key, value) => props.itemPicked(value)}
         labelStyle={{ paddingLeft: 0 }}
         underlineStyle={{ display: 'none' }}

@@ -1,9 +1,12 @@
 import merge from 'lodash/merge';
-// import { combineReducers } from 'redux';
+import { combineReducers } from 'redux';
 // import humps from 'humps';
 import build from 'redux-object';
 import isDate from 'date-fns/is_date';
 import {
+  READ_STOPWATCH_STARTED,
+  READ_STOPWATCH_SUCCEEDED,
+  READ_STOPWATCH_FAILED,
   UPDATE_DATABASE,
 } from './TimerActions';
 
@@ -45,8 +48,35 @@ export const getStopwatch = (state) => {
   return stopwatch;
 };
 
-/*
+const error = (state = null, action) => {
+  switch (action.type) {
+    case READ_STOPWATCH_FAILED:
+      return action.payload || null;
+
+    case READ_STOPWATCH_STARTED:
+    case READ_STOPWATCH_SUCCEEDED:
+      return null;
+
+    default:
+      return state;
+  }
+};
+
+const isConnecting = (state = false, action) => {
+  switch (action.type) {
+    case READ_STOPWATCH_SUCCEEDED:
+    case READ_STOPWATCH_FAILED:
+      return false;
+
+    case READ_STOPWATCH_STARTED:
+      return true;
+
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
-  data,
+  error,
+  isConnecting,
 });
-*/

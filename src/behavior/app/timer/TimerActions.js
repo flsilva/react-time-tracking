@@ -3,19 +3,27 @@ import addSeconds from 'date-fns/add_seconds';
 import differenceInSeconds from 'date-fns/difference_in_seconds';
 import isDate from 'date-fns/is_date';
 import humps from 'humps';
-import { getFetcher } from '../api/ApiConfig';
 import { getStopwatch } from './TimerReducers';
+import { getFetcher } from '../api/ApiConfig';
+import { extractApiErrors } from '../api/ApiErrors';
 
 export const SET_ACTIVITY_DATE_REQUESTED = 'app/timer/set/date/requested';
 export const SET_STOPWATCH_HOURS_REQUESTED = 'app/timer/set/hours/requested';
 export const SET_STOPWATCH_MINUTES_REQUESTED = 'app/timer/set/minutes/requested';
 export const SET_ACTIVITY_PROJECT_REQUESTED = 'app/timer/set/project/requested';
 export const READ_STOPWATCH_REQUESTED = 'app/timer/read/requested';
+export const READ_STOPWATCH_STARTED = 'app/timer/read/started';
+export const READ_STOPWATCH_SUCCEEDED = 'app/timer/read/succeeded';
+export const READ_STOPWATCH_FAILED = 'app/timer/read/failed';
 export const PAUSE_STOPWATCH_REQUESTED = 'app/timer/pause/requested';
 export const START_STOPWATCH_REQUESTED = 'app/timer/start/requested';
 export const UPDATE_DATABASE = 'app/timer/update/database';
 
 export const readStopwatch = () => ({ type: READ_STOPWATCH_REQUESTED });
+const readStopwatchStarted = () => ({ type: READ_STOPWATCH_STARTED });
+const readStopwatchSucceeded = payload => ({ type: READ_STOPWATCH_SUCCEEDED, payload });
+const readStopwatchFailed = payload => ({ type: READ_STOPWATCH_FAILED, payload });
+
 export const startStopwatch = () => ({ type: START_STOPWATCH_REQUESTED });
 export const pauseStopwatch = () => ({ type: PAUSE_STOPWATCH_REQUESTED });
 export const setStopwatchHours = payload => ({
@@ -87,15 +95,15 @@ const readStopwatchPromise = () => {
 
 function* readStopwatchSaga() {
   try {
-    // yield put(readStopwatchStarted());
+    yield put(readStopwatchStarted());
 
     const data = yield call(readStopwatchPromise);
 
     yield put(updateDatabase({ data }));
-    // yield put(readStopwatchSucceeded({ data }));
+    yield put(readStopwatchSucceeded({ data }));
   } catch (error) {
     console.log('readStopwatchSaga().catch() - error: ', error);
-    // yield put(readStopwatchFailed(extractApiErrors(error)));
+    yield put(readStopwatchFailed(extractApiErrors(error)));
   }
 }
 
