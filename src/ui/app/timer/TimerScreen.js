@@ -36,7 +36,9 @@ class TimerScreen extends Component {
 
   render() {
     const { palette } = this.context.muiTheme;
-    const { data } = this.props;
+    const data = this.props.data ? this.props.data : {};
+    const { activityDate, activityTotalTime, isRunning, startedAt } = data;
+    const projectId = data.project ? data.project.id : null;
     const toolbarStyles = {
       backgroundColor: palette.primary1Color,
       boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
@@ -79,25 +81,26 @@ class TimerScreen extends Component {
           <MainNav user={this.props.user} />
         </Drawer>
         <PlayPauseControls
-          isRunning={data.isRunning}
+          isRunning={isRunning}
           pause={this.props.pauseStopwatch}
           start={this.props.startStopwatch}
         />
         <TimeElapsed
           hourPicked={this.props.hourPicked}
-          isRunning={data.isRunning}
+          isRunning={isRunning}
           minutePicked={this.props.minutePicked}
-          startedAt={this.props.data.startedAt}
-          activityTotalTime={this.props.data.activityTotalTime}
+          startedAt={startedAt}
+          activityTotalTime={activityTotalTime}
         />
         <div style={{ margin: 10 }}>
           <DatePicker
-            date={this.props.data.activityDate}
+            date={activityDate}
             datePicked={this.props.datePicked}
           />
           <ProjectListDropDown
             itemPicked={this.props.projectPicked}
             projects={this.props.projects}
+            selectedItem={projectId}
           />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <DescriptionIcon
@@ -131,9 +134,10 @@ TimerScreen.contextTypes = {
 TimerScreen.propTypes = {
   data: PropTypes.shape({
     activityDate: PropTypes.instanceOf(Date),
-    isRunning: PropTypes.bool,
-    startedAt: PropTypes.instanceOf(Date),
     activityTotalTime: PropTypes.number,
+    isRunning: PropTypes.bool,
+    projectId: PropTypes.string,
+    startedAt: PropTypes.instanceOf(Date),
   }),
   datePicked: PropTypes.func.isRequired,
   hourPicked: PropTypes.func.isRequired,

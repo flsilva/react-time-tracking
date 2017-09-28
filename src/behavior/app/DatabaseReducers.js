@@ -1,8 +1,10 @@
 import normalize from 'json-api-normalizer';
 import { entities as projectEntitiesReducer } from './projects/ProjectReducers';
 import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectActions';
-import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
 import { entities as userEntitiesReducer } from './users/UserReducers';
+import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
+import { entity as stopwatchEntityReducer } from './timer/TimerReducers';
+import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './timer/TimerActions';
 
 // export const CLEAR_DATABASE = 'CLEAR_DATABASE';
 // export const UPDATE_DATABASE = 'UPDATE_DATABASE';
@@ -11,6 +13,10 @@ const entityReducers = {
   projects: {
     reducer: projectEntitiesReducer,
     updateDbAction: UPDATE_PROJECTS_DATABASE,
+  },
+  stopwatches: {
+    reducer: stopwatchEntityReducer,
+    updateDbAction: UPDATE_STOPWATCH_DATABASE,
   },
   users: {
     reducer: userEntitiesReducer,
@@ -22,9 +28,12 @@ export default (state = {}, action) => {
   switch (action.type) {
       // case UPDATE_DATABASE: {
     case UPDATE_PROJECTS_DATABASE:
+    case UPDATE_STOPWATCH_DATABASE:
     case UPDATE_USERS_DATABASE: {
       const normalizedData = normalize(action.payload.data);
-      console.log('DatabaseReducers() - UPDATE_DATABASE - normalizedData: ', normalizedData);
+      console.log('DatabaseReducers() - UPDATE_DATABASE - action.type: ', action.type);
+      console.log('DatabaseReducers() - UPDATE_DATABASE - action.payload.data: ', action.payload.data);
+      console.log('normalizedData: ', normalizedData);
 
       // reconsider if it wouldn't be better to have this static:
       // return {

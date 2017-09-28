@@ -36,7 +36,7 @@ class TimerScreenContainer extends Component {
           datePicked={this.props.actions.setActivityDate}
           hourPicked={this.props.actions.setStopwatchHours}
           minutePicked={this.props.actions.setStopwatchMinutes}
-          projectPicked={this.props.actions.pickProject}
+          projectPicked={this.props.actions.setActivityProject}
           data={data}
           projects={this.props.projects}
           pauseStopwatch={this.props.actions.pauseStopwatch}
@@ -59,7 +59,7 @@ TimerScreenContainer.propTypes = {
     setActivityDate: PropTypes.func.isRequired,
     setStopwatchHours: PropTypes.func.isRequired,
     setStopwatchMinutes: PropTypes.func.isRequired,
-    pickProject: PropTypes.func.isRequired,
+    setActivityProject: PropTypes.func.isRequired,
     pauseStopwatch: PropTypes.func.isRequired,
     startStopwatch: PropTypes.func.isRequired,
   }).isRequired,

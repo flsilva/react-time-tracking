@@ -25,8 +25,8 @@ const ProjectListDropDown = props => (
     {props.projects &&
       <DropDownMenu
         maxHeight={200}
-        value={props.selectedProject}
-        onChange={props.itemPicked}
+        value={props.selectedItem ? props.selectedItem : ""}
+        onChange={(e, key, value) => props.itemPicked(value)}
         labelStyle={{ paddingLeft: 0 }}
         underlineStyle={{ display: 'none' }}
       >
@@ -39,12 +39,12 @@ const ProjectListDropDown = props => (
 ProjectListDropDown.propTypes = {
   itemPicked: PropTypes.func.isRequired,
   projects: PropTypes.arrayOf(PropTypes.object),
-  selectedProject: PropTypes.string,
+  selectedItem: PropTypes.string,
 };
 
 ProjectListDropDown.defaultProps = {
   projects: null,
-  selectedProject: '',
+  selectedItem: '',
 };
 
 export default ProjectListDropDown;
