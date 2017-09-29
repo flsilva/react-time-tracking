@@ -42,6 +42,7 @@ class TimerScreenContainer extends Component {
           data={data}
           projects={this.props.projects}
           pauseStopwatch={this.props.actions.pauseStopwatch}
+          resetStopwatch={this.props.actions.resetStopwatch}
           startStopwatch={this.props.actions.startStopwatch}
           submit={this.submit}
           error={this.props.error}
@@ -63,6 +64,7 @@ TimerScreenContainer.propTypes = {
     setStopwatchMinutes: PropTypes.func.isRequired,
     setActivityProject: PropTypes.func.isRequired,
     pauseStopwatch: PropTypes.func.isRequired,
+    resetStopwatch: PropTypes.func.isRequired,
     startStopwatch: PropTypes.func.isRequired,
   }).isRequired,
 
@@ -75,7 +77,10 @@ TimerScreenContainer.propTypes = {
   error: PropTypes.arrayOf(PropTypes.string),
   isConnecting: PropTypes.bool,
 
-  projects: PropTypes.arrayOf(PropTypes.object),
+  projects: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+    isConnecting: PropTypes.bool,
+  }),
 
   user: PropTypes.shape({
     name: PropTypes.string,
@@ -86,12 +91,15 @@ TimerScreenContainer.defaultProps = {
   data: null,
   error: null,
   isConnecting: false,
-  projects: null,
+  projects: {},
 };
 
 const mapStateToProps = state => ({
   data: getStopwatch(state),
-  projects: readEntitiesByQueries(state, ['?include=author']),
+  projects: {
+    data: readEntitiesByQueries(state, ['?include=author']),
+    isConnecting: state.projects.isConnecting,
+  },
   isConnecting: state.stopwatches.isConnecting,
 });
 

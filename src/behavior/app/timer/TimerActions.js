@@ -18,6 +18,7 @@ export const READ_STOPWATCH_SUCCEEDED = 'app/timer/read/succeeded';
 export const READ_STOPWATCH_FAILED = 'app/timer/read/failed';
 export const PAUSE_STOPWATCH_REQUESTED = 'app/timer/pause/requested';
 export const START_STOPWATCH_REQUESTED = 'app/timer/start/requested';
+export const RESET_STOPWATCH_REQUESTED = 'app/timer/reset/requested';
 export const UPDATE_DATABASE = 'app/timer/update/database';
 
 export const readStopwatch = () => ({ type: READ_STOPWATCH_REQUESTED });
@@ -50,6 +51,8 @@ export const setActivityDescription = payload => ({
   type: SET_ACTIVITY_DESCRIPTION_REQUESTED,
   payload,
 });
+
+export const resetStopwatch = () => ({ type: RESET_STOPWATCH_REQUESTED });
 
 const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
@@ -391,10 +394,45 @@ function* setActivityDescriptionSaga(action) {
   }
 }
 
+function* resetStopwatchSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+
+  try {
+    // yield put(setActivityDateStarted());
+
+    // optimistic update
+    const stopwatch = yield select(getStopwatch);
+
+    const payload = {
+      data: {
+        id: stopwatch.id,
+        type: 'stopwatches',
+        attributes: {
+          activityDate: null,
+          activityTotalTime: null,
+          description: null,
+          startedAt: null,
+        },
+      },
+    };
+
+    yield put(updateDatabase({ data: payload }));
+    //
+
+    const data = yield call(updateStopwatchPromise, payload);
+
+    yield put(updateDatabase({ data }));
+    // yield put(setActivityDateSucceeded({ data }));
+  } catch (error) {
+    // yield put(setActivityDateFailed(extractApiErrors(error)));
+  }
+}
+
 export function* bindActionsToSagas() {
-  yield takeLatest(READ_STOPWATCH_REQUESTED, readStopwatchSaga);
   yield takeLatest(START_STOPWATCH_REQUESTED, startStopwatchSaga);
   yield takeLatest(PAUSE_STOPWATCH_REQUESTED, pauseStopwatchSaga);
+  yield takeLatest(READ_STOPWATCH_REQUESTED, readStopwatchSaga);
+  yield takeLatest(RESET_STOPWATCH_REQUESTED, resetStopwatchSaga);
   yield takeLatest(SET_STOPWATCH_HOURS_REQUESTED, setStopwatchHoursSaga);
   yield takeLatest(SET_STOPWATCH_MINUTES_REQUESTED, setStopwatchMinutesSaga);
   yield takeLatest(SET_ACTIVITY_DATE_REQUESTED, setActivityDateSaga);

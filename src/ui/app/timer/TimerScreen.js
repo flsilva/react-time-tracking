@@ -11,7 +11,6 @@ import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
 import DescriptionIcon from 'material-ui/svg-icons/action/description';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import TextField from 'material-ui/TextField';
 import MainNav from '../nav/MainNav';
 import PlayPauseControls from './PlayPauseControls';
 import TimeElapsed from './TimeElapsed';
@@ -33,6 +32,7 @@ class TimerScreen extends Component {
   iconMenuItemClickHandler = (event, child) => {
     if (child.props.value === RESET_TIMER) {
       console.log('TimerScreen().iconMenuItemClickHandler() - RESET TIMER');
+      this.props.resetStopwatch();
     }
   }
 
@@ -44,7 +44,7 @@ class TimerScreen extends Component {
     const projectId = data.project ? data.project.id : null;
     let descriptionButtonLabel = data.description ? data.description : 'Description (optional)';
     if (descriptionButtonLabel.length > 36) {
-      descriptionButtonLabel = descriptionButtonLabel.substr(0, 36) + '...';
+      descriptionButtonLabel = `${descriptionButtonLabel.substr(0, 36)} ...`;
     }
     const toolbarStyles = {
       backgroundColor: palette.primary1Color,
@@ -120,7 +120,8 @@ class TimerScreen extends Component {
           />
           <ProjectListDropDown
             itemPicked={this.props.projectPicked}
-            projects={this.props.projects}
+            isConnecting={this.props.projects.isConnecting}
+            projects={this.props.projects.data}
             selectedItem={projectId}
           />
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -186,10 +187,14 @@ TimerScreen.propTypes = {
   hourPicked: PropTypes.func.isRequired,
   minutePicked: PropTypes.func.isRequired,
   projectPicked: PropTypes.func.isRequired,
-  projects: PropTypes.arrayOf(PropTypes.object),
+  projects: PropTypes.shape({
+    data: PropTypes.arrayOf(PropTypes.object),
+    isConnecting: PropTypes.bool,
+  }),
   submit: PropTypes.func.isRequired,
   descriptionClickHandler: PropTypes.func.isRequired,
   pauseStopwatch: PropTypes.func.isRequired,
+  resetStopwatch: PropTypes.func.isRequired,
   startStopwatch: PropTypes.func.isRequired,
   user: PropTypes.shape({
     name: PropTypes.string,
@@ -199,7 +204,7 @@ TimerScreen.propTypes = {
 TimerScreen.defaultProps = {
   data: {},
   isConnecting: false,
-  projects: null,
+  projects: {},
   user: null,
 };
 
