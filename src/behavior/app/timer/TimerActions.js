@@ -8,6 +8,7 @@ import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
 export const SET_ACTIVITY_DATE_REQUESTED = 'app/timer/set/date/requested';
+export const SET_ACTIVITY_DESCRIPTION_REQUESTED = 'app/timer/set/description/requested';
 export const SET_STOPWATCH_HOURS_REQUESTED = 'app/timer/set/hours/requested';
 export const SET_STOPWATCH_MINUTES_REQUESTED = 'app/timer/set/minutes/requested';
 export const SET_ACTIVITY_PROJECT_REQUESTED = 'app/timer/set/project/requested';
@@ -42,6 +43,11 @@ export const setActivityDate = payload => ({
 
 export const setActivityProject = payload => ({
   type: SET_ACTIVITY_PROJECT_REQUESTED,
+  payload,
+});
+
+export const setActivityDescription = payload => ({
+  type: SET_ACTIVITY_DESCRIPTION_REQUESTED,
   payload,
 });
 
@@ -93,7 +99,16 @@ const readStopwatchPromise = () => {
   return getFetcher().fetch(payload);
 };
 
-function* readStopwatchSaga() {
+function* readStopwatchSaga(action) {
+  if (!action.meta || !action.meta.killCache) {
+    const cachedStopwatch = yield select(getStopwatch);
+
+    if (cachedStopwatch) {
+      yield put(readStopwatchSucceeded({ data: cachedStopwatch }));
+      return;
+    }
+  }
+
   try {
     yield put(readStopwatchStarted());
 
@@ -345,6 +360,37 @@ function* setActivityProjectSaga(action) {
   }
 }
 
+function* setActivityDescriptionSaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+
+  try {
+    // yield put(setActivityDateStarted());
+
+    // optimistic update
+    const stopwatch = yield select(getStopwatch);
+
+    const payload = {
+      data: {
+        id: stopwatch.id,
+        type: 'stopwatches',
+        attributes: {
+          description: action.payload,
+        },
+      },
+    };
+
+    yield put(updateDatabase({ data: payload }));
+    //
+
+    const data = yield call(updateStopwatchPromise, payload);
+
+    yield put(updateDatabase({ data }));
+    // yield put(setActivityDateSucceeded({ data }));
+  } catch (error) {
+    // yield put(setActivityDateFailed(extractApiErrors(error)));
+  }
+}
+
 export function* bindActionsToSagas() {
   yield takeLatest(READ_STOPWATCH_REQUESTED, readStopwatchSaga);
   yield takeLatest(START_STOPWATCH_REQUESTED, startStopwatchSaga);
@@ -353,4 +399,5 @@ export function* bindActionsToSagas() {
   yield takeLatest(SET_STOPWATCH_MINUTES_REQUESTED, setStopwatchMinutesSaga);
   yield takeLatest(SET_ACTIVITY_DATE_REQUESTED, setActivityDateSaga);
   yield takeLatest(SET_ACTIVITY_PROJECT_REQUESTED, setActivityProjectSaga);
+  yield takeLatest(SET_ACTIVITY_DESCRIPTION_REQUESTED, setActivityDescriptionSaga);
 }

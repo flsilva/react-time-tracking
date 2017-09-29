@@ -23,6 +23,7 @@ import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirm
 import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import TimerScreenContainer from './behavior/app/timer/TimerScreenContainer';
+import TimerDescriptionScreenContainer from './behavior/app/timer/DescriptionScreenContainer';
 import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import withPagination from './behavior/app/utils/withPagination';
@@ -111,6 +112,7 @@ export const routes = {
           component: AuthenticatedAppContainer,
           childRoutes: [
             { path: '/app', component: TimerScreenContainer },
+            { path: '/app/log-description', component: TimerDescriptionScreenContainer },
             { path: '/app/projects',
               component: withPagination(ProjectListScreenContainer),
             },

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { getStopwatch } from './TimerReducers';
 import * as TimerActions from './TimerActions';
 import { readEntities as readProjectEntities } from '../projects/ProjectActions';
@@ -34,6 +35,7 @@ class TimerScreenContainer extends Component {
       <div>
         <TimerScreen
           datePicked={this.props.actions.setActivityDate}
+          descriptionClickHandler={() => browserHistory.push('/app/log-description')}
           hourPicked={this.props.actions.setStopwatchHours}
           minutePicked={this.props.actions.setStopwatchMinutes}
           projectPicked={this.props.actions.setActivityProject}

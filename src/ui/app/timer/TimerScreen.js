@@ -4,6 +4,7 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -38,8 +39,13 @@ class TimerScreen extends Component {
   render() {
     const { palette } = this.context.muiTheme;
     const data = this.props.data ? this.props.data : {};
+    console.log('TimerScreen().render() - data: ', data);
     const { activityDate, activityTotalTime, isRunning, startedAt } = data;
     const projectId = data.project ? data.project.id : null;
+    let descriptionButtonLabel = data.description ? data.description : 'Description (optional)';
+    if (descriptionButtonLabel.length > 36) {
+      descriptionButtonLabel = descriptionButtonLabel.substr(0, 36) + '...';
+    }
     const toolbarStyles = {
       backgroundColor: palette.primary1Color,
       boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
@@ -88,7 +94,8 @@ class TimerScreen extends Component {
             display: 'flex',
             justifyContent: 'center',
             height: 125,
-            paddingTop: 10 }}
+            paddingTop: 10,
+          }}
         >
           {this.props.isConnecting ?
             <CircularProgress color={'rgb(0, 188, 212)'} size={50} thickness={4} />
@@ -121,20 +128,40 @@ class TimerScreen extends Component {
               color="#3f2da5"
               style={{ marginRight: 20 }}
             />
-            <TextField
-              hintText="Description (optional)"
-              multiLine
-              rowsMax={4}
+            <FlatButton
+              label={descriptionButtonLabel}
+              onClick={this.props.descriptionClickHandler}
+              style={{
+                borderBottom: '1px solid rgb(179, 179, 179)',
+                borderRadius: 0,
+                display: 'flex',
+                flexGrow: 1,
+                textAlign: 'left',
+              }}
+              labelStyle={{
+                color: 'rgb(179, 179, 179)',
+                fontSize: 16,
+                fontWeight: 300,
+                padding: 0,
+                textTransform: 'none',
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: 20,
+            }}
+          >
+            <RaisedButton
+              disabled={this.props.isConnecting}
+              label="Finalize"
+              primary
+              onClick={this.props.submit}
             />
           </div>
         </div>
-        <RaisedButton
-          disabled={this.props.isConnecting}
-          label="Finalize"
-          primary
-          onClick={this.props.submit}
-          style={{ position: 'fixed', bottom: 10, right: 10 }}
-        />
       </div>
     );
   }
@@ -161,6 +188,7 @@ TimerScreen.propTypes = {
   projectPicked: PropTypes.func.isRequired,
   projects: PropTypes.arrayOf(PropTypes.object),
   submit: PropTypes.func.isRequired,
+  descriptionClickHandler: PropTypes.func.isRequired,
   pauseStopwatch: PropTypes.func.isRequired,
   startStopwatch: PropTypes.func.isRequired,
   user: PropTypes.shape({

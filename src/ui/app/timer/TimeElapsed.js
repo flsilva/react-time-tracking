@@ -49,16 +49,18 @@ class TimeElapsed extends Component {
     seconds: '00',
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { startedAt, activityTotalTime } = nextProps;
+  // componentWillMount() is needed because when we navigate between screens
+  // and come back here, getting stopwatch data from cache, react doesn't invoke
+  // componentWillReceiveProps(), but it does invoke componentWillMount().
+  componentWillMount() {
+    this.handleUpdate(this.props);
+  }
 
-    if (nextProps.isRunning && !this.interval) {
-      this.createInterval();
-    } else if (!nextProps.isRunning) {
-      this.killInterval();
-      const time = this.getTime(startedAt, activityTotalTime);
-      this.setState(time);
-    }
+  // componentWillReceiveProps() is needed because when we pick up
+  // an hour or minute we get an updated activityTotalTime,
+  // so we need to recalc hours and minutes.
+  componentWillReceiveProps(nextProps) {
+    this.handleUpdate(nextProps);
   }
 
   componentWillUnmount() {
@@ -80,8 +82,19 @@ class TimeElapsed extends Component {
       differenceInSeconds(addSeconds(new Date(), activityTotalTime), startedAt) : activityTotalTime
   );
 
+  handleUpdate = (props) => {
+    if (props.isRunning) {
+      this.createInterval();
+    } else {
+      this.killInterval();
+    }
+
+    this.updateTime(props);
+  }
+
   createInterval = () => {
-    this.interval = setInterval(this.updateTime, 1000);
+    if (this.interval) return;
+    this.interval = setInterval(() => this.updateTime(this.props), 1000);
   }
 
   killInterval = () => {
@@ -89,8 +102,8 @@ class TimeElapsed extends Component {
     this.interval = null;
   }
 
-  updateTime = () => {
-    const { startedAt, activityTotalTime } = this.props;
+  updateTime = (props) => {
+    const { startedAt, activityTotalTime } = props;
     const time = this.getTime(startedAt, activityTotalTime);
     this.setState(time);
   }
