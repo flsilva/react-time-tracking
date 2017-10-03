@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { getStopwatch } from './TimerReducers';
 import * as TimerActions from './TimerActions';
-import { readEntities as readProjectEntities } from '../projects/ProjectActions';
+import { readEntities as readProjectEntities, QUERY_ALL } from '../projects/ProjectActions';
 import { readEntitiesByQueries } from '../projects/ProjectReducers';
 import TimerScreen from '../../../ui/app/timer/TimerScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
@@ -15,13 +15,7 @@ class TimerScreenContainer extends Component {
 
   componentDidMount() {
     this.props.actions.readStopwatch();
-
-    // TODO: refactor: make query optional,
-    // and make fetchedQueries work with empty queries.
-    // think about a constant QUERY_ALL exposed by ProjectActions,
-    // instead of empty / null.
-    this.props.actions.readProjectEntities('?include=author');
-    //
+    this.props.actions.readProjectEntities(QUERY_ALL);
   }
 
   submit = () => {
@@ -92,7 +86,7 @@ TimerScreenContainer.defaultProps = {
 const mapStateToProps = state => ({
   data: getStopwatch(state),
   projects: {
-    data: readEntitiesByQueries(state, ['?include=author']),
+    data: readEntitiesByQueries(state, [QUERY_ALL]),
     isConnecting: state.projects.isConnecting,
   },
   isConnecting: state.stopwatches.isConnecting,

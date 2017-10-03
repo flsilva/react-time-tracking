@@ -32,6 +32,8 @@ export const DELETE_ENTITY_STARTED = 'app/projects/delete/entity/started';
 export const DELETE_ENTITY_SUCCEEDED = 'app/projects/delete/entity/succeeded';
 export const DELETE_ENTITY_FAILED = 'app/projects/delete/entity/failed';
 
+export const QUERY_ALL = 'app/projects/query/entity/all';
+
 const clearDatabase = () => ({ type: CLEAR_DATABASE });
 const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
@@ -201,7 +203,10 @@ function* readEntitiesSaga(action) {
   try {
     yield put(readEntitiesStarted());
 
-    const data = yield call(readEntitiesPromise, action.payload.query);
+    let sendQuery = action.payload.query;
+    if (sendQuery === QUERY_ALL) sendQuery = '';
+
+    const data = yield call(readEntitiesPromise, sendQuery);
 
     yield put(updateDatabase({ data }));
     yield put(readEntitiesSucceeded({ data, query: action.payload.query }));
