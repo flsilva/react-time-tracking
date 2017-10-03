@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import { ToolbarGroup } from 'material-ui/Toolbar';
 import TextField from 'material-ui/TextField';
 import { Field, reduxForm } from 'redux-form';
+import ArrowBackAppBar from '../header/ArrowBackAppBar';
+import DoneIconButton from '../common/DoneIconButton';
 
 // renderTextField() must be placed outside DescriptionScreen(),
 // otherwise it generates a new input component each time
@@ -24,58 +24,25 @@ const renderTextField = ({ input }) => (
   />
 );
 
-const DescriptionScreen = (props, context) => {
+const DescriptionScreen = (props) => {
   const { handleSubmit, isConnecting } = props;
-  const { palette } = context.muiTheme;
-  const toolbarStyles = {
-    backgroundColor: palette.primary1Color,
-    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
-  };
 
   const submitHandler = (data) => {
-    console.log('DescriptionScreen().submitHandler() - data: ', data);
     props.submitHandler(data.description);
   };
 
   return (
     <div>
-      <Toolbar style={toolbarStyles}>
-        <ToolbarGroup firstChild>
-          <IconButton onClick={props.goBackHandler}>
-            <FontIcon
-              className="material-icons"
-              color={palette.alternateTextColor}
-            >
-              arrow_back
-            </FontIcon>
-          </IconButton>
-          <ToolbarTitle
-            text="Add Description"
-            style={{ color: palette.alternateTextColor }}
-          />
-        </ToolbarGroup>
+      <ArrowBackAppBar title="Add Description" onClickBackButton={props.goBackHandler}>
         <ToolbarGroup lastChild>
-          <IconButton onClick={handleSubmit(submitHandler)} disabled={isConnecting}>
-            <FontIcon
-              className="material-icons"
-              color={palette.alternateTextColor}
-            >
-              done
-            </FontIcon>
-          </IconButton>
+          <DoneIconButton onClick={handleSubmit(submitHandler)} disabled={isConnecting} />
         </ToolbarGroup>
-      </Toolbar>
+      </ArrowBackAppBar>
       <div style={{ margin: '25px 10px' }}>
         <Field name="description" component={renderTextField} />
       </div>
     </div>
   );
-};
-
-DescriptionScreen.contextTypes = {
-  muiTheme: PropTypes.shape({
-    palette: PropTypes.object,
-  }),
 };
 
 DescriptionScreen.propTypes = {

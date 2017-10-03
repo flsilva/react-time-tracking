@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import IconMenu from 'material-ui/IconMenu';
+import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import FontIcon from 'material-ui/FontIcon';
 import ProjectForm from './ProjectForm';
+import ArrowBackAppBar from '../header/ArrowBackAppBar';
+import DoneIconButton from '../common/DoneIconButton';
+import MoreVertIconMenu from '../common/MoreVertIconMenu';
 
 const MENU_ITEM_DELETE = 'MENU_ITEM_DELETE';
 
@@ -33,36 +32,17 @@ class ProjectFormScreen extends Component {
   render() {
     const { isEditing, isConnecting, project } = this.props;
     const title = isEditing ? 'Edit Project' : 'New Project';
-    const { palette } = this.context.muiTheme;
-    const toolbarStyles = {
-      backgroundColor: palette.primary1Color,
-      boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
-    };
 
     return (
-      <div className="ProjectFormScreen">
-        <Toolbar style={toolbarStyles}>
-          <ToolbarGroup firstChild>
-            <IconButton onClick={this.backHandler}>
-              <FontIcon className="material-icons" color={palette.alternateTextColor}>arrow_back</FontIcon>
-            </IconButton>
-            <ToolbarTitle text={title} style={{ color: palette.alternateTextColor }} />
-          </ToolbarGroup>
+      <div>
+        <ArrowBackAppBar title={title} onClickBackButton={this.backHandler}>
           <ToolbarGroup lastChild>
-            <IconButton onClick={this.submitHandler} disabled={isConnecting}>
-              <FontIcon className="material-icons" color={palette.alternateTextColor}>done</FontIcon>
-            </IconButton>
-            <IconMenu
-              iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-              iconStyle={{ color: palette.alternateTextColor }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-              onItemTouchTap={this.iconMenuItemClickHandler}
-            >
+            <DoneIconButton onClick={this.submitHandler} disabled={isConnecting} />
+            <MoreVertIconMenu onItemTouchTap={this.iconMenuItemClickHandler}>
               <MenuItem primaryText="Delete" value={MENU_ITEM_DELETE} />
-            </IconMenu>
+            </MoreVertIconMenu>
           </ToolbarGroup>
-        </Toolbar>
+        </ArrowBackAppBar>
         <div style={bodyStyles}>
           <ProjectForm
             ref={(node) => { this.projectForm = node; }}
@@ -75,12 +55,6 @@ class ProjectFormScreen extends Component {
     );
   }
 }
-
-ProjectFormScreen.contextTypes = {
-  muiTheme: PropTypes.shape({
-    palette: PropTypes.object,
-  }),
-};
 
 ProjectFormScreen.propTypes = {
   delete: PropTypes.func.isRequired,

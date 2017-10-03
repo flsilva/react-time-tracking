@@ -1,92 +1,46 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import Drawer from 'material-ui/Drawer';
-import IconMenu from 'material-ui/IconMenu';
+import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import IconButton from 'material-ui/IconButton';
 import CircularProgress from 'material-ui/CircularProgress';
-import FontIcon from 'material-ui/FontIcon';
 import DescriptionIcon from 'material-ui/svg-icons/action/description';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import MainNav from '../nav/MainNav';
+import SimpleAppBar from '../header/SimpleAppBar';
 import PlayPauseControls from './PlayPauseControls';
 import TimeElapsed from './TimeElapsed';
 import DatePicker from './DatePicker';
 import ProjectListDropDown from './ProjectListDropDown';
+import MoreVertIconMenu from '../common/MoreVertIconMenu';
 
 const RESET_TIMER = 'app/timer/reset/requested';
 
 class TimerScreen extends Component {
 
-  state = {
-    menuActive: false,
-  }
-
-  toggleMenu = () => {
-    this.setState({ menuActive: !this.state.menuActive });
-  }
-
   iconMenuItemClickHandler = (event, child) => {
     if (child.props.value === RESET_TIMER) {
-      console.log('TimerScreen().iconMenuItemClickHandler() - RESET TIMER');
       this.props.resetStopwatch();
     }
   }
 
   render() {
-    const { palette } = this.context.muiTheme;
     const data = this.props.data ? this.props.data : {};
-    console.log('TimerScreen().render() - data: ', data);
     const { activityDate, activityTotalTime, isRunning, startedAt } = data;
     const projectId = data.project ? data.project.id : null;
     let descriptionButtonLabel = data.description ? data.description : 'Description (optional)';
     if (descriptionButtonLabel.length > 36) {
       descriptionButtonLabel = `${descriptionButtonLabel.substr(0, 36)} ...`;
     }
-    const toolbarStyles = {
-      backgroundColor: palette.primary1Color,
-      boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
-    };
 
     return (
-      <div className="TimerScreen">
-        <Toolbar style={toolbarStyles}>
-          <ToolbarGroup firstChild>
-            <IconButton onClick={this.toggleMenu}>
-              <FontIcon
-                className="material-icons"
-                color={palette.alternateTextColor}
-              >
-                menu
-              </FontIcon>
-            </IconButton>
-            <ToolbarTitle
-              text="Timer"
-              style={{ color: palette.alternateTextColor }}
-            />
-          </ToolbarGroup>
+      <div>
+        <SimpleAppBar title="Stopwatch">
           <ToolbarGroup lastChild>
-            <IconMenu
-              iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-              iconStyle={{ color: palette.alternateTextColor }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-              onItemTouchTap={this.iconMenuItemClickHandler}
-            >
+            <MoreVertIconMenu onItemTouchTap={this.iconMenuItemClickHandler}>
               <MenuItem primaryText="Reset timer" value={RESET_TIMER} />
-            </IconMenu>
+            </MoreVertIconMenu>
           </ToolbarGroup>
-        </Toolbar>
-        <Drawer
-          docked={false}
-          open={this.state.menuActive}
-          onRequestChange={this.toggleMenu}
-        >
-          <MainNav user={this.props.user} />
-        </Drawer>
+        </SimpleAppBar>
         <div
           style={{
             alignItems: 'center',
@@ -157,7 +111,7 @@ class TimerScreen extends Component {
           >
             <RaisedButton
               disabled={this.props.isConnecting}
-              label="Finalize"
+              label="Save"
               primary
               onClick={this.props.submit}
             />
@@ -196,16 +150,12 @@ TimerScreen.propTypes = {
   pauseStopwatch: PropTypes.func.isRequired,
   resetStopwatch: PropTypes.func.isRequired,
   startStopwatch: PropTypes.func.isRequired,
-  user: PropTypes.shape({
-    name: PropTypes.string,
-  }),
 };
 
 TimerScreen.defaultProps = {
   data: {},
   isConnecting: false,
   projects: {},
-  user: null,
 };
 
 export default TimerScreen;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 
-const MainNav = (props) => {
+const MainNav = (props, context) => {
   const navigateToTimer = () => {
     browserHistory.push('/app');
   };
@@ -39,19 +39,15 @@ const MainNav = (props) => {
     </List>
   );
 
-  const menu = (props.user) ? signedInMenu() : signedOutMenu();
+  const menu = (context.user) ? signedInMenu() : signedOutMenu();
 
   return menu;
 };
 
-MainNav.propTypes = {
+MainNav.contextTypes = {
   user: PropTypes.shape({
     name: PropTypes.string,
   }),
-};
-
-MainNav.defaultProps = {
-  user: null,
 };
 
 export default MainNav;

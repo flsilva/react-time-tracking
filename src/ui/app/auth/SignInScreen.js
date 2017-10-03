@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppHeader from '../header/AppHeader';
+import SimpleAppBar from '../header/SimpleAppBar';
 import EmailSignInForm from './EmailSignInForm';
 
 const bodyStyles = {
@@ -9,7 +9,7 @@ const bodyStyles = {
 
 const SignInScreen = props => (
   <div className="SignInScreen">
-    <AppHeader title="Sign In" user={props.user} />
+    <SimpleAppBar title="Sign In" />
     <div style={bodyStyles}>
       <EmailSignInForm
         submitHandler={props.submitHandler}

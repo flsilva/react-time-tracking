@@ -4,10 +4,9 @@ export default keys => (
     let headerValue;
 
     keys.forEach((headerKey) => {
-      headerValue = headers.get(headerKey);
-
-      if (headerValue) {
-        extractedHeaders[headerKey] = headerValue;
+      console.log(`extractHeaders() - headers.has(${headerKey}): `, headers.has(headerKey));
+      if (headers.has(headerKey)) {
+        extractedHeaders[headerKey] = headers.get(headerKey);
       }
     });
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import AppHeader from '../header/AppHeader';
+import SimpleAppBar from '../header/SimpleAppBar';
 import ProjectList from './ProjectList';
 
 const fabStyles = {
@@ -17,8 +17,8 @@ const navToNewProject = () => {
 };
 
 const ProjectListScreen = props => (
-  <div className="ProjectListScreen">
-    <AppHeader title="Projects" user={props.user} />
+  <div>
+    <SimpleAppBar title="Projects" />
     <ProjectList data={props.data} />
     {!props.isConnecting &&
       <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
@@ -31,15 +31,11 @@ const ProjectListScreen = props => (
 ProjectListScreen.propTypes = {
   isConnecting: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.object),
-  user: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-  }),
 };
 
 ProjectListScreen.defaultProps = {
   data: null,
   isConnecting: false,
-  user: null,
 };
 
 export default ProjectListScreen;

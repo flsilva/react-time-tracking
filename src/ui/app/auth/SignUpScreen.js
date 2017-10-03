@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppHeader from '../header/AppHeader';
+import SimpleAppBar from '../header/SimpleAppBar';
 import EmailSignUpForm from './EmailSignUpForm';
 
 const bodyStyles = {
@@ -9,7 +9,7 @@ const bodyStyles = {
 
 const SignUpScreen = props => (
   <div className="SignUpScreen">
-    <AppHeader title="Sign Up" user={props.user} />
+    <SimpleAppBar title="Sign Up" />
     <div style={bodyStyles}>
       <EmailSignUpForm
         submitHandler={props.submitHandler}
@@ -22,14 +22,10 @@ const SignUpScreen = props => (
 SignUpScreen.propTypes = {
   isConnecting: PropTypes.bool,
   submitHandler: PropTypes.func.isRequired,
-  user: PropTypes.shape({
-    name: PropTypes.string,
-  }),
 };
 
 SignUpScreen.defaultProps = {
   isConnecting: false,
-  user: null,
 };
 
 export default SignUpScreen;

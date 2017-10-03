@@ -22,10 +22,7 @@ export const addResponseTokenToState = (dispatch, action, extractHeaders) => (
       // eslint-disable-next-line no-console
       console.log('addResponseTokenToState()');
 
-      const method = request.opts.method;
-
-      if (request.isSigningOut || response.status === 401 ||
-         (method !== 'POST' && method !== 'PUT' && method !== 'PATCH' && !request.isRecoveringSession)) {
+      if (request.isSigningOut || response.status === 401) {
         return next();
       }
 
@@ -45,10 +42,7 @@ export const addResponseTokenToLocalStorage = (extractHeaders, storageTokenId) =
       // eslint-disable-next-line no-console
       console.log('addResponseTokenToLocalStorage()');
 
-      const method = request.opts.method;
-
-      if (request.isSigningOut || response.status === 401 ||
-         (method !== 'POST' && method !== 'PUT' && method !== 'PATCH' && !request.isRecoveringSession)) {
+      if (request.isSigningOut || response.status === 401) {
         return next();
       }
 

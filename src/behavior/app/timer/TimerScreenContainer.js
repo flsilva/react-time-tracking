@@ -47,7 +47,6 @@ class TimerScreenContainer extends Component {
           submit={this.submit}
           error={this.props.error}
           isConnecting={isConnecting}
-          user={this.props.user}
         />
         <Notifications notifications={getNotifications(error, false)} />
       </div>
@@ -81,10 +80,6 @@ TimerScreenContainer.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     isConnecting: PropTypes.bool,
   }),
-
-  user: PropTypes.shape({
-    name: PropTypes.string,
-  }).isRequired,
 };
 
 TimerScreenContainer.defaultProps = {
