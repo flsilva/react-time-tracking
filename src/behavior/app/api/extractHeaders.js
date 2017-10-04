@@ -1,15 +1,7 @@
-export default keys => (
-  (headers) => {
-    const extractedHeaders = {};
-    let headerValue;
-
-    keys.forEach((headerKey) => {
-      console.log(`extractHeaders() - headers.has(${headerKey}): `, headers.has(headerKey));
-      if (headers.has(headerKey)) {
-        extractedHeaders[headerKey] = headers.get(headerKey);
-      }
-    });
-
-    return extractedHeaders;
-  }
+export default keys => headers => (
+  keys.filter(headerKey => headers.has(headerKey))
+    .reduce((extractedHeaders, headerKey) => ({
+      ...extractedHeaders,
+      ...{ [headerKey]: headers.get(headerKey) },
+    }), {})
 );
