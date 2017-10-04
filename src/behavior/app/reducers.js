@@ -2,7 +2,7 @@ import { reducer as form } from 'redux-form'
 import auth from './auth/AuthReducers';
 import database from './DatabaseReducers';
 import projects from './projects/ProjectReducers';
-import stopwatches from './timer/TimerReducers';
+import stopwatches from './stopwatch/StopwatchReducers';
 
 const reducers = {
   auth,

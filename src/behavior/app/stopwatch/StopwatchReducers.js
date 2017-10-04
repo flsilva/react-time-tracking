@@ -8,12 +8,12 @@ import {
   READ_STOPWATCH_SUCCEEDED,
   READ_STOPWATCH_FAILED,
   UPDATE_DATABASE,
-} from './TimerActions';
+} from './StopwatchActions';
 
 export const entity = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_DATABASE: {
-      console.log('TimerReducers().data() - UPDATE_DATABASE - action.payload: ', action.payload);
+      console.log('StopwatchReducers().data() - UPDATE_DATABASE - action.payload: ', action.payload);
       // const newState = humps.camelizeKeys(action.payload.attributes);
       // const { activityDate, startedAt } = newState;
 
@@ -28,7 +28,7 @@ export const entity = (state = {}, action) => {
   }
 };
 
-// export const getStopwatch = state => state.timer.data;
+// export const getStopwatch = state => state.stopwatch.data;
 export const getStopwatch = (state) => {
   const stopwatches = state.database.stopwatches;
   if (!stopwatches) return null;

@@ -13,9 +13,9 @@ import DatePicker from './DatePicker';
 import ProjectListDropDown from './ProjectListDropDown';
 import MoreVertIconMenu from '../common/MoreVertIconMenu';
 
-const RESET_TIMER = 'app/timer/reset/requested';
+const RESET_TIMER = 'app/stopwatch/reset/requested';
 
-class TimerScreen extends Component {
+class StopwatchScreen extends Component {
 
   iconMenuItemClickHandler = (event, child) => {
     if (child.props.value === RESET_TIMER) {
@@ -37,7 +37,7 @@ class TimerScreen extends Component {
         <SimpleAppBar title="Stopwatch">
           <ToolbarGroup lastChild>
             <MoreVertIconMenu onItemTouchTap={this.iconMenuItemClickHandler}>
-              <MenuItem primaryText="Reset timer" value={RESET_TIMER} />
+              <MenuItem primaryText="Reset stopwatch" value={RESET_TIMER} />
             </MoreVertIconMenu>
           </ToolbarGroup>
         </SimpleAppBar>
@@ -122,13 +122,13 @@ class TimerScreen extends Component {
   }
 }
 
-TimerScreen.contextTypes = {
+StopwatchScreen.contextTypes = {
   muiTheme: PropTypes.shape({
     palette: PropTypes.object,
   }),
 };
 
-TimerScreen.propTypes = {
+StopwatchScreen.propTypes = {
   data: PropTypes.shape({
     activityDate: PropTypes.instanceOf(Date),
     activityTotalTime: PropTypes.number,
@@ -152,10 +152,10 @@ TimerScreen.propTypes = {
   startStopwatch: PropTypes.func.isRequired,
 };
 
-TimerScreen.defaultProps = {
+StopwatchScreen.defaultProps = {
   data: {},
   isConnecting: false,
   projects: {},
 };
 
-export default TimerScreen;
+export default StopwatchScreen;

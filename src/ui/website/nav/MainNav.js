@@ -5,7 +5,7 @@ import { List, ListItem } from 'material-ui/List';
 import './MainNav.css';
 
 const MainNav = (props) => {
-  const navigateToTimer = () => {
+  const navigateToStopwatch = () => {
     browserHistory.push('/app');
   };
 
@@ -22,7 +22,7 @@ const MainNav = (props) => {
       <ListItem
         primaryText="Back to App"
         leftIcon="keyboard_arrow_left"
-        onClick={navigateToTimer}
+        onClick={navigateToStopwatch}
       />
     </List>
   );

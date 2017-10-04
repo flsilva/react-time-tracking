@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 
 const MainNav = (props, context) => {
-  const navigateToTimer = () => {
+  const navigateToStopwatch = () => {
     browserHistory.push('/app');
   };
 
@@ -26,7 +26,7 @@ const MainNav = (props, context) => {
 
   const signedInMenu = () => (
     <List>
-      <ListItem primaryText="Timer" onClick={navigateToTimer} />
+      <ListItem primaryText="Stopwatch" onClick={navigateToStopwatch} />
       <ListItem primaryText="Projects" onClick={navigateToProjects} />
       <ListItem primaryText="Sign Out" onClick={navigateToSignOut} />
     </List>

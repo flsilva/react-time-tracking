@@ -15,7 +15,7 @@ const formatDate = (date) => {
   return format(date, 'MMM Do');
 };
 
-const TimerDatePicker = props => (
+const StopwatchDatePicker = props => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <FontIcon
       className="material-icons"
@@ -35,13 +35,13 @@ const TimerDatePicker = props => (
   </div>
 );
 
-TimerDatePicker.propTypes = {
+StopwatchDatePicker.propTypes = {
   datePicked: PropTypes.func.isRequired,
   date: PropTypes.instanceOf(Date),
 };
 
-TimerDatePicker.defaultProps = {
+StopwatchDatePicker.defaultProps = {
   date: new Date(),
 };
 
-export default TimerDatePicker;
+export default StopwatchDatePicker;

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { setActivityDescription } from '../timer/TimerActions';
-import { getStopwatch } from '../timer/TimerReducers';
-import DescriptionScreen from '../../../ui/app/timer/DescriptionScreen';
+import { setActivityDescription } from '../stopwatch/StopwatchActions';
+import { getStopwatch } from '../stopwatch/StopwatchReducers';
+import DescriptionScreen from '../../../ui/app/stopwatch/DescriptionScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 

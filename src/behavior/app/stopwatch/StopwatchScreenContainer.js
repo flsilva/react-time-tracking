@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { getStopwatch } from './TimerReducers';
-import * as TimerActions from './TimerActions';
+import { getStopwatch } from './StopwatchReducers';
+import * as StopwatchActions from './StopwatchActions';
 import { readEntities as readProjectEntities, QUERY_ALL } from '../projects/ProjectActions';
 import { readEntitiesByQueries } from '../projects/ProjectReducers';
-import TimerScreen from '../../../ui/app/timer/TimerScreen';
+import StopwatchScreen from '../../../ui/app/stopwatch/StopwatchScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-class TimerScreenContainer extends Component {
+class StopwatchScreenContainer extends Component {
 
   componentDidMount() {
     this.props.actions.readStopwatch();
@@ -19,7 +19,7 @@ class TimerScreenContainer extends Component {
   }
 
   submit = () => {
-    console.log('TimerScreenContainer().submit()');
+    console.log('StopwatchScreenContainer().submit()');
   }
 
   render() {
@@ -27,7 +27,7 @@ class TimerScreenContainer extends Component {
 
     return (
       <div>
-        <TimerScreen
+        <StopwatchScreen
           datePicked={this.props.actions.setActivityDate}
           descriptionClickHandler={() => browserHistory.push('/app/log-description')}
           hourPicked={this.props.actions.setStopwatchHours}
@@ -48,7 +48,7 @@ class TimerScreenContainer extends Component {
   }
 }
 
-TimerScreenContainer.propTypes = {
+StopwatchScreenContainer.propTypes = {
   actions: PropTypes.shape({
     readStopwatch: PropTypes.func.isRequired,
     readProjectEntities: PropTypes.func.isRequired,
@@ -76,7 +76,7 @@ TimerScreenContainer.propTypes = {
   }),
 };
 
-TimerScreenContainer.defaultProps = {
+StopwatchScreenContainer.defaultProps = {
   data: null,
   error: null,
   isConnecting: false,
@@ -95,11 +95,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   actions: {
     ...bindActionCreators({ readProjectEntities }, dispatch),
-    ...bindActionCreators(TimerActions, dispatch),
+    ...bindActionCreators(StopwatchActions, dispatch),
   },
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TimerScreenContainer);
+)(StopwatchScreenContainer);

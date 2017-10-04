@@ -3,8 +3,8 @@ import { entities as projectEntitiesReducer } from './projects/ProjectReducers';
 import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectActions';
 import { entities as userEntitiesReducer } from './users/UserReducers';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
-import { entity as stopwatchEntityReducer } from './timer/TimerReducers';
-import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './timer/TimerActions';
+import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchReducers';
+import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './stopwatch/StopwatchActions';
 
 // export const CLEAR_DATABASE = 'CLEAR_DATABASE';
 // export const UPDATE_DATABASE = 'UPDATE_DATABASE';
