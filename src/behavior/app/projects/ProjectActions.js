@@ -134,41 +134,6 @@ function* createEntitySaga(action) {
   }
 }
 
-const deleteEntityPromise = (id) => {
-  const opts = {
-    method: 'DELETE',
-  };
-
-  const path = `projects/${id}`;
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
-
-function* deleteEntitySaga(action) {
-  if (!action) throw new Error('Argument <action> must not be null.');
-  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
-  if (!action.payload.id) {
-    throw new Error('Argument <action.payload.id> must not be null.');
-  }
-
-  try {
-    yield put(deleteEntityStarted());
-
-    const data = yield call(deleteEntityPromise, action.payload.id);
-
-    yield put(clearDatabase());
-    yield put(deleteEntitySucceeded({ data }));
-    if (action.meta.successCb) action.meta.successCb();
-  } catch (error) {
-    yield put(deleteEntityFailed(extractApiErrors(error)));
-  }
-}
-
 const readEntitiesPromise = (query = '') => {
   const opts = {
     method: 'GET',
@@ -301,6 +266,41 @@ function* updateEntitySaga({ payload, meta }) {
     if (meta.successCb) meta.successCb();
   } catch (error) {
     yield put(updateEntityFailed(extractApiErrors(error)));
+  }
+}
+
+const deleteEntityPromise = (id) => {
+  const opts = {
+    method: 'DELETE',
+  };
+
+  const path = `projects/${id}`;
+
+  const payload = {
+    opts,
+    path,
+  };
+
+  return getFetcher().fetch(payload);
+};
+
+function* deleteEntitySaga(action) {
+  if (!action) throw new Error('Argument <action> must not be null.');
+  if (!action.payload) throw new Error('Argument <action.payload> must not be null.');
+  if (!action.payload.id) {
+    throw new Error('Argument <action.payload.id> must not be null.');
+  }
+
+  try {
+    yield put(deleteEntityStarted());
+
+    const data = yield call(deleteEntityPromise, action.payload.id);
+
+    yield put(clearDatabase());
+    yield put(deleteEntitySucceeded({ data }));
+    if (action.meta.successCb) action.meta.successCb();
+  } catch (error) {
+    yield put(deleteEntityFailed(extractApiErrors(error)));
   }
 }
 
