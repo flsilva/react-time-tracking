@@ -1,3 +1,4 @@
+import pipe from 'lodash/fp/pipe';
 import ApiFetcher from './ApiFetcher';
 import { newTokenReceived } from '../auth/AuthActions';
 import { signOutSuccess } from '../auth/sign-out/SignOutActions';
@@ -7,8 +8,7 @@ import {
   addApiPathToRequest,
   addContentTypeJsonToRequest,
   addCorsModeToRequest,
-  addStateTokenToRequest,
-  addLocalStorageTokenToRequest,
+  addTokenToRequest,
 } from './requestHandlers';
 
 import {
@@ -33,39 +33,33 @@ const tokenHeaderKeys = [
 let dispatch;
 let getState;
 
-const apiConfig = (_dispatch, _getState) => {
-  if (!_dispatch) throw new Error('Argument <dispatch> must not be null.');
-  if (!_getState) throw new Error('Argument <getState> must not be null.');
-
-  const config = {
-    dispatch: _dispatch,
-    apiPath: 'http://192.168.0.4:3000/',
-    requestHandlers: [
-      addApiPathToRequest,
-      addContentTypeJsonToRequest,
-      addCorsModeToRequest,
-      addStateTokenToRequest(_getState),
-      addLocalStorageTokenToRequest(STORAGE_TOKEN_ID),
-    ],
-    successResponseHandlers: [
-      removeTokenFromLocalStorage(STORAGE_TOKEN_ID),
-      unauthorizedResponseHandler(_dispatch, signOutSuccess, unauthorizedMessage),
-      addResponseTokenToState(_dispatch, newTokenReceived, extractHeaders(tokenHeaderKeys)),
-      addResponseTokenToLocalStorage(extractHeaders(tokenHeaderKeys), STORAGE_TOKEN_ID),
-      returnJsonResponse,
-    ],
-  };
-
-  return config;
-};
-
 export const init = (_dispatch, _getState) => {
   dispatch = _dispatch;
   getState = _getState;
 };
 
-export const getFetcher = () => (
-  new ApiFetcher(apiConfig(dispatch, getState))
-);
+export const getFetcher = () => {
+  const config = {
+    apiPath: 'http://192.168.0.4:3000/',
+  };
 
-export default apiConfig;
+  let tokenObj = getState().auth.token;
+  if (!tokenObj) tokenObj = JSON.parse(localStorage.getItem(STORAGE_TOKEN_ID));
+
+  const requestPipe = pipe(
+    addApiPathToRequest(config),
+    addContentTypeJsonToRequest,
+    addCorsModeToRequest,
+    addTokenToRequest(tokenObj),
+  );
+
+  const responsePipe = pipe(
+    removeTokenFromLocalStorage(STORAGE_TOKEN_ID),
+    unauthorizedResponseHandler(dispatch, signOutSuccess, unauthorizedMessage),
+    addResponseTokenToState(dispatch, newTokenReceived, extractHeaders(tokenHeaderKeys)),
+    addResponseTokenToLocalStorage(extractHeaders(tokenHeaderKeys), STORAGE_TOKEN_ID),
+    returnJsonResponse,
+  );
+
+  return new ApiFetcher(requestPipe, responsePipe);
+};

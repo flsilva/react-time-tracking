@@ -1,63 +1,38 @@
-export const addApiPathToRequest = (config, request, next) => (
-  () => {
-    request.url = config.apiPath + request.path;
-    next();
+import merge from 'lodash/merge';
+
+export const addApiPathToRequest = config => request => ({
+  ...request,
+  ...{
+    url: config.apiPath + request.path,
+  },
+});
+
+export const addContentTypeJsonToRequest = (request) => {
+  const newRequest = { ...request };
+
+  if (!newRequest.opts.headers) {
+    newRequest.opts.headers = new Headers();
   }
+
+  newRequest.opts.headers.append('Content-Type', 'application/vnd.api+json');
+  return newRequest;
+};
+
+export const addCorsModeToRequest = request => (
+  merge({ ...request }, { opts: { mode: 'cors' } })
 );
 
-export const addContentTypeJsonToRequest = (config, request, next) => (
-  () => {
-    if (!request.opts.headers) {
-      request.opts.headers = new Headers();
-    }
+export const addTokenToRequest = tokenObj => (request) => {
+  if (!tokenObj) return request;
 
-    request.opts.headers.append('Content-Type', 'application/vnd.api+json');
-    next();
+  const newRequest = { ...request };
+
+  if (!newRequest.opts.headers) {
+    newRequest.opts.headers = new Headers();
   }
-);
 
-export const addCorsModeToRequest = (config, request, next) => (
-  () => {
-    request.opts.mode = 'cors';
-    next();
-  }
-);
-
-export const addStateTokenToRequest = getState => (
-  (config, request, next) => (
-    () => {
-      if (!request.opts.headers) {
-        request.opts.headers = new Headers();
-      }
-
-      const tokenHeaders = getState().auth.token;
-      if (!tokenHeaders) return next();
-
-      Object.keys(tokenHeaders).forEach((key) => {
-        request.opts.headers.append(key, tokenHeaders[key]);
-      });
-
-      return next();
-    }
-  )
-);
-
-export const addLocalStorageTokenToRequest = storageTokenId => (
-  (config, request, next) => (
-    () => {
-      if (!request.opts.headers) {
-        request.opts.headers = new Headers();
-      }
-
-      const tokenHeaders = JSON.parse(localStorage.getItem(storageTokenId));
-      if (!tokenHeaders) return next();
-
-      Object.keys(tokenHeaders).forEach((key) => {
-        if (request.opts.headers.has(key)) return;
-        request.opts.headers.append(key, tokenHeaders[key]);
-      });
-
-      return next();
-    }
-  )
-);
+  return Object.keys(tokenObj).reduce((finalRequest, key) => {
+    finalRequest.opts.headers.append(key, tokenObj[key]);
+    return finalRequest;
+  }, newRequest);
+};
