@@ -6,6 +6,7 @@ import format from 'date-fns/format';
 import isYesterday from 'date-fns/is_yesterday';
 import isToday from 'date-fns/is_today';
 import isTomorrow from 'date-fns/is_tomorrow';
+import IconFieldWrap from '../common/IconFieldWrap';
 
 const formatDate = (date) => {
   if (isToday(date)) return 'Today';
@@ -15,28 +16,31 @@ const formatDate = (date) => {
   return format(date, 'MMM Do');
 };
 
+const Icon = (
+  <FontIcon
+    className="material-icons"
+    style={{ color: '#3f2da5' }}
+  >
+    insert_invitation
+  </FontIcon>
+);
+
 const StopwatchDatePicker = props => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
-    <FontIcon
-      className="material-icons"
-      style={{ color: '#3f2da5', marginRight: 20 }}
-    >
-      insert_invitation
-    </FontIcon>
+  <IconFieldWrap icon={Icon}>
     <DatePicker
       autoOk
       hintText="Pick a date"
       value={props.date ? props.date : new Date()}
-      onChange={(e, value) => props.datePicked(value)}
+      onChange={(e, value) => props.onDatePick(value)}
       formatDate={formatDate}
       textFieldStyle={{ width: 105 }}
       underlineStyle={{ display: 'none' }}
     />
-  </div>
+  </IconFieldWrap>
 );
 
 StopwatchDatePicker.propTypes = {
-  datePicked: PropTypes.func.isRequired,
+  onDatePick: PropTypes.func.isRequired,
   date: PropTypes.instanceOf(Date),
 };
 

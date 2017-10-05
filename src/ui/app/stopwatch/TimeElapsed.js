@@ -110,13 +110,13 @@ class TimeElapsed extends Component {
 
   render() {
     return (
-      <div style={{ backgroundColor: '#3f2da5', paddingBottom: 20 }}>
+      <div>
         <div style={styles.container}>
           <div style={styles.container}>
             <DropDownMenu
               maxHeight={300}
               value={this.state.hours}
-              onChange={(e, index, value) => this.props.hourPicked(value)}
+              onChange={(e, index, value) => this.props.onHourPick(value)}
               iconStyle={{ display: 'none' }}
               menuItemStyle={{ fontSize: 40, padding: '20px 0' }}
               labelStyle={styles.num}
@@ -129,7 +129,7 @@ class TimeElapsed extends Component {
             <DropDownMenu
               maxHeight={300}
               value={this.state.minutes}
-              onChange={(e, index, value) => this.props.minutePicked(value)}
+              onChange={(e, index, value) => this.props.onMinutePick(value)}
               iconStyle={{ display: 'none' }}
               menuItemStyle={{ fontSize: 40, padding: '20px 0' }}
               labelStyle={styles.num}
@@ -148,9 +148,9 @@ class TimeElapsed extends Component {
 }
 
 TimeElapsed.propTypes = {
-  hourPicked: PropTypes.func.isRequired,
+  onHourPick: PropTypes.func.isRequired,
   isRunning: PropTypes.bool,
-  minutePicked: PropTypes.func.isRequired,
+  onMinutePick: PropTypes.func.isRequired,
   startedAt: PropTypes.instanceOf(Date),
   activityTotalTime: PropTypes.number,
 };
