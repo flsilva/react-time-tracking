@@ -68,7 +68,7 @@ export const returnJsonResponse = ({ request, response, resolve, reject }) => {
   console.log('returnJsonResponse()');
 
   if (!response) return { request, response, resolve, reject };
-  let newResponse = request;
+  let newResponse;
 
   response.json()
     .then((json) => {
@@ -81,5 +81,5 @@ export const returnJsonResponse = ({ request, response, resolve, reject }) => {
     })
     .catch(() => resolve());
 
-  return { request: newResponse, response, resolve, reject };
+  return { request, response: newResponse, resolve, reject };
 };
