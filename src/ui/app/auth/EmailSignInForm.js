@@ -24,11 +24,6 @@ class EmailSignInForm extends Component {
   }
 
   render() {
-    const submitButtonAttrs = {};
-    if (this.props.isConnecting) {
-      submitButtonAttrs.disabled = 'disabled';
-    }
-
     return (
       <form className="EmailSignInForm">
         <TextField

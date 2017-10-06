@@ -39,15 +39,11 @@ export const init = (_dispatch, _getState) => {
 };
 
 export const getFetcher = () => {
-  const config = {
-    apiPath: 'http://192.168.0.4:3000/',
-  };
-
   let tokenObj = getState().auth.token;
   if (!tokenObj) tokenObj = JSON.parse(localStorage.getItem(STORAGE_TOKEN_ID));
 
   const requestPipe = pipe(
-    addApiPathToRequest(config),
+    addApiPathToRequest('http://192.168.0.4:3000/'),
     addContentTypeJsonToRequest,
     addCorsModeToRequest,
     addTokenToRequest(tokenObj),

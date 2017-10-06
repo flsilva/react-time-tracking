@@ -1,9 +1,9 @@
 import merge from 'lodash/merge';
 
-export const addApiPathToRequest = config => request => ({
+export const addApiPathToRequest = apiPath => request => ({
   ...request,
   ...{
-    url: config.apiPath + request.path,
+    url: apiPath + request.path,
   },
 });
 
