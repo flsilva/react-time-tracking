@@ -7,14 +7,6 @@ import SignInScreen from '../../../ui/app/auth/SignInScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-const mapStateToProps = state => ({
-  auth: state.auth,
-});
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(EmailSignInActions, dispatch),
-});
-
 const SignInScreenContainer = (props) => {
   const { isConnecting, error } = props.auth.emailSignIn;
 
@@ -51,6 +43,14 @@ SignInScreenContainer.propTypes = {
     }),
   }).isRequired,
 };
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(EmailSignInActions, dispatch),
+});
 
 export default connect(
   mapStateToProps,
