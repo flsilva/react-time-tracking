@@ -1,3 +1,5 @@
+import isString from 'lodash/isString';
+
 // eslint-disable-next-line import/prefer-default-export
 export const extractApiErrors = (error) => {
   if (!error) {
@@ -9,9 +11,11 @@ export const extractApiErrors = (error) => {
   if (error.errors && error.errors.full_messages) {
     errors = error.errors.full_messages;
   } else if (error.errors) {
-    errors = error.errors;
+    errors = error.errors.map(someError => (
+      isString(someError) ? { detail: someError } : someError
+    ));
   } else if (error.error) {
-    errors = [error.error];
+    errors = [{ detail: error.error }];
   }
 
   return errors;
