@@ -1,7 +1,7 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { readEntityById, readEntitiesByQueries } from './ProjectReducers';
 import { getUser } from '../auth/AuthReducers';
-import { getFetcher } from '../api/ApiConfig';
+import { getFetcher2 } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 
 export const CLEAR_DATABASE = 'app/projects/clear/database';
@@ -97,19 +97,7 @@ const createEntityPromise = (data, userId) => {
     },
   };
 
-  const opts = {
-    body: JSON.stringify(normalizedData),
-    method: 'POST',
-  };
-
-  const path = 'projects';
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
+  return getFetcher2().post('projects', normalizedData);
 };
 
 function* createEntitySaga(action) {
@@ -123,31 +111,19 @@ function* createEntitySaga(action) {
     yield put(createEntityStarted());
 
     const user = yield select(getUser);
-    const data = yield call(createEntityPromise, action.payload.data, user.id);
+    const response = yield call(createEntityPromise, action.payload.data, user.id);
 
     yield put(clearDatabase());
-    yield put(updateDatabase({ data }));
-    yield put(createEntitySucceeded({ data }));
+    yield put(updateDatabase({ data: response.data }));
+    yield put(createEntitySucceeded({ data: response.data }));
     if (action.meta.successCb) action.meta.successCb();
   } catch (error) {
     yield put(createEntityFailed(extractApiErrors(error)));
   }
 }
 
-const readEntitiesPromise = (query = '') => {
-  const opts = {
-    method: 'GET',
-  };
-
-  const path = `projects/${query}`;
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
+// TODO: refactor way to send query to use axios' API.
+const readEntitiesPromise = (query = '') => getFetcher2().get(`projects/${query}`);
 
 function* readEntitiesSaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
@@ -171,29 +147,17 @@ function* readEntitiesSaga(action) {
     let sendQuery = action.payload.query;
     if (sendQuery === QUERY_ALL) sendQuery = '';
 
-    const data = yield call(readEntitiesPromise, sendQuery);
+    const response = yield call(readEntitiesPromise, sendQuery);
 
-    yield put(updateDatabase({ data }));
-    yield put(readEntitiesSucceeded({ data, query: action.payload.query }));
+    yield put(updateDatabase({ data: response.data }));
+    yield put(readEntitiesSucceeded({ data: response.data, query: action.payload.query }));
   } catch (error) {
     yield put(readEntitiesFailed(extractApiErrors(error)));
   }
 }
 
-const readEntityPromise = (id, query = '') => {
-  const opts = {
-    method: 'GET',
-  };
-
-  const path = `projects/${id}${query}`;
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
+// TODO: refactor way to send query to use axios' API.
+const readEntityPromise = (id, query = '') => getFetcher2().get(`projects/${id}${query}`);
 
 function* readEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
@@ -214,37 +178,25 @@ function* readEntitySaga(action) {
   try {
     yield put(readEntityStarted());
 
-    const data = yield call(readEntityPromise, action.payload.id, action.payload.query);
+    const response = yield call(readEntityPromise, action.payload.id, action.payload.query);
 
-    yield put(updateDatabase({ data }));
-    yield put(readEntitySucceeded({ data }));
+    yield put(updateDatabase({ data: response.data }));
+    yield put(readEntitySucceeded({ data: response.data }));
   } catch (error) {
     yield put(readEntityFailed(extractApiErrors(error)));
   }
 }
 
-const updateEntityPromise = (id, data) => {
+const updateEntityPromise = (id, payload) => {
   const normalizedData = {
     data: {
       id,
       type: 'projects',
-      attributes: data,
+      attributes: payload,
     },
   };
 
-  const opts = {
-    body: JSON.stringify(normalizedData),
-    method: 'PATCH',
-  };
-
-  const path = `projects/${id}`;
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
+  return getFetcher2().patch(`projects/${id}`, normalizedData);
 };
 
 function* updateEntitySaga({ payload, meta }) {
@@ -259,30 +211,17 @@ function* updateEntitySaga({ payload, meta }) {
   try {
     yield put(updateEntityStarted());
 
-    const data = yield call(updateEntityPromise, payload.id, payload.data);
+    const response = yield call(updateEntityPromise, payload.id, payload.data);
 
-    yield put(updateDatabase({ data }));
-    yield put(updateEntitySucceeded({ data }));
+    yield put(updateDatabase({ data: response.data }));
+    yield put(updateEntitySucceeded({ data: response.data }));
     if (meta.successCb) meta.successCb();
   } catch (error) {
     yield put(updateEntityFailed(extractApiErrors(error)));
   }
 }
 
-const deleteEntityPromise = (id) => {
-  const opts = {
-    method: 'DELETE',
-  };
-
-  const path = `projects/${id}`;
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
+const deleteEntityPromise = id => getFetcher2().delete(`projects/${id}`);
 
 function* deleteEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
@@ -293,11 +232,9 @@ function* deleteEntitySaga(action) {
 
   try {
     yield put(deleteEntityStarted());
-
-    const data = yield call(deleteEntityPromise, action.payload.id);
-
+    yield call(deleteEntityPromise, action.payload.id);
     yield put(clearDatabase());
-    yield put(deleteEntitySucceeded({ data }));
+    yield put(deleteEntitySucceeded());
     if (action.meta.successCb) action.meta.successCb();
   } catch (error) {
     yield put(deleteEntityFailed(extractApiErrors(error)));

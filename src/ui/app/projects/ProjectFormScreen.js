@@ -5,8 +5,8 @@ import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
 import ProjectForm from './ProjectForm';
 import ArrowBackAppBar from '../header/ArrowBackAppBar';
-import DoneIconButton from '../common/DoneIconButton';
-import MoreVertIconMenu from '../common/MoreVertIconMenu';
+import DoneIconButton from '../../common/DoneIconButton';
+import MoreVertIconMenu from '../../common/MoreVertIconMenu';
 
 const MENU_ITEM_DELETE = 'MENU_ITEM_DELETE';
 

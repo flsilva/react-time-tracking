@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ToolbarGroup } from 'material-ui/Toolbar';
 import AppBar from './AppBar';
 import AppBarTitle from './AppBarTitle';
-import ArrowBackIconButton from '../common/ArrowBackIconButton';
+import ArrowBackIconButton from '../../common/ArrowBackIconButton';
 
 const ArrowBackAppBar = props => (
   <AppBar>

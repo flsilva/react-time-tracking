@@ -1,8 +1,9 @@
 import pipe from 'lodash/fp/pipe';
+import axios from 'axios';
 import ApiFetcher from './ApiFetcher';
-import { newTokenReceived } from '../auth/AuthActions';
-import { signOutSuccess } from '../auth/sign-out/SignOutActions';
 import extractHeaders from './extractHeaders';
+import { newTokenReceived, userSignOutSucceeded } from '../auth/AuthActions';
+import { getToken, getUser } from '../auth/AuthReducers';
 
 import {
   addApiPathToRequest,
@@ -14,7 +15,9 @@ import {
 import {
   removeTokenFromLocalStorage,
   unauthorizedResponseHandler,
+  unauthorizedResponseHandler2,
   addResponseTokenToState,
+  extractHeadersFromResponse,
   addResponseTokenToLocalStorage,
   returnJsonResponse,
 } from './responseHandlers';
@@ -30,16 +33,14 @@ const tokenHeaderKeys = [
   'uid',
 ];
 
-let dispatch;
-let getState;
+let store;
 
-export const init = (_dispatch, _getState) => {
-  dispatch = _dispatch;
-  getState = _getState;
+export const init = (_store) => {
+  store = _store;
 };
 
 export const getFetcher = () => {
-  let tokenObj = getState().auth.token;
+  let tokenObj = store.getState().auth.token;
   if (!tokenObj) tokenObj = JSON.parse(localStorage.getItem(STORAGE_TOKEN_ID));
 
   const requestPipe = pipe(
@@ -51,11 +52,43 @@ export const getFetcher = () => {
 
   const responsePipe = pipe(
     removeTokenFromLocalStorage(STORAGE_TOKEN_ID),
-    unauthorizedResponseHandler(dispatch, signOutSuccess, unauthorizedMessage),
-    addResponseTokenToState(dispatch, newTokenReceived, extractHeaders(tokenHeaderKeys)),
+    unauthorizedResponseHandler(store.dispatch, userSignOutSucceeded, unauthorizedMessage),
+    addResponseTokenToState(store.dispatch, newTokenReceived, extractHeaders(tokenHeaderKeys)),
     addResponseTokenToLocalStorage(extractHeaders(tokenHeaderKeys), STORAGE_TOKEN_ID),
     returnJsonResponse,
   );
 
   return new ApiFetcher(requestPipe, responsePipe);
+};
+
+const customHeaders = () => ({
+  ...getToken(store.getState()),
+  'Content-Type': 'application/vnd.api+json',
+});
+
+export const getFetcher2 = () => {
+  const fetcher = axios.create({
+    baseURL: 'http://192.168.0.4:3000/',
+    crossDomain: true,
+    headers: customHeaders(),
+    timeout: 5000,
+  });
+
+  // we need to exclude it when signing in,
+  // otherwise API returns 401 for invalid credentials
+  // and we en up with a unauthorized error,
+  // which is something we only want when user is signed in
+  // already, but its token expired.
+  if (getUser(store.getState())) {
+    fetcher.interceptors.response.use(
+      null,
+      unauthorizedResponseHandler2(store.dispatch, userSignOutSucceeded, unauthorizedMessage),
+    );
+  }
+
+  fetcher.interceptors.response.use(
+    extractHeadersFromResponse(store.dispatch, newTokenReceived, extractHeaders(tokenHeaderKeys)),
+  );
+
+  return fetcher;
 };

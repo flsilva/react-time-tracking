@@ -1,45 +1,30 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import MainNav from '../nav/MainNav';
+import { ToolbarGroup } from 'material-ui/Toolbar';
+import WebsiteBar from './WebsiteBar';
+import WebsiteBarTitle from './WebsiteBarTitle';
+import WebsiteBarDrawer from './WebsiteBarDrawer';
+import MenuIconButton from '../../common/MenuIconButton';
+import withDrawer from '../../common/withDrawer';
 
-class WebsiteHeader extends Component {
-
-  state = {
-    menuActive: false,
-  }
-
-  toggleMenu = () => {
-    this.setState({ menuActive: !this.state.menuActive });
-  }
-
-  render() {
-    return (
-      <div className="WebsiteHeader">
-        <AppBar
-          onLeftIconButtonTouchTap={this.toggleMenu}
-        />
-        <Drawer
-          docked={false}
-          open={this.state.menuActive}
-          onRequestChange={this.toggleMenu}
-        >
-          <MainNav user={this.props.user} />
-        </Drawer>
-      </div>
-    );
-  }
-}
+const WebsiteHeader = props => (
+  <WebsiteBar>
+    <ToolbarGroup firstChild>
+      <MenuIconButton onClick={props.onToggleDrawer} />
+      <WebsiteBarTitle title={props.title} />
+    </ToolbarGroup>
+    {props.children}
+  </WebsiteBar>
+);
 
 WebsiteHeader.propTypes = {
-  user: PropTypes.shape({
-    name: PropTypes.string,
-  }),
+  children: PropTypes.node,
+  onToggleDrawer: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 WebsiteHeader.defaultProps = {
-  user: null,
+  children: null,
 };
 
-export default WebsiteHeader;
+export default withDrawer(WebsiteHeader, WebsiteBarDrawer);

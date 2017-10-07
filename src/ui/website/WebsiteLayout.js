@@ -4,7 +4,7 @@ import WebsiteHeader from './header/WebsiteHeader';
 
 const WebsiteLayout = props => (
   <div className="WebsiteLayout">
-    <WebsiteHeader user={props.auth.user} />
+    <WebsiteHeader title="OpenTracker" />
     <div className="SectionContainer">
       {props.children}
     </div>
@@ -15,9 +15,6 @@ const WebsiteLayout = props => (
 );
 
 WebsiteLayout.propTypes = {
-  auth: PropTypes.shape({
-    user: PropTypes.object,
-  }).isRequired,
   children: PropTypes.element.isRequired,
 };
 

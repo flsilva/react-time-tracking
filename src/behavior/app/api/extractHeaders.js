@@ -1,7 +1,7 @@
 export default keys => headers => (
-  keys.filter(headerKey => headers.has(headerKey))
+  keys.filter(headerKey => Object.prototype.hasOwnProperty.call(headers, headerKey))
     .reduce((extractedHeaders, headerKey) => ({
       ...extractedHeaders,
-      ...{ [headerKey]: headers.get(headerKey) },
+      ...{ [headerKey]: headers[headerKey] },
     }), {})
 );

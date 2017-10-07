@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux';
 import {
-  SIGN_OUT_START,
-  SIGN_OUT_SUCCESS,
-  SIGN_OUT_ERROR,
+  SIGN_OUT_STARTED,
+  SIGN_OUT_SUCCEEDED,
+  SIGN_OUT_FAILED,
 } from './SignOutActions';
 
 const isConnecting = (state = null, action) => {
   switch (action.type) {
-    case SIGN_OUT_START:
+    case SIGN_OUT_STARTED:
       return true;
 
-    case SIGN_OUT_SUCCESS:
-    case SIGN_OUT_ERROR:
+    case SIGN_OUT_SUCCEEDED:
+    case SIGN_OUT_FAILED:
       return false;
 
     default:
@@ -21,11 +21,11 @@ const isConnecting = (state = null, action) => {
 
 const error = (state = null, action) => {
   switch (action.type) {
-    case SIGN_OUT_ERROR:
+    case SIGN_OUT_FAILED:
       return action.payload || null;
 
-    case SIGN_OUT_START:
-    case SIGN_OUT_SUCCESS:
+    case SIGN_OUT_STARTED:
+    case SIGN_OUT_SUCCEEDED:
       return null;
 
     default:

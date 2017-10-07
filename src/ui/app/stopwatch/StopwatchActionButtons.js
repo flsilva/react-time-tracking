@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
-import AlignRight from '../common/AlignRight';
+import AlignRight from '../../common/AlignRight';
 
 const StopwatchActionButtons = props => (
   <AlignRight style={{ marginTop: 20 }}>

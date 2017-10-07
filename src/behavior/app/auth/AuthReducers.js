@@ -1,24 +1,22 @@
 import { combineReducers } from 'redux';
-import { NEW_TOKEN_RECEIVED } from './AuthActions';
-import { SIGN_OUT_SUCCESS } from './sign-out/SignOutActions';
-import { EMAIL_SIGN_IN_SUCCESS } from './email/EmailSignInActions';
-import { RESTORE_SESSION_SUCCESS } from './restore-session/RestoreSessionActions';
+import {
+  NEW_TOKEN_RECEIVED,
+  USER_SIGN_IN_SUCCEEDED,
+  USER_SIGN_OUT_SUCCEEDED,
+} from './AuthActions';
 import emailSignIn from './email/EmailSignInReducers';
 import emailSignUp from './email/EmailSignUpReducers';
 import restoreSession from './restore-session/RestoreSessionReducers';
 import signOut from './sign-out/SignOutReducers';
 
-export const getUser = state => state.auth.user;
+const STORAGE_TOKEN_ID = 'APP_TOKEN';
 
 const user = (state = null, action) => {
   switch (action.type) {
-    case EMAIL_SIGN_IN_SUCCESS:
-    case RESTORE_SESSION_SUCCESS:
-      // eslint-disable-next-line no-console
-      console.log('AuthReducers::user() - case RESTORE_SESSION_SUCCESS OR EMAIL_SIGN_IN_SUCCESS');
+    case USER_SIGN_IN_SUCCEEDED:
       return action.payload || null;
 
-    case SIGN_OUT_SUCCESS:
+    case USER_SIGN_OUT_SUCCEEDED:
       return null;
 
     default:
@@ -26,21 +24,36 @@ const user = (state = null, action) => {
   }
 };
 
+export const getUser = state => state.auth.user;
+
 const token = (state = null, action) => {
   // THINK ABOUT CREATING A NEW KILL_TOKEN, FIRED AFTER SIGN_OUT,
   // TO CLEAR HEADERS HERE
   switch (action.type) {
     case NEW_TOKEN_RECEIVED:
-      // eslint-disable-next-line no-console
-      console.log('AuthReducers::token() - case NEW_TOKEN_RECEIVED');
       return action.payload || null;
 
-    case SIGN_OUT_SUCCESS:
+    case USER_SIGN_OUT_SUCCEEDED:
       return null;
 
     default:
       return state;
   }
+};
+
+export const getToken = state => state.auth.token;
+
+export const getTokenFromLocalStorage = () => (
+  JSON.parse(localStorage.getItem(STORAGE_TOKEN_ID))
+);
+
+const saveTokenToLocalStorage = (_token) => {
+  console.log('AuthReducers().saveTokenToLocalStorage() - _token: ', _token);
+  localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(_token));
+};
+
+export const init = (store, observeStore) => {
+  observeStore(store, getToken, saveTokenToLocalStorage);
 };
 
 export default combineReducers({

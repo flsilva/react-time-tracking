@@ -21,7 +21,7 @@ import {
   CLEAR_DATABASE,
   UPDATE_DATABASE,
 } from './ProjectActions';
-import { SIGN_OUT_SUCCESS } from '../auth/sign-out/SignOutActions';
+import { USER_SIGN_OUT_SUCCEEDED } from '../auth/AuthActions';
 
 export const entities = (state = {}, action) => {
   switch (action.type) {
@@ -29,7 +29,7 @@ export const entities = (state = {}, action) => {
       return merge({ ...state }, action.payload);
 
     case CLEAR_DATABASE:
-    case SIGN_OUT_SUCCESS:
+    case USER_SIGN_OUT_SUCCEEDED:
       return {};
 
     default:

@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux';
 import {
-  EMAIL_SIGN_IN_START,
-  EMAIL_SIGN_IN_SUCCESS,
-  EMAIL_SIGN_IN_ERROR,
+  EMAIL_SIGN_IN_STARTED,
+  EMAIL_SIGN_IN_SUCCEEDED,
+  EMAIL_SIGN_IN_FAILED,
 } from './EmailSignInActions';
 
 const isConnecting = (state = null, action) => {
   switch (action.type) {
-    case EMAIL_SIGN_IN_START:
+    case EMAIL_SIGN_IN_STARTED:
       return true;
 
-    case EMAIL_SIGN_IN_SUCCESS:
-    case EMAIL_SIGN_IN_ERROR:
+    case EMAIL_SIGN_IN_SUCCEEDED:
+    case EMAIL_SIGN_IN_FAILED:
       return false;
 
     default:
@@ -21,11 +21,11 @@ const isConnecting = (state = null, action) => {
 
 const error = (state = null, action) => {
   switch (action.type) {
-    case EMAIL_SIGN_IN_ERROR:
+    case EMAIL_SIGN_IN_FAILED:
       return action.payload || null;
 
-    case EMAIL_SIGN_IN_START:
-    case EMAIL_SIGN_IN_SUCCESS:
+    case EMAIL_SIGN_IN_STARTED:
+    case EMAIL_SIGN_IN_SUCCEEDED:
       return null;
 
     default:

@@ -1,51 +1,30 @@
-import { getFetcher } from '../../api/ApiConfig';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { getFetcher2 } from '../../api/ApiConfig';
 import { extractApiErrors } from '../../api/ApiErrors';
 
-export const SIGN_OUT_START = 'SIGN_OUT_START';
-export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
-export const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR';
+export const SIGN_OUT_REQUESTED = 'SIGN_OUT_REQUESTED';
+export const SIGN_OUT_STARTED = 'SIGN_OUT_STARTED';
+export const SIGN_OUT_SUCCEEDED = 'SIGN_OUT_SUCCEEDED';
+export const SIGN_OUT_FAILED = 'SIGN_OUT_FAILED';
 
-const signOutStart = () => ({ type: SIGN_OUT_START });
-export const signOutSuccess = payload => ({ type: SIGN_OUT_SUCCESS, payload });
-const signOutError = payload => ({ type: SIGN_OUT_ERROR, payload });
+export const signOut = () => ({ type: SIGN_OUT_REQUESTED });
+const signOutStarted = () => ({ type: SIGN_OUT_STARTED });
+const signOutSucceeded = payload => ({ type: SIGN_OUT_SUCCEEDED, payload });
+const signOutFailed = payload => ({ type: SIGN_OUT_FAILED, payload });
 
-export const signOut = () => (
-  (dispatch) => {
-    // eslint-disable-next-line no-console
-    console.log('SignOutActions::signOut()');
+const signOutPromise = () => getFetcher2().delete('auth/sign_out');
 
-    dispatch(signOutStart());
-
-    const errorHandler = (error) => {
-    // eslint-disable-next-line no-console
-      console.log('SignOutActions::signOut().errorHandler() - error: ', error);
-
-      // we can remotely log errors,
-      // but give OK feedback for end users,
-      // no need to show errors.
-      const errors = extractApiErrors(error);
-      dispatch(signOutError(errors));
-      dispatch(signOutSuccess({}));
-      return {};
-    };
-
-    const successHandler = (json) => {
-    // eslint-disable-next-line no-console
-      console.log('SignOutActions::signOut().successHandler() - json: ', json);
-      dispatch(signOutSuccess(json.data));
-      return json.data;
-    };
-
-    const opts = {
-      method: 'DELETE',
-    };
-
-    const payload = {
-      opts,
-      path: 'auth/sign_out',
-      isSigningOut: true,
-    };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
+function* signOutSaga() {
+  try {
+    yield put(signOutStarted());
+    yield call(signOutPromise);
+    yield put(signOutSucceeded());
+  } catch (error) {
+    yield put(signOutFailed(extractApiErrors(error.response.data)));
+    yield put(signOutSucceeded());
   }
-);
+}
+
+export function* bindActionsToSagas() {
+  yield takeLatest(SIGN_OUT_REQUESTED, signOutSaga);
+}

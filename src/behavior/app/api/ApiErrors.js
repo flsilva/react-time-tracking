@@ -8,7 +8,9 @@ export const extractApiErrors = (error) => {
 
   let errors;
 
-  if (error.errors && error.errors.full_messages) {
+  if (isString(error)) {
+    errors = [{ detail: error }];
+  } else if (error.errors && error.errors.full_messages) {
     errors = error.errors.full_messages;
   } else if (error.errors) {
     errors = error.errors.map(someError => (

@@ -4,8 +4,8 @@ import { ToolbarGroup } from 'material-ui/Toolbar';
 import AppBar from './AppBar';
 import AppBarTitle from './AppBarTitle';
 import AppBarDrawer from './AppBarDrawer';
-import MenuIconButton from '../common/MenuIconButton';
-import withDrawer from '../common/withDrawer';
+import MenuIconButton from '../../common/MenuIconButton';
+import withDrawer from '../../common/withDrawer';
 
 const SimpleAppBar = props => (
   <AppBar>

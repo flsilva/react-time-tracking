@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
-import MoreVertIconMenu from '../common/MoreVertIconMenu';
+import MoreVertIconMenu from '../../common/MoreVertIconMenu';
 import SimpleAppBar from '../header/SimpleAppBar';
 
 const RESET_TIMER = 'app/stopwatch/reset/requested';

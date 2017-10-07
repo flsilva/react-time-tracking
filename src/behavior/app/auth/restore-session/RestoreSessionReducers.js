@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux';
 import {
-  RESTORE_SESSION_START,
-  RESTORE_SESSION_SUCCESS,
-  RESTORE_SESSION_ERROR,
+  RESTORE_SESSION_STARTED,
+  RESTORE_SESSION_SUCCEEDED,
+  RESTORE_SESSION_FAILED,
 } from './RestoreSessionActions';
 
 const isConnecting = (state = null, action) => {
   switch (action.type) {
-    case RESTORE_SESSION_START:
+    case RESTORE_SESSION_STARTED:
       return true;
 
-    case RESTORE_SESSION_SUCCESS:
-    case RESTORE_SESSION_ERROR:
+    case RESTORE_SESSION_SUCCEEDED:
+    case RESTORE_SESSION_FAILED:
       return false;
 
     default:
@@ -21,11 +21,11 @@ const isConnecting = (state = null, action) => {
 
 const error = (state = null, action) => {
   switch (action.type) {
-    case RESTORE_SESSION_ERROR:
+    case RESTORE_SESSION_FAILED:
       return action.payload || null;
 
-    case RESTORE_SESSION_START:
-    case RESTORE_SESSION_SUCCESS:
+    case RESTORE_SESSION_STARTED:
+    case RESTORE_SESSION_SUCCEEDED:
       return null;
 
     default:

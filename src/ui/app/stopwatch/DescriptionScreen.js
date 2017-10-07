@@ -4,7 +4,7 @@ import { ToolbarGroup } from 'material-ui/Toolbar';
 import TextField from 'material-ui/TextField';
 import { Field, reduxForm } from 'redux-form';
 import ArrowBackAppBar from '../header/ArrowBackAppBar';
-import DoneIconButton from '../common/DoneIconButton';
+import DoneIconButton from '../../common/DoneIconButton';
 
 // renderTextField() must be placed outside DescriptionScreen(),
 // otherwise it generates a new input component each time

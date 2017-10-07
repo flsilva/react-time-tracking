@@ -15,7 +15,8 @@ const mapDispatchToProps = dispatch => ({
 
 class SignOutScreenContainer extends Component {
   componentDidMount() {
-    this.props.actions.signOut().then(() => browserHistory.push('/'));
+    this.props.actions.signOut();
+    browserHistory.push('/')
   }
 
   render() {

@@ -1,49 +1,34 @@
-import { getFetcher } from '../../api/ApiConfig';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { getFetcher2 } from '../../api/ApiConfig';
 import { extractApiErrors } from '../../api/ApiErrors';
 
-export const EMAIL_SIGN_IN_START = 'EMAIL_SIGN_IN_START';
-export const EMAIL_SIGN_IN_SUCCESS = 'EMAIL_SIGN_IN_SUCCESS';
-export const EMAIL_SIGN_IN_ERROR = 'EMAIL_SIGN_IN_ERROR';
+export const EMAIL_SIGN_IN_REQUESTED = 'EMAIL_SIGN_IN_REQUESTED';
+export const EMAIL_SIGN_IN_STARTED = 'EMAIL_SIGN_IN_STARTED';
+export const EMAIL_SIGN_IN_SUCCEEDED = 'EMAIL_SIGN_IN_SUCCEEDED';
+export const EMAIL_SIGN_IN_FAILED = 'EMAIL_SIGN_IN_FAILED';
 
-const emailSignInStart = () => ({ type: EMAIL_SIGN_IN_START });
-const emailSignInSuccess = payload => ({ type: EMAIL_SIGN_IN_SUCCESS, payload });
-const emailSignInError = payload => ({ type: EMAIL_SIGN_IN_ERROR, payload });
+export const emailSignIn = (email, password) => ({
+  type: EMAIL_SIGN_IN_REQUESTED,
+  payload: { email, password },
+});
+const emailSignInStarted = () => ({ type: EMAIL_SIGN_IN_STARTED });
+const emailSignInSucceeded = payload => ({ type: EMAIL_SIGN_IN_SUCCEEDED, payload });
+const emailSignInFailed = payload => ({ type: EMAIL_SIGN_IN_FAILED, payload });
 
-export const emailSignIn = (email, password) => (
-  (dispatch) => {
-    // console.log('EmailSignInActions::emailSignIn()');
+const emailSignInPromise = payload => getFetcher2().post('auth/sign_in', payload);
 
-    dispatch(emailSignInStart());
+function* emailSignInSaga(action) {
+  try {
+    yield put(emailSignInStarted());
 
-    const errorHandler = (error) => {
-      // console.log('EmailSignInActions::emailSignIn().errorHandler() - error: ', error);
+    const response = yield call(emailSignInPromise, action.payload);
 
-      const errors = extractApiErrors(error);
-      dispatch(emailSignInError(errors));
-      return new Promise((resolve, reject) => reject(errors));
-    };
-
-    const successHandler = (json) => {
-      // console.log('EmailSignInActions::emailSignIn().successHandler() - json: ', json);
-
-      dispatch(emailSignInSuccess(json.data));
-      return json.data;
-    };
-
-    const opts = {
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      method: 'POST',
-    };
-
-    const payload = {
-      opts,
-      path: 'auth/sign_in',
-      isSigningIn: true,
-    };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
+    yield put(emailSignInSucceeded(response.data.data));
+  } catch (error) {
+    yield put(emailSignInFailed(extractApiErrors(error.response.data)));
   }
-);
+}
+
+export function* bindActionsToSagas() {
+  yield takeLatest(EMAIL_SIGN_IN_REQUESTED, emailSignInSaga);
+}
