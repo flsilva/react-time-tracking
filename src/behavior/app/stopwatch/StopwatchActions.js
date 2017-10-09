@@ -2,10 +2,10 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import addSeconds from 'date-fns/add_seconds';
 import differenceInSeconds from 'date-fns/difference_in_seconds';
 import isDate from 'date-fns/is_date';
-import humps from 'humps';
 import { getStopwatch } from './StopwatchReducers';
-import { getFetcher } from '../api/ApiConfig';
+import { getFetcher2 } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
+import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
 export const SET_ACTIVITY_DATE_REQUESTED = 'app/stopwatch/set/date/requested';
 export const SET_ACTIVITY_DESCRIPTION_REQUESTED = 'app/stopwatch/set/description/requested';
@@ -19,6 +19,7 @@ export const READ_STOPWATCH_FAILED = 'app/stopwatch/read/failed';
 export const PAUSE_STOPWATCH_REQUESTED = 'app/stopwatch/pause/requested';
 export const START_STOPWATCH_REQUESTED = 'app/stopwatch/start/requested';
 export const RESET_STOPWATCH_REQUESTED = 'app/stopwatch/reset/requested';
+export const UPDATE_STOPWATCH_FAILED = 'app/stopwatch/update/failed';
 export const UPDATE_DATABASE = 'app/stopwatch/update/database';
 
 export const readStopwatch = () => ({ type: READ_STOPWATCH_REQUESTED });
@@ -26,6 +27,7 @@ const readStopwatchStarted = () => ({ type: READ_STOPWATCH_STARTED });
 const readStopwatchSucceeded = payload => ({ type: READ_STOPWATCH_SUCCEEDED, payload });
 const readStopwatchFailed = payload => ({ type: READ_STOPWATCH_FAILED, payload });
 
+export const updateStopwatchFailed = payload => ({ type: UPDATE_STOPWATCH_FAILED, payload });
 export const startStopwatch = () => ({ type: START_STOPWATCH_REQUESTED });
 export const pauseStopwatch = () => ({ type: PAUSE_STOPWATCH_REQUESTED });
 export const setStopwatchHours = payload => ({
@@ -71,36 +73,11 @@ const getTime = (startedAt, activityTotalTime) => {
   return { hours, minutes, seconds };
 };
 
-const updateStopwatchPromise = (data) => {
-  const opts = {
-    body: JSON.stringify(humps.decamelizeKeys(data, { separator: '-' })),
-    method: 'PATCH',
-  };
+const updateStopwatchPromise = payload => (
+  getFetcher2().patch(`stopwatches/${payload.data.id}?include=author,project`, payload)
+);
 
-  const path = `stopwatches/${data.data.id}?include=author,project`;
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
-
-const readStopwatchPromise = () => {
-  const opts = {
-    method: 'GET',
-  };
-
-  const path = 'stopwatches';
-
-  const payload = {
-    opts,
-    path,
-  };
-
-  return getFetcher().fetch(payload);
-};
+const readStopwatchPromise = () => getFetcher2().get('stopwatches');
 
 function* readStopwatchSaga(action) {
   if (!action.meta || !action.meta.killCache) {
@@ -115,81 +92,51 @@ function* readStopwatchSaga(action) {
   try {
     yield put(readStopwatchStarted());
 
-    const data = yield call(readStopwatchPromise);
+    const response = yield call(readStopwatchPromise);
 
-    yield put(updateDatabase({ data }));
-    yield put(readStopwatchSucceeded({ data }));
+    yield put(updateDatabase({ data: response.data }));
+    yield put(readStopwatchSucceeded({ data: response.data }));
   } catch (error) {
-    console.log('readStopwatchSaga().catch() - error: ', error);
     yield put(readStopwatchFailed(extractApiErrors(error)));
   }
 }
 
 function* startStopwatchSaga() {
   try {
-    // yield put(readStopwatchStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          startedAt: new Date(),
-        },
-      },
-    };
-
-    // stopwatch.isRunning = true;
-    // stopwatch.startedAt = new Date();
-
-    // yield put(updateDatabase({ attributes: stopwatch }));
-    // yield put(updateDatabase({ data: updates }));
+    const { id } = yield select(getStopwatch);
+    const payload = formatPayloadToApi('stopwatches', { id, startedAt: new Date() });
     yield put(updateDatabase({ data: payload }));
     //
 
-    // const data = yield call(startStopwatchPromise);
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(readStopwatchSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(readStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
 function* pauseStopwatchSaga() {
   try {
-    // yield put(pauseStopwatchStarted());
-
     // optimistic update
     const stopwatch = yield select(getStopwatch);
+    const { activityTotalTime, id, startedAt } = stopwatch;
 
-    const activityTotalTime = stopwatch.activityTotalTime + differenceInSeconds(new Date(), stopwatch.startedAt);
+    const newActivityTotalTime = activityTotalTime + differenceInSeconds(new Date(), startedAt);
 
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          activityTotalTime,
-          startedAt: null,
-        },
-      },
+    const attributes = {
+      id,
+      activityTotalTime: newActivityTotalTime,
+      startedAt: null,
     };
-
+    const payload = formatPayloadToApi('stopwatches', attributes);
     yield put(updateDatabase({ data: payload }));
     //
 
-    // const data = yield call(pauseStopwatchPromise);
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(pauseStopwatchSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(pauseStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
@@ -198,47 +145,37 @@ function* setStopwatchHoursSaga(action) {
 
   const hours = action.payload;
 
-  if (hours !== 0 && !hours) throw new Error('Argument <action.payload> must not be null.');
+  if (hours !== 0 && !hours) {
+    throw new Error('Argument <action.payload> must not be null.');
+  }
+
   if (isNaN(hours)) {
     throw new Error('Argument <action.payload> must be an integer.');
   }
 
   try {
-    // yield put(setStopwatchHourStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-    const currentHours = getTime(stopwatch.startedAt, stopwatch.activityTotalTime).hours;
+    const { activityTotalTime, id, startedAt } = yield select(getStopwatch);
+    const currentHours = getTime(startedAt, activityTotalTime).hours;
 
     if (hours === currentHours) return;
 
-    let activityTotalTime = stopwatch.activityTotalTime;
+    let newActivityTotalTime = activityTotalTime;
     if (hours > currentHours) {
-      activityTotalTime += (hours - currentHours) * 3600;
+      newActivityTotalTime += (hours - currentHours) * 3600;
     } else {
-      activityTotalTime -= (currentHours - hours) * 3600;
+      newActivityTotalTime -= (currentHours - hours) * 3600;
     }
 
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          activityTotalTime,
-        },
-      },
-    };
-
+    const attributes = { id, activityTotalTime: newActivityTotalTime };
+    const payload = formatPayloadToApi('stopwatches', attributes);
     yield put(updateDatabase({ data: payload }));
     //
 
-    // const data = yield call(setStopwatchHourPromise);
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(setStopwatchHourSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(setStopwatchHourFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
@@ -247,47 +184,37 @@ function* setStopwatchMinutesSaga(action) {
 
   const minutes = action.payload;
 
-  if (minutes !== 0 && !minutes) throw new Error('Argument <action.payload> must not be null.');
+  if (minutes !== 0 && !minutes) {
+    throw new Error('Argument <action.payload> must not be null.');
+  }
+
   if (isNaN(minutes)) {
     throw new Error('Argument <action.payload> must be an integer.');
   }
 
   try {
-    // yield put(setStopwatchMinutesStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-    const currentMinutes = getTime(stopwatch.startedAt, stopwatch.activityTotalTime).minutes;
+    const { activityTotalTime, id, startedAt } = yield select(getStopwatch);
+    const currentMinutes = getTime(startedAt, activityTotalTime).minutes;
 
     if (minutes === currentMinutes) return;
 
-    let activityTotalTime = stopwatch.activityTotalTime;
+    let newActivityTotalTime = activityTotalTime;
     if (minutes > currentMinutes) {
-      activityTotalTime += (minutes - currentMinutes) * 60;
+      newActivityTotalTime += (minutes - currentMinutes) * 60;
     } else {
-      activityTotalTime -= (currentMinutes - minutes) * 60;
+      newActivityTotalTime -= (currentMinutes - minutes) * 60;
     }
 
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          activityTotalTime,
-        },
-      },
-    };
-
+    const attributes = { id, activityTotalTime: newActivityTotalTime };
+    const payload = formatPayloadToApi('stopwatches', attributes);
     yield put(updateDatabase({ data: payload }));
     //
 
-    // const data = yield call(setStopwatchHourPromise);
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(setStopwatchHourSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(setStopwatchHourFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
@@ -299,30 +226,17 @@ function* setActivityDateSaga(action) {
   }
 
   try {
-    // yield put(setActivityDateStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          activityDate: action.payload,
-        },
-      },
-    };
-
+    const { id } = yield select(getStopwatch);
+    const attributes = { id, activityDate: action.payload };
+    const payload = formatPayloadToApi('stopwatches', attributes);
     yield put(updateDatabase({ data: payload }));
     //
 
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(setActivityDateSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(setActivityDateFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
@@ -331,35 +245,17 @@ function* setActivityProjectSaga(action) {
   if (!action.payload) throw new Error('Argument <action.payload> must be a String ID.');
 
   try {
-    // yield put(setActivityDateStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        relationships: {
-          project: {
-            data: {
-              id: action.payload,
-              type: 'projects',
-            },
-          },
-        },
-      },
-    };
-
+    const { id } = yield select(getStopwatch);
+    let payload = formatPayloadToApi('stopwatches', { id });
+    payload = addRelationshipToPayload(payload, 'project', 'projects', action.payload);
     yield put(updateDatabase({ data: payload }));
     //
 
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(setActivityDateSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(setActivityDateFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
@@ -367,30 +263,17 @@ function* setActivityDescriptionSaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
 
   try {
-    // yield put(setActivityDateStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          description: action.payload,
-        },
-      },
-    };
-
+    const { id } = yield select(getStopwatch);
+    const description = action.payload;
+    const payload = formatPayloadToApi('stopwatches', { id, description });
     yield put(updateDatabase({ data: payload }));
     //
 
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(setActivityDateSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(setActivityDateFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 
@@ -398,33 +281,23 @@ function* resetStopwatchSaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
 
   try {
-    // yield put(setActivityDateStarted());
-
     // optimistic update
-    const stopwatch = yield select(getStopwatch);
-
-    const payload = {
-      data: {
-        id: stopwatch.id,
-        type: 'stopwatches',
-        attributes: {
-          activityDate: null,
-          activityTotalTime: null,
-          description: null,
-          startedAt: null,
-        },
-      },
+    const { id } = yield select(getStopwatch);
+    const attributes = {
+      id,
+      activityDate: null,
+      activityTotalTime: null,
+      description: null,
+      startedAt: null,
     };
-
+    const payload = formatPayloadToApi('stopwatches', attributes);
     yield put(updateDatabase({ data: payload }));
     //
 
-    const data = yield call(updateStopwatchPromise, payload);
-
-    yield put(updateDatabase({ data }));
-    // yield put(setActivityDateSucceeded({ data }));
+    const response = yield call(updateStopwatchPromise, payload);
+    yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    // yield put(setActivityDateFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(extractApiErrors(error)));
   }
 }
 

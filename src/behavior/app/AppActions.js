@@ -6,6 +6,7 @@ import { bindActionsToSagas as bindSignOutActionsToSagas } from './auth/sign-out
 import { bindActionsToSagas as bindProjectActionsToSagas } from './projects/ProjectActions';
 import { bindActionsToSagas as bindStopwatchActionsToSagas } from './stopwatch/StopwatchActions';
 import { restoreSession } from './auth/restore-session/RestoreSessionActions';
+import { newTokenReceived } from './auth/AuthActions';
 import { getTokenFromLocalStorage } from './auth/AuthReducers';
 import { init as initAppApi } from './api/ApiConfig';
 import { init as initAppState } from './reducers';
@@ -15,12 +16,20 @@ export const initApp = payload => ({ type: INIT_APP, payload });
 
 function* initAppSaga(action) {
   const { store } = action.payload;
+  // TODO: Rethink. We need to read token from LocalStorage before calling
+  // initAppState(), which in turn calls initAuthState(), triggering its
+  // observeStore()'s callback sending null as token, which then gets written
+  // to LocalStorage, so we lose it.
+  const token = getTokenFromLocalStorage();
+  //
 
   initAppState(store);
   initAppApi(store);
 
-  const token = getTokenFromLocalStorage();
-  if (token) yield put(restoreSession());
+  if (token) {
+    yield put(newTokenReceived(token));
+    yield put(restoreSession());
+  }
 }
 
 function* bindActionsToSagas() {
