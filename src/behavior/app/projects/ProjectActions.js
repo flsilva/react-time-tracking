@@ -3,6 +3,7 @@ import { readEntityById, readEntitiesByQueries } from './ProjectReducers';
 import { getUser } from '../auth/AuthReducers';
 import { getFetcher2 } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
+import { formatPayloadToApi } from '../api/JsonApiUtils';
 
 export const CLEAR_DATABASE = 'app/projects/clear/database';
 export const UPDATE_DATABASE = 'app/projects/update/database';
@@ -187,16 +188,9 @@ function* readEntitySaga(action) {
   }
 }
 
-const updateEntityPromise = (id, payload) => {
-  const normalizedData = {
-    data: {
-      id,
-      type: 'projects',
-      attributes: payload,
-    },
-  };
-
-  return getFetcher2().patch(`projects/${id}`, normalizedData);
+const updateEntityPromise = (id, _payload) => {
+  const payload = formatPayloadToApi('projects', { ..._payload, id });
+  return getFetcher2().patch(`projects/${id}`, payload);
 };
 
 function* updateEntitySaga({ payload, meta }) {
