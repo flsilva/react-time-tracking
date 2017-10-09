@@ -3,7 +3,7 @@ import { readEntityById, readEntitiesByQueries } from './ProjectReducers';
 import { getUser } from '../auth/AuthReducers';
 import { getFetcher2 } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
-import { formatPayloadToApi } from '../api/JsonApiUtils';
+import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
 export const CLEAR_DATABASE = 'app/projects/clear/database';
 export const UPDATE_DATABASE = 'app/projects/update/database';
@@ -83,22 +83,9 @@ const deleteEntitySucceeded = payload => ({ type: DELETE_ENTITY_SUCCEEDED, paylo
 const deleteEntityFailed = payload => ({ type: DELETE_ENTITY_FAILED, payload });
 
 const createEntityPromise = (data, userId) => {
-  const normalizedData = {
-    data: {
-      type: 'projects',
-      attributes: data,
-      relationships: {
-        author: {
-          data: {
-            id: userId,
-            type: 'users',
-          },
-        },
-      },
-    },
-  };
-
-  return getFetcher2().post('projects', normalizedData);
+  let payload = formatPayloadToApi('projects', data);
+  payload = addRelationshipToPayload(payload, 'author', 'users', userId);
+  return getFetcher2().post('projects', payload);
 };
 
 function* createEntitySaga(action) {
