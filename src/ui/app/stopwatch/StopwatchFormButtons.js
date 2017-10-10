@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import AlignRight from '../../common/AlignRight';
 
-const StopwatchActionButtons = props => (
+const StopwatchFormButtons = props => (
   <AlignRight style={{ marginTop: 20 }}>
     <RaisedButton
       disabled={props.isConnecting}
@@ -14,13 +14,13 @@ const StopwatchActionButtons = props => (
   </AlignRight>
 );
 
-StopwatchActionButtons.propTypes = {
+StopwatchFormButtons.propTypes = {
   isConnecting: PropTypes.bool,
   onSaveClick: PropTypes.func.isRequired,
 };
 
-StopwatchActionButtons.defaultProps = {
+StopwatchFormButtons.defaultProps = {
   isConnecting: false,
 };
 
-export default StopwatchActionButtons;
+export default StopwatchFormButtons;

@@ -4,10 +4,10 @@ import {
   USER_SIGN_IN_SUCCEEDED,
   USER_SIGN_OUT_SUCCEEDED,
 } from './AuthActions';
-import emailSignIn from './email/EmailSignInReducers';
-import emailSignUp from './email/EmailSignUpReducers';
-import restoreSession from './restore-session/RestoreSessionReducers';
-import signOut from './sign-out/SignOutReducers';
+import emailSignIn from './email/EmailSignInState';
+import emailSignUp from './email/EmailSignUpState';
+import restoreSession from './restore-session/RestoreSessionState';
+import signOut from './sign-out/SignOutState';
 
 const STORAGE_TOKEN_ID = 'APP_TOKEN';
 
@@ -48,7 +48,7 @@ export const getTokenFromLocalStorage = () => (
 );
 
 const saveTokenToLocalStorage = (_token) => {
-  console.log('AuthReducers().saveTokenToLocalStorage() - _token: ', _token);
+  console.log('AuthState().saveTokenToLocalStorage() - _token: ', _token);
   localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(_token));
 };
 

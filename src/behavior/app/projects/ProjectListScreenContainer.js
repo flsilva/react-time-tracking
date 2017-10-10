@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as ProjectActions from './ProjectActions';
-import { readEntitiesByQueries, getEntitiesPaginationByQuery } from './ProjectReducers';
+import { readEntitiesByQueries, getEntitiesPaginationByQuery } from './ProjectState';
 import ProjectListScreen from '../../../ui/app/projects/ProjectListScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';

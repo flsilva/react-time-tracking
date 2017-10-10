@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { getStopwatch } from './StopwatchReducers';
+import { getStopwatch } from './StopwatchState';
 import Description from '../../../ui/app/stopwatch/Description';
 
 const DescriptionButtonContainer = props => (

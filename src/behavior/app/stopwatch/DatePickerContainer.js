@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
-import { getStopwatch } from './StopwatchReducers';
+import { getStopwatch } from './StopwatchState';
 import DatePicker from '../../../ui/app/stopwatch/DatePicker';
 
 const DatePickerContainer = props => (

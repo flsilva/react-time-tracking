@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
-import { readEntityById } from './ProjectReducers';
+import { readEntityById } from './ProjectState';
 import ProjectFormScreen from '../../../ui/app/projects/ProjectFormScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';

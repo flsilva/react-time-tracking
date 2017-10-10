@@ -9,7 +9,7 @@ import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-rou
 import routes from './routes';
 import initApp from './behavior/app';
 import { sagas } from './behavior/app/AppActions';
-import { reducers as appReducers } from './behavior/app/reducers';
+import { reducers as appReducers } from './behavior/app/AppState';
 
 import './index.css';
 

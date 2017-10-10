@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { observeStore } from './reducers';
+import { observeStore } from './AppState';
 import initAuth, {
   extractHttpAuthHeadersFromResponse,
   getAuthHeaders,
   unauthorizedHttpResponseHandler,
 } from './auth';
-import { getUser } from './auth/AuthReducers';
+import { getUser } from './auth/AuthState';
 
 let store;
 

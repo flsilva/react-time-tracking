@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { readEntities, QUERY_ALL } from '../projects/ProjectActions';
-import { readEntitiesByQueries } from '../projects/ProjectReducers';
+import { readEntitiesByQueries } from '../projects/ProjectState';
 import { setActivityProject } from './StopwatchActions';
-import { getStopwatch } from './StopwatchReducers';
+import { getStopwatch } from './StopwatchState';
 import ProjectDropDown from '../../../ui/app/stopwatch/ProjectDropDown';
 
 class ProjectDropDownContainer extends Component {

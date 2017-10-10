@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
 import { newTokenReceived, userSignOutSucceeded } from './AuthActions';
-import { getToken, getTokenFromLocalStorage, init as initState } from './AuthReducers';
+import { getToken, getTokenFromLocalStorage, init as initState } from './AuthState';
 import { restoreSession } from './restore-session/RestoreSessionActions';
 
 const tokenHeaderKeys = [

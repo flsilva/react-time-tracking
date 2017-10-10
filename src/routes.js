@@ -4,7 +4,7 @@ import Layout from './ui/Layout';
 import WebsiteLayout from './behavior/website/WebsiteLayout';
 import FaqScreen from './ui/website/faq/FaqScreen';
 import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
-import AppLayout from './behavior/app/AppLayout';
+import AppLayoutContainer from './behavior/app/AppLayoutContainer';
 import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
 import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
 import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirmationScreenContainer';
@@ -35,7 +35,7 @@ export default {
       ],
     },
     {
-      component: AppLayout,
+      component: AppLayoutContainer,
       childRoutes: [
         { path: '/sign-out', component: SignOutScreenContainer },
         {

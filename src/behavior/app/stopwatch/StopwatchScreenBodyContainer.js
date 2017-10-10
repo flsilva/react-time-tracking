@@ -3,14 +3,14 @@ import ScreenBody from '../../../ui/app/common/ScreenBody';
 import DatePickerContainer from './DatePickerContainer';
 import ProjectDropDownContainer from './ProjectDropDownContainer';
 import DescriptionButtonContainer from './DescriptionButtonContainer';
-import StopwatchActionButtonsContainer from './StopwatchActionButtonsContainer';
+import StopwatchFormButtonsContainer from './StopwatchFormButtonsContainer';
 
 const StopwatchScreenBodyContainer = () => (
   <ScreenBody>
     <DatePickerContainer />
     <ProjectDropDownContainer />
     <DescriptionButtonContainer />
-    <StopwatchActionButtonsContainer />
+    <StopwatchFormButtonsContainer />
   </ScreenBody>
 );
 

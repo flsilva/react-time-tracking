@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { setActivityDescription } from '../stopwatch/StopwatchActions';
-import StopwatchActionButtons from '../../../ui/app/stopwatch/StopwatchActionButtons';
+import StopwatchFormButtons from '../../../ui/app/stopwatch/StopwatchFormButtons';
 
-const StopwatchActionButtonsContainer = (props) => {
+const StopwatchFormButtonsContainer = (props) => {
   const onSaveClick = () => {
-    console.log('StopwatchActionButtonsContainer().onSaveClick()');
+    console.log('StopwatchFormButtonsContainer().onSaveClick()');
   };
 
   return (
-    <StopwatchActionButtons
+    <StopwatchFormButtons
       isConnecting={props.isConnecting}
       onSaveClick={onSaveClick}
     />
   );
 };
 
-StopwatchActionButtonsContainer.propTypes = {
+StopwatchFormButtonsContainer.propTypes = {
   actions: PropTypes.shape({
     setActivityDescription: PropTypes.func.isRequired,
   }).isRequired,
@@ -26,7 +26,7 @@ StopwatchActionButtonsContainer.propTypes = {
   isConnecting: PropTypes.bool,
 };
 
-StopwatchActionButtonsContainer.defaultProps = {
+StopwatchFormButtonsContainer.defaultProps = {
   isConnecting: false,
 };
 
@@ -43,4 +43,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StopwatchActionButtonsContainer);
+)(StopwatchFormButtonsContainer);
