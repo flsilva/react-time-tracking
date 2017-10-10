@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher2 } from '../../api/ApiConfig';
+import { getFetcher } from '../../api/ApiConfig';
 import { extractApiErrors } from '../../api/ApiErrors';
 
 export const EMAIL_SIGN_IN_REQUESTED = 'EMAIL_SIGN_IN_REQUESTED';
@@ -15,7 +15,7 @@ const emailSignInStarted = () => ({ type: EMAIL_SIGN_IN_STARTED });
 const emailSignInSucceeded = payload => ({ type: EMAIL_SIGN_IN_SUCCEEDED, payload });
 const emailSignInFailed = payload => ({ type: EMAIL_SIGN_IN_FAILED, payload });
 
-const emailSignInPromise = payload => getFetcher2().post('auth/sign_in', payload);
+const emailSignInPromise = payload => getFetcher().post('auth/sign_in', payload);
 
 function* emailSignInSaga(action) {
   try {

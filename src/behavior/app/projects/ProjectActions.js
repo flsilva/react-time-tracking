@@ -1,7 +1,7 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { readEntityById, readEntitiesByQueries } from './ProjectReducers';
 import { getUser } from '../auth/AuthReducers';
-import { getFetcher2 } from '../api/ApiConfig';
+import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
@@ -85,7 +85,7 @@ const deleteEntityFailed = payload => ({ type: DELETE_ENTITY_FAILED, payload });
 const createEntityPromise = (data, userId) => {
   let payload = formatPayloadToApi('projects', data);
   payload = addRelationshipToPayload(payload, 'author', 'users', userId);
-  return getFetcher2().post('projects', payload);
+  return getFetcher().post('projects', payload);
 };
 
 function* createEntitySaga(action) {
@@ -111,7 +111,7 @@ function* createEntitySaga(action) {
 }
 
 // TODO: refactor way to send query to use axios' API.
-const readEntitiesPromise = (query = '') => getFetcher2().get(`projects/${query}`);
+const readEntitiesPromise = (query = '') => getFetcher().get(`projects/${query}`);
 
 function* readEntitiesSaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
@@ -145,7 +145,7 @@ function* readEntitiesSaga(action) {
 }
 
 // TODO: refactor way to send query to use axios' API.
-const readEntityPromise = (id, query = '') => getFetcher2().get(`projects/${id}${query}`);
+const readEntityPromise = (id, query = '') => getFetcher().get(`projects/${id}${query}`);
 
 function* readEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');
@@ -177,7 +177,7 @@ function* readEntitySaga(action) {
 
 const updateEntityPromise = (id, _payload) => {
   const payload = formatPayloadToApi('projects', { ..._payload, id });
-  return getFetcher2().patch(`projects/${id}`, payload);
+  return getFetcher().patch(`projects/${id}`, payload);
 };
 
 function* updateEntitySaga({ payload, meta }) {
@@ -202,7 +202,7 @@ function* updateEntitySaga({ payload, meta }) {
   }
 }
 
-const deleteEntityPromise = id => getFetcher2().delete(`projects/${id}`);
+const deleteEntityPromise = id => getFetcher().delete(`projects/${id}`);
 
 function* deleteEntitySaga(action) {
   if (!action) throw new Error('Argument <action> must not be null.');

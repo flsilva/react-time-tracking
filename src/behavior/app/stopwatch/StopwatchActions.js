@@ -3,7 +3,7 @@ import addSeconds from 'date-fns/add_seconds';
 import differenceInSeconds from 'date-fns/difference_in_seconds';
 import isDate from 'date-fns/is_date';
 import { getStopwatch } from './StopwatchReducers';
-import { getFetcher2 } from '../api/ApiConfig';
+import { getFetcher } from '../api/ApiConfig';
 import { extractApiErrors } from '../api/ApiErrors';
 import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
@@ -74,10 +74,10 @@ const getTime = (startedAt, activityTotalTime) => {
 };
 
 const updateStopwatchPromise = payload => (
-  getFetcher2().patch(`stopwatches/${payload.data.id}?include=author,project`, payload)
+  getFetcher().patch(`stopwatches/${payload.data.id}?include=author,project`, payload)
 );
 
-const readStopwatchPromise = () => getFetcher2().get('stopwatches');
+const readStopwatchPromise = () => getFetcher().get('stopwatches');
 
 function* readStopwatchSaga(action) {
   if (!action.meta || !action.meta.killCache) {

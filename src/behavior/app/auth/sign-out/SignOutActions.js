@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher2 } from '../../api/ApiConfig';
+import { getFetcher } from '../../api/ApiConfig';
 import { extractApiErrors } from '../../api/ApiErrors';
 
 export const SIGN_OUT_REQUESTED = 'SIGN_OUT_REQUESTED';
@@ -12,7 +12,7 @@ const signOutStarted = () => ({ type: SIGN_OUT_STARTED });
 const signOutSucceeded = payload => ({ type: SIGN_OUT_SUCCEEDED, payload });
 const signOutFailed = payload => ({ type: SIGN_OUT_FAILED, payload });
 
-const signOutPromise = () => getFetcher2().delete('auth/sign_out');
+const signOutPromise = () => getFetcher().delete('auth/sign_out');
 
 function* signOutSaga() {
   try {

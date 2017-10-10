@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher2 } from '../../api/ApiConfig';
+import { getFetcher } from '../../api/ApiConfig';
 import { extractApiErrors } from '../../api/ApiErrors';
 
 export const RESTORE_SESSION_REQUESTED = 'RESTORE_SESSION_REQUESTED';
@@ -13,7 +13,7 @@ const restoreSessionSucceeded = payload => ({ type: RESTORE_SESSION_SUCCEEDED, p
 const restoreSessionFailed = payload => ({ type: RESTORE_SESSION_FAILED, payload });
 
 const restoreSessionPromise = () => (
-  getFetcher2().get('auth/validate_token')
+  getFetcher().get('auth/validate_token')
 );
 
 function* restoreSessionSaga() {
