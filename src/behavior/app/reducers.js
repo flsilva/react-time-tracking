@@ -1,4 +1,4 @@
-import { reducer as form } from 'redux-form'
+import { reducer as form } from 'redux-form';
 import auth, { init as initAuthState } from './auth/AuthReducers';
 import database from './DatabaseReducers';
 import projects from './projects/ProjectReducers';
@@ -22,7 +22,7 @@ export const observeStore = (store, select, onChange) => {
 
 export const init = (store) => {
   initAuthState(store, observeStore);
-}
+};
 
 export const reducers = {
   auth,
