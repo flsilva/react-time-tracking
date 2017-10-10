@@ -15,10 +15,11 @@ export const initApp = payload => ({ type: INIT_APP, payload });
 
 function* initAppSaga(action) {
   const { store } = action.payload;
-  // TODO: Rethink. We need to read token from LocalStorage before calling
+  // We need to read token from LocalStorage before calling
   // initAppState(), which in turn calls initAuthState(), triggering its
   // observeStore()'s callback sending null as token, which then gets written
   // to LocalStorage, so we lose it.
+  // TODO: Rethink this implementation.
   const token = getTokenFromLocalStorage();
   //
 
