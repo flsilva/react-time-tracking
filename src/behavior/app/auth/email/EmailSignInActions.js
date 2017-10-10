@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher } from '../../api/ApiConfig';
+import { getFetcher } from '../../';
 import { extractApiErrors } from '../../api/ApiErrors';
 
 export const EMAIL_SIGN_IN_REQUESTED = 'EMAIL_SIGN_IN_REQUESTED';

@@ -3,7 +3,7 @@ import addSeconds from 'date-fns/add_seconds';
 import differenceInSeconds from 'date-fns/difference_in_seconds';
 import isDate from 'date-fns/is_date';
 import { getStopwatch } from './StopwatchReducers';
-import { getFetcher } from '../api/ApiConfig';
+import { getFetcher } from '../';
 import { extractApiErrors } from '../api/ApiErrors';
 import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 

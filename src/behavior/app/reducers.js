@@ -1,5 +1,5 @@
 import { reducer as form } from 'redux-form';
-import auth, { init as initAuthState } from './auth/AuthReducers';
+import auth from './auth/AuthReducers';
 import database from './DatabaseReducers';
 import projects from './projects/ProjectReducers';
 import stopwatches from './stopwatch/StopwatchReducers';
@@ -18,10 +18,6 @@ export const observeStore = (store, select, onChange) => {
   const unsubscribe = store.subscribe(handleChange);
   handleChange();
   return unsubscribe;
-};
-
-export const init = (store) => {
-  initAuthState(store, observeStore);
 };
 
 export const reducers = {

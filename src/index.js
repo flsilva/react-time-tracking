@@ -7,7 +7,8 @@ import createSagaMiddleware from 'redux-saga';
 import { Router, browserHistory } from 'react-router';
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 import routes from './routes';
-import { sagas, initApp } from './behavior/app/AppActions';
+import initApp from './behavior/app';
+import { sagas } from './behavior/app/AppActions';
 import { reducers as appReducers } from './behavior/app/reducers';
 
 import './index.css';
@@ -35,7 +36,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(sagas);
-store.dispatch(initApp({ store }));
+initApp(store);
 
 const history = syncHistoryWithStore(browserHistory, store);
 

@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher } from '../../api/ApiConfig';
+import { getFetcher } from '../../';
 import { extractApiErrors } from '../../api/ApiErrors';
 
 export const RESTORE_SESSION_REQUESTED = 'RESTORE_SESSION_REQUESTED';

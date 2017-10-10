@@ -1,7 +1,7 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { readEntityById, readEntitiesByQueries } from './ProjectReducers';
 import { getUser } from '../auth/AuthReducers';
-import { getFetcher } from '../api/ApiConfig';
+import { getFetcher } from '../';
 import { extractApiErrors } from '../api/ApiErrors';
 import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
