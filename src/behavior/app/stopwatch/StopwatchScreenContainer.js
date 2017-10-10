@@ -31,7 +31,7 @@ StopwatchScreenContainer.propTypes = {
   actions: PropTypes.shape({
     readStopwatch: PropTypes.func.isRequired,
   }).isRequired,
-  error: PropTypes.arrayOf(PropTypes.string),
+  error: PropTypes.arrayOf(PropTypes.object),
 };
 
 StopwatchScreenContainer.defaultProps = {

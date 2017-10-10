@@ -9,9 +9,8 @@ import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
 class SignUpScreenContainer extends Component {
-  submitHandler = (email, password, confirmPassword) => {
-    this.props.actions.emailSignUp(email, password, confirmPassword)
-      .then(this.submitHandlerSuccess);
+  submitHandler = (data) => {
+    this.props.actions.emailSignUp(data, this.submitHandlerSuccess);
   }
 
   submitHandlerSuccess = () => {

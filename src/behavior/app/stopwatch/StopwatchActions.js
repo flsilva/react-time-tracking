@@ -97,7 +97,7 @@ function* readStopwatchSaga(action) {
     yield put(updateDatabase({ data: response.data }));
     yield put(readStopwatchSucceeded({ data: response.data }));
   } catch (error) {
-    yield put(readStopwatchFailed(extractApiErrors(error)));
+    yield put(readStopwatchFailed(extractApiErrors(error.response.data)));
   }
 }
 

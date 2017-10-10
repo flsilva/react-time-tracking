@@ -27,7 +27,7 @@ class EmailSignUpForm extends Component {
     e.preventDefault();
 
     const { email, password, confirmPassword } = this.state;
-    this.props.submitHandler(email, password, confirmPassword);
+    this.props.submitHandler({ email, password, confirmPassword });
   }
 
   render() {

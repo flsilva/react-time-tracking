@@ -1,49 +1,41 @@
-import { getFetcher } from '../../api/ApiConfig';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { getFetcher2 } from '../../api/ApiConfig';
 import { extractApiErrors } from '../../api/ApiErrors';
 
-export const EMAIL_SIGN_UP_START = 'EMAIL_SIGN_UP_START';
-export const EMAIL_SIGN_UP_SUCCESS = 'EMAIL_SIGN_UP_SUCCESS';
-export const EMAIL_SIGN_UP_ERROR = 'EMAIL_SIGN_UP_ERROR';
+const EMAIL_SIGN_UP_REQUESTED = 'EMAIL_SIGN_UP_REQUESTED';
+export const EMAIL_SIGN_UP_STARTED = 'EMAIL_SIGN_UP_STARTED';
+export const EMAIL_SIGN_UP_SUCCEEDED = 'EMAIL_SIGN_UP_SUCCEEDED';
+export const EMAIL_SIGN_UP_FAILED = 'EMAIL_SIGN_UP_FAILED';
 
-const emailSignUpStart = () => ({ type: EMAIL_SIGN_UP_START });
-const emailSignUpSuccess = payload => ({ type: EMAIL_SIGN_UP_SUCCESS, payload });
-const emailSignUpError = payload => ({ type: EMAIL_SIGN_UP_ERROR, payload });
+export const emailSignUp = (payload, successCb) => ({
+  meta: { successCb },
+  payload,
+  type: EMAIL_SIGN_UP_REQUESTED,
+});
+const emailSignUpStarted = () => ({ type: EMAIL_SIGN_UP_STARTED });
+const emailSignUpSucceeded = payload => ({ type: EMAIL_SIGN_UP_SUCCEEDED, payload });
+const emailSignUpFailed = payload => ({ type: EMAIL_SIGN_UP_FAILED, payload });
 
-export const emailSignUp = (email, password, confirmPassword) => (
-  (dispatch) => {
-    // console.log('EmailSignUpActions::emailSignUp()');
+const emailSignUpPromise = payload => getFetcher2().post('auth', payload);
 
-    dispatch(emailSignUpStart());
-
-    const errorHandler = (error) => {
-      // console.log('EmailSignInActions::emailSignUp().errorHandler() - error: ', error);
-
-      const errors = extractApiErrors(error);
-      dispatch(emailSignUpError(errors));
-      return new Promise((resolve, reject) => reject(errors));
-    };
-
-    const successHandler = (json) => {
-      // console.log('EmailSignUpActions::emailSignUp().successHandler() - json: ', json);
-      dispatch(emailSignUpSuccess(json.data));
-      return json.data;
-    };
-
-    const opts = {
-      body: JSON.stringify({
-        email,
-        password,
-        password_confirmation: confirmPassword,
-        confirm_success_url: 'http://127.0.0.1:3001/sign-up/confirmation',
-      }),
-      method: 'POST',
-    };
-
+function* emailSignUpSaga(action) {
+  try {
+    yield put(emailSignUpStarted());
+    const { email, password, confirmPassword } = action.payload;
     const payload = {
-      opts,
-      path: 'auth',
+      confirm_success_url: 'http://127.0.0.1:3001/sign-up/confirmation',
+      email,
+      password,
+      password_confirmation: confirmPassword,
     };
-
-    return getFetcher().fetch(payload).then(successHandler).catch(errorHandler);
+    const response = yield call(emailSignUpPromise, payload);
+    yield put(emailSignUpSucceeded(response.data.data));
+    if (action.meta && action.meta.successCb) action.meta.successCb();
+  } catch (error) {
+    yield put(emailSignUpFailed(extractApiErrors(error.response.data)));
   }
-);
+}
+
+export function* bindActionsToSagas() {
+  yield takeLatest(EMAIL_SIGN_UP_REQUESTED, emailSignUpSaga);
+}

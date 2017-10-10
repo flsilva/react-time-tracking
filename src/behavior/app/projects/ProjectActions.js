@@ -104,7 +104,7 @@ function* createEntitySaga(action) {
     yield put(clearDatabase());
     yield put(updateDatabase({ data: response.data }));
     yield put(createEntitySucceeded({ data: response.data }));
-    if (action.meta.successCb) action.meta.successCb();
+    if (action.meta && action.meta.successCb) action.meta.successCb();
   } catch (error) {
     yield put(createEntityFailed(extractApiErrors(error)));
   }

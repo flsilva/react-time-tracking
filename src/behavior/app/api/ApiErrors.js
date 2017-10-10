@@ -1,9 +1,11 @@
 import isString from 'lodash/isString';
 
+const DEFAULT_ERROR_MESSAGE = 'There was an error trying to connect to our servers, please try again.';
+
 // eslint-disable-next-line import/prefer-default-export
 export const extractApiErrors = (error) => {
   if (!error) {
-    return [{ detail: 'There was an error trying to connect to our servers, please try again.' }];
+    return [{ detail: DEFAULT_ERROR_MESSAGE }];
   }
 
   let errors;
@@ -11,7 +13,7 @@ export const extractApiErrors = (error) => {
   if (isString(error)) {
     errors = [{ detail: error }];
   } else if (error.errors && error.errors.full_messages) {
-    errors = error.errors.full_messages;
+    errors = error.errors.full_messages.map(detail => ({ detail }));
   } else if (error.errors) {
     errors = error.errors.map(someError => (
       isString(someError) ? { detail: someError } : someError

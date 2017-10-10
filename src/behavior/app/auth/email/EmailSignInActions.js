@@ -20,9 +20,7 @@ const emailSignInPromise = payload => getFetcher2().post('auth/sign_in', payload
 function* emailSignInSaga(action) {
   try {
     yield put(emailSignInStarted());
-
     const response = yield call(emailSignInPromise, action.payload);
-
     yield put(emailSignInSucceeded(response.data.data));
   } catch (error) {
     yield put(emailSignInFailed(extractApiErrors(error.response.data)));
