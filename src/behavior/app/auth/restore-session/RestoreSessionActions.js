@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { getFetcher } from '../../';
-import { extractApiErrors } from '../../api/ApiErrors';
 
 export const RESTORE_SESSION_REQUESTED = 'RESTORE_SESSION_REQUESTED';
 export const RESTORE_SESSION_STARTED = 'RESTORE_SESSION_STARTED';
@@ -19,12 +18,10 @@ const restoreSessionPromise = () => (
 function* restoreSessionSaga() {
   try {
     yield put(restoreSessionStarted());
-
     const response = yield call(restoreSessionPromise);
-
     yield put(restoreSessionSucceeded(response.data.data));
   } catch (error) {
-    yield put(restoreSessionFailed(extractApiErrors(error.response.data)));
+    yield put(restoreSessionFailed(error));
   }
 }
 

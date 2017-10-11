@@ -3,7 +3,7 @@ import isString from 'lodash/isString';
 const DEFAULT_ERROR_MESSAGE = 'There was an error trying to connect to our servers, please try again.';
 
 // eslint-disable-next-line import/prefer-default-export
-export const extractApiErrors = (error) => {
+export const formatApiError = (error) => {
   if (!error) {
     return [{ detail: DEFAULT_ERROR_MESSAGE }];
   }

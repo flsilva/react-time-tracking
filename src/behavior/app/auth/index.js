@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
 import { newTokenReceived, userSignOutSucceeded } from './AuthActions';
-import { getToken, getTokenFromLocalStorage, init as initState } from './AuthState';
+import { getToken, getTokenFromLocalStorage, registerObservers } from './AuthState';
 import { restoreSession } from './restore-session/RestoreSessionActions';
 
 const tokenHeaderKeys = [
@@ -24,7 +24,7 @@ export default (_store, observeStore) => {
   const token = getTokenFromLocalStorage();
   /**/
 
-  initState(store, observeStore);
+  registerObservers(store, observeStore);
 
   if (token) {
     store.dispatch(newTokenReceived(token));
@@ -34,17 +34,14 @@ export default (_store, observeStore) => {
 
 export const getAuthHeaders = () => getToken(store.getState());
 
-export const extractHttpAuthHeadersFromResponse = dispatch => (response) => {
-  const headers = pick(response.headers, tokenHeaderKeys);
-  if (!isEmpty(headers)) {
-    dispatch(newTokenReceived(headers));
+export const extractAuthDataFromObject = (dispatch, object) => {
+  const token = pick(object, tokenHeaderKeys);
+  if (!isEmpty(token)) {
+    dispatch(newTokenReceived(token));
   }
-
-  return response;
 };
 
-export const unauthorizedHttpResponseHandler = dispatch => (error) => {
-  if (error.response.status !== 401) return Promise.reject(error);
+export const unauthorizedHandler = (dispatch) => {
   dispatch(userSignOutSucceeded());
-  return Promise.reject(unauthorizedMessage);
+  return unauthorizedMessage;
 };

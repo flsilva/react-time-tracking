@@ -1,23 +1,38 @@
 import axios from 'axios';
 import { observeStore } from './AppState';
 import initAuth, {
-  extractHttpAuthHeadersFromResponse,
+  extractAuthDataFromObject,
   getAuthHeaders,
-  unauthorizedHttpResponseHandler,
+  unauthorizedHandler,
 } from './auth';
 import { getUser } from './auth/AuthState';
+import { formatApiError } from './api/ApiErrors';
 
 let store;
-
-export default (_store) => {
-  store = _store;
-  initAuth(store, observeStore);
-};
 
 const getHeaders = () => ({
   ...getAuthHeaders(),
   'Content-Type': 'application/vnd.api+json',
 });
+
+const extractHttpAuthHeadersFromResponse = (response) => {
+  extractAuthDataFromObject(store.dispatch, response.headers);
+  return response;
+};
+
+const unauthorizedHttpHandler = (error) => {
+  if (error.response.status !== 401) return Promise.reject(error);
+  return Promise.reject(unauthorizedHandler(store.dispatch));
+};
+
+const formatApiErrorHandler = error => (
+  Promise.reject(formatApiError(error.response.data))
+);
+
+export default (_store) => {
+  store = _store;
+  initAuth(store, observeStore);
+};
 
 export const getFetcher = () => {
   const fetcher = axios.create({
@@ -35,16 +50,12 @@ export const getFetcher = () => {
    * but their tokens have expired.
    */
   if (getUser(store.getState())) {
-    fetcher.interceptors.response.use(
-      null,
-      unauthorizedHttpResponseHandler(store.dispatch),
-    );
+    fetcher.interceptors.response.use(null, unauthorizedHttpHandler);
   }
   /**/
 
-  fetcher.interceptors.response.use(
-    extractHttpAuthHeadersFromResponse(store.dispatch),
-  );
+  fetcher.interceptors.response.use(extractHttpAuthHeadersFromResponse);
+  fetcher.interceptors.response.use(null, formatApiErrorHandler);
 
   return fetcher;
 };

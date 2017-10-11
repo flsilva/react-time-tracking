@@ -52,7 +52,7 @@ const saveTokenToLocalStorage = (_token) => {
   localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(_token));
 };
 
-export const init = (store, observeStore) => {
+export const registerObservers = (store, observeStore) => {
   observeStore(store, getToken, saveTokenToLocalStorage);
 };
 

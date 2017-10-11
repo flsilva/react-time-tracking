@@ -4,7 +4,6 @@ import differenceInSeconds from 'date-fns/difference_in_seconds';
 import isDate from 'date-fns/is_date';
 import { getStopwatch } from './StopwatchState';
 import { getFetcher } from '../';
-import { extractApiErrors } from '../api/ApiErrors';
 import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
 export const SET_ACTIVITY_DATE_REQUESTED = 'app/stopwatch/set/date/requested';
@@ -97,7 +96,7 @@ function* readStopwatchSaga(action) {
     yield put(updateDatabase({ data: response.data }));
     yield put(readStopwatchSucceeded({ data: response.data }));
   } catch (error) {
-    yield put(readStopwatchFailed(extractApiErrors(error.response.data)));
+    yield put(readStopwatchFailed(error));
   }
 }
 
@@ -112,7 +111,7 @@ function* startStopwatchSaga() {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -136,7 +135,7 @@ function* pauseStopwatchSaga() {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -175,7 +174,7 @@ function* setStopwatchHoursSaga(action) {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -214,7 +213,7 @@ function* setStopwatchMinutesSaga(action) {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -236,7 +235,7 @@ function* setActivityDateSaga(action) {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -255,7 +254,7 @@ function* setActivityProjectSaga(action) {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -273,7 +272,7 @@ function* setActivityDescriptionSaga(action) {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 
@@ -297,7 +296,7 @@ function* resetStopwatchSaga(action) {
     const response = yield call(updateStopwatchPromise, payload);
     yield put(updateDatabase({ data: response.data }));
   } catch (error) {
-    yield put(updateStopwatchFailed(extractApiErrors(error)));
+    yield put(updateStopwatchFailed(error));
   }
 }
 

@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { getFetcher } from '../../';
-import { extractApiErrors } from '../../api/ApiErrors';
 
 export const EMAIL_SIGN_IN_REQUESTED = 'EMAIL_SIGN_IN_REQUESTED';
 export const EMAIL_SIGN_IN_STARTED = 'EMAIL_SIGN_IN_STARTED';
@@ -23,7 +22,7 @@ function* emailSignInSaga(action) {
     const response = yield call(emailSignInPromise, action.payload);
     yield put(emailSignInSucceeded(response.data.data));
   } catch (error) {
-    yield put(emailSignInFailed(extractApiErrors(error.response.data)));
+    yield put(emailSignInFailed(error));
   }
 }
 

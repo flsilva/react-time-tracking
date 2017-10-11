@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { getFetcher } from '../../';
-import { extractApiErrors } from '../../api/ApiErrors';
 
 export const SIGN_OUT_REQUESTED = 'SIGN_OUT_REQUESTED';
 export const SIGN_OUT_STARTED = 'SIGN_OUT_STARTED';
@@ -20,7 +19,7 @@ function* signOutSaga() {
     yield call(signOutPromise);
     yield put(signOutSucceeded());
   } catch (error) {
-    yield put(signOutFailed(extractApiErrors(error.response.data)));
+    yield put(signOutFailed(error));
     yield put(signOutSucceeded());
   }
 }

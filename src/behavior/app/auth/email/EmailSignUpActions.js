@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { getFetcher } from '../../';
-import { extractApiErrors } from '../../api/ApiErrors';
 
 const EMAIL_SIGN_UP_REQUESTED = 'EMAIL_SIGN_UP_REQUESTED';
 export const EMAIL_SIGN_UP_STARTED = 'EMAIL_SIGN_UP_STARTED';
@@ -32,7 +31,7 @@ function* emailSignUpSaga(action) {
     yield put(emailSignUpSucceeded(response.data.data));
     if (action.meta && action.meta.successCb) action.meta.successCb();
   } catch (error) {
-    yield put(emailSignUpFailed(extractApiErrors(error.response.data)));
+    yield put(emailSignUpFailed(error));
   }
 }
 

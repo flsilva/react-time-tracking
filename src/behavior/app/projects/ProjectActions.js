@@ -2,7 +2,6 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { readEntityById, readEntitiesByQueries } from './ProjectState';
 import { getUser } from '../auth/AuthState';
 import { getFetcher } from '../';
-import { extractApiErrors } from '../api/ApiErrors';
 import { addRelationshipToPayload, formatPayloadToApi } from '../api/JsonApiUtils';
 
 export const CLEAR_DATABASE = 'app/projects/clear/database';
@@ -106,7 +105,8 @@ function* createEntitySaga(action) {
     yield put(createEntitySucceeded({ data: response.data }));
     if (action.meta && action.meta.successCb) action.meta.successCb();
   } catch (error) {
-    yield put(createEntityFailed(extractApiErrors(error)));
+    console.log('createEntitySaga().catch() - error: ', error);
+    yield put(createEntityFailed(error));
   }
 }
 
@@ -140,7 +140,7 @@ function* readEntitiesSaga(action) {
     yield put(updateDatabase({ data: response.data }));
     yield put(readEntitiesSucceeded({ data: response.data, query: action.payload.query }));
   } catch (error) {
-    yield put(readEntitiesFailed(extractApiErrors(error)));
+    yield put(readEntitiesFailed(error));
   }
 }
 
@@ -171,7 +171,7 @@ function* readEntitySaga(action) {
     yield put(updateDatabase({ data: response.data }));
     yield put(readEntitySucceeded({ data: response.data }));
   } catch (error) {
-    yield put(readEntityFailed(extractApiErrors(error)));
+    yield put(readEntityFailed(error));
   }
 }
 
@@ -198,7 +198,7 @@ function* updateEntitySaga({ payload, meta }) {
     yield put(updateEntitySucceeded({ data: response.data }));
     if (meta.successCb) meta.successCb();
   } catch (error) {
-    yield put(updateEntityFailed(extractApiErrors(error)));
+    yield put(updateEntityFailed(error));
   }
 }
 
@@ -218,7 +218,7 @@ function* deleteEntitySaga(action) {
     yield put(deleteEntitySucceeded());
     if (action.meta.successCb) action.meta.successCb();
   } catch (error) {
-    yield put(deleteEntityFailed(extractApiErrors(error)));
+    yield put(deleteEntityFailed(error));
   }
 }
 
