@@ -13,7 +13,7 @@ class ProjectFormScreenContainer extends Component {
 
   componentDidMount() {
     const id = this.props.params.projectId;
-    if (id) this.props.actions.readEntity(id, '?include=author');
+    if (id) this.props.actions.readEntity(id, { include: 'author' });
   }
 
   getSubmitHandler = () => (

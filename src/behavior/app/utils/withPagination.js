@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 
-const buildQuery = (page, itemsPerPage) => (
-  `?page[number]=${page}&page[size]=${itemsPerPage}&sort=-created-at&include=author`
-);
+const buildQuery = (page, itemsPerPage) => ({
+  include: 'author',
+  'page[number]': page,
+  'page[size]': itemsPerPage,
+  sort: '-created-at',
+});
 
 const withPagination = WrappedComponent => (
   class extends Component {

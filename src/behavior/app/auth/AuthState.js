@@ -48,7 +48,6 @@ export const getTokenFromLocalStorage = () => (
 );
 
 const saveTokenToLocalStorage = (_token) => {
-  console.log('AuthState().saveTokenToLocalStorage() - _token: ', _token);
   localStorage.setItem(STORAGE_TOKEN_ID, JSON.stringify(_token));
 };
 

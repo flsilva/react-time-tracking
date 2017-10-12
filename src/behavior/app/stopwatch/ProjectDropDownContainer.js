@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { readEntities, QUERY_ALL } from '../projects/ProjectActions';
-import { readEntitiesByQueries } from '../projects/ProjectState';
+import { readEntities } from '../projects/ProjectActions';
+import { getEntities } from '../projects/ProjectState';
 import { setActivityProject } from './StopwatchActions';
 import { getStopwatch } from './StopwatchState';
 import ProjectDropDown from '../../../ui/app/stopwatch/ProjectDropDown';
@@ -12,7 +12,7 @@ import ProjectDropDown from '../../../ui/app/stopwatch/ProjectDropDown';
 class ProjectDropDownContainer extends Component {
 
   componentDidMount() {
-    this.props.actions.readEntities(QUERY_ALL);
+    this.props.actions.readEntities();
   }
 
   render() {
@@ -51,7 +51,7 @@ const mapStateToProps = (state) => {
 
   return {
     activityDate,
-    data: readEntitiesByQueries(state, [QUERY_ALL]),
+    data: getEntities(state),
     isConnecting: state.projects.isConnecting,
     projectId,
   };

@@ -7,6 +7,10 @@ export const addRelationshipToPayload = (payload, attrName, type, id) => {
   if (!type) throw new Error('Argument <type> must not be null.');
   if (!id) throw new Error('Argument <id> must not be null.');
 
+  console.log('addRelationshipToPayload() - payload: ', payload);
+  console.log('addRelationshipToPayload() - attrName: ', attrName);
+  console.log('addRelationshipToPayload() - type: ', type);
+  console.log('addRelationshipToPayload() - id: ', id);
   return merge({ ...payload }, {
     data: {
       relationships: {

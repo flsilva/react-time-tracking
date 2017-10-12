@@ -23,6 +23,8 @@ import {
 } from './ProjectActions';
 import { USER_SIGN_OUT_SUCCEEDED } from '../auth/AuthActions';
 
+const QUERY_ALL = 'app/projects/query/entity/all';
+
 export const entities = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_DATABASE:
@@ -42,7 +44,7 @@ const fetchedQueries = (state = {}, action) => {
     case READ_ENTITIES_SUCCEEDED:
       return {
         ...state,
-        [action.payload.query]: {
+        [JSON.stringify(action.payload.query)]: {
           ids: action.payload.data.data.map(entity => entity.id),
           links: action.payload.data.links,
         },
@@ -113,12 +115,16 @@ export const readEntityById = (state, id) => {
   return build(state.database, 'projects', id, { eager: true, ignoreLinks: true });
 };
 
-export const readEntitiesByQueries = (state, queries = []) => {
-  if (!state.projects || !queries.length) return null;
+export const getEntities = (state, queries = []) => {
+  if (!state.projects) return null;
+  if (!queries.length) queries.push(QUERY_ALL);
 
   return flatten(
+    // transform query objects into strings
+    // so we can use them to index fetchedQueries
+    queries.map(query => JSON.stringify(query))
     // filter out requested queries not stored
-    queries.filter(query => state.projects.fetchedQueries[query])
+    .filter(query => state.projects.fetchedQueries[query])
     // map an array of queries (String objects)
     // to an array of arrays of entity IDs
     .map(query => state.projects.fetchedQueries[query].ids
@@ -127,10 +133,15 @@ export const readEntitiesByQueries = (state, queries = []) => {
     ));
 };
 
-export const getEntitiesPaginationByQuery = (state, query) => (
-  state.projects && state.projects.fetchedQueries && state.projects.fetchedQueries[query] ?
-    state.projects.fetchedQueries[query].links : null
-);
+export const getEntitiesPaginationByQuery = (state, _query) => {
+  if (!state.projects || !state.projects.fetchedQueries) return null;
+
+  const query = JSON.stringify(_query);
+  const fetchedQuery = state.projects.fetchedQueries[query];
+  if (!fetchedQuery) return null;
+
+  return fetchedQuery.links;
+};
 
 export default combineReducers({
   error,

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as ProjectActions from './ProjectActions';
-import { readEntitiesByQueries, getEntitiesPaginationByQuery } from './ProjectState';
+import { getEntities, getEntitiesPaginationByQuery } from './ProjectState';
 import ProjectListScreen from '../../../ui/app/projects/ProjectListScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -88,7 +88,7 @@ const mapStateToProps = (state, { queries = [] }) => {
 
   return ({
     projects: {
-      list: readEntitiesByQueries(state, queries),
+      list: getEntities(state, queries),
       pagination,
       error: state.projects.error,
       isConnecting: state.projects.isConnecting,

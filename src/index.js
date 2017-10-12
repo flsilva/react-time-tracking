@@ -7,10 +7,9 @@ import createSagaMiddleware from 'redux-saga';
 import { Router, browserHistory } from 'react-router';
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 import routes from './routes';
-import initApp from './behavior/app';
+import initApp, { appMiddleware } from './behavior/app';
 import { sagas } from './behavior/app/AppActions';
 import { reducers as appReducers } from './behavior/app/AppState';
-
 import './index.css';
 
 const reducers = combineReducers({
@@ -27,6 +26,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducers,
   composeEnhancers(
+    appMiddleware,
     applyMiddleware(
       thunkMiddleware,
       sagaMiddleware,

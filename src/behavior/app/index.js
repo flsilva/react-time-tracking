@@ -1,11 +1,14 @@
+import { applyMiddleware } from 'redux';
 import axios from 'axios';
 import { observeStore } from './AppState';
 import initAuth, {
+  authMiddleware,
   extractAuthDataFromObject,
   getAuthHeaders,
   unauthorizedHandler,
 } from './auth';
 import { getUser } from './auth/AuthState';
+import { apiMiddleware } from './api';
 import { formatApiError } from './api/ApiErrors';
 
 let store;
@@ -59,3 +62,7 @@ export const getFetcher = () => {
 
   return fetcher;
 };
+
+export const makeHttpRequest = request => getFetcher().request(request);
+
+export const appMiddleware = applyMiddleware(authMiddleware, apiMiddleware);

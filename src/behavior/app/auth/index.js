@@ -1,7 +1,8 @@
+import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
 import { newTokenReceived, userSignOutSucceeded } from './AuthActions';
-import { getToken, getTokenFromLocalStorage, registerObservers } from './AuthState';
+import { getToken, getTokenFromLocalStorage, getUser, registerObservers } from './AuthState';
 import { restoreSession } from './restore-session/RestoreSessionActions';
 
 const tokenHeaderKeys = [
@@ -44,4 +45,18 @@ export const extractAuthDataFromObject = (dispatch, object) => {
 export const unauthorizedHandler = (dispatch) => {
   dispatch(userSignOutSucceeded());
   return unauthorizedMessage;
+};
+
+export const authMiddleware = _store => next => (action) => {
+  console.log('authMiddleware() - action', action);
+
+  const user = getUser(_store.getState());
+  if (!user) return next(action);
+
+  const newAction = cloneDeep(action);
+  if (!newAction.meta) newAction.meta = {};
+  if (!newAction.meta.auth) newAction.meta.auth = {};
+  newAction.meta.auth.user = user;
+
+  return next(newAction);
 };
