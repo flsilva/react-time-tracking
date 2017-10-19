@@ -1,8 +1,11 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import addSeconds from 'date-fns/add_seconds';
-import differenceInSeconds from 'date-fns/difference_in_seconds';
 import isDate from 'date-fns/is_date';
 import { getStopwatch } from './StopwatchState';
+import {
+  changeElapsedHours,
+  changeElapsedMinutes,
+  getElapsedTimeInSeconds,
+} from './StopwatchUtils';
 
 export const SET_ACTIVITY_DATE_REQUESTED = 'app/stopwatch/set/date/requested';
 export const SET_ACTIVITY_DESCRIPTION_REQUESTED = 'app/stopwatch/set/description/requested';
@@ -18,21 +21,6 @@ export const START_STOPWATCH_REQUESTED = 'app/stopwatch/start/requested';
 export const RESET_STOPWATCH_REQUESTED = 'app/stopwatch/reset/requested';
 export const UPDATE_STOPWATCH_FAILED = 'app/stopwatch/update/failed';
 export const UPDATE_DATABASE = 'app/stopwatch/update/database';
-
-const getTotalElapsedSeconds = (startedAt, activityTotalTime) => (
-  startedAt ?
-    differenceInSeconds(addSeconds(new Date(), activityTotalTime), startedAt) : activityTotalTime
-);
-
-const getTime = (startedAt, activityTotalTime) => {
-  const totalElapsedSeconds = getTotalElapsedSeconds(startedAt, activityTotalTime);
-  const hours = Math.floor(totalElapsedSeconds / 3600);
-  const minutes = Math.floor(totalElapsedSeconds / 60) - (hours * 60);
-  let seconds = totalElapsedSeconds - (minutes * 60) - (hours * 3600);
-  if (seconds < 10) seconds = `0${seconds}`;
-
-  return { hours, minutes, seconds };
-};
 
 const generatePatchHttpRequest = (id, payload = {}) => {
   if (!id) throw new Error('Argument <id> must not be null.');
@@ -91,14 +79,14 @@ export const pauseStopwatch = ({ id, startedAt, activityTotalTime = 0 }) => {
     type: PAUSE_STOPWATCH_REQUESTED,
     meta: {
       http: generatePatchHttpRequest(id, {
-        activityTotalTime: (activityTotalTime + differenceInSeconds(new Date(), startedAt)),
+        activityTotalTime: getElapsedTimeInSeconds(startedAt, new Date(), activityTotalTime),
         startedAt: null,
       }),
     },
   };
 };
 
-export const setStopwatchHours = ({ id, startedAt, activityTotalTime = 0, hours = 0 }) => {
+export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0 }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
 
@@ -106,26 +94,17 @@ export const setStopwatchHours = ({ id, startedAt, activityTotalTime = 0, hours 
     throw new Error('Argument <hours> must be an integer.');
   }
 
-  const currentHours = getTime(startedAt, activityTotalTime).hours;
-
-  let newActivityTotalTime = activityTotalTime;
-  if (hours > currentHours) {
-    newActivityTotalTime += (hours - currentHours) * 3600;
-  } else {
-    newActivityTotalTime -= (currentHours - hours) * 3600;
-  }
-
   return {
     type: SET_STOPWATCH_HOURS_REQUESTED,
     meta: {
       http: generatePatchHttpRequest(id, {
-        activityTotalTime: newActivityTotalTime,
+        activityTotalTime: changeElapsedHours(activityTotalTime, hours),
       }),
     },
   };
 };
 
-export const setStopwatchMinutes = ({ id, startedAt, activityTotalTime = 0, minutes = 0 }) => {
+export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0 }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
 
@@ -133,20 +112,11 @@ export const setStopwatchMinutes = ({ id, startedAt, activityTotalTime = 0, minu
     throw new Error('Argument <minutes> must be an integer.');
   }
 
-  const currentMinutes = getTime(startedAt, activityTotalTime).minutes;
-
-  let newActivityTotalTime = activityTotalTime;
-  if (minutes > currentMinutes) {
-    newActivityTotalTime += (minutes - currentMinutes) * 60;
-  } else {
-    newActivityTotalTime -= (currentMinutes - minutes) * 60;
-  }
-
   return {
     type: SET_STOPWATCH_MINUTES_REQUESTED,
     meta: {
       http: generatePatchHttpRequest(id, {
-        activityTotalTime: newActivityTotalTime,
+        activityTotalTime: changeElapsedMinutes(activityTotalTime, minutes),
       }),
     },
   };

@@ -43,6 +43,7 @@ const StopwatchTimeAndControls = (props) => {
       </div>
       <TimeElapsed
         activityTotalTime={activityTotalTime}
+        getElapsedTimeObject={props.getElapsedTimeObject}
         onHourPick={props.onHourPick}
         isRunning={isRunning}
         onMinutePick={props.onMinutePick}
@@ -60,6 +61,7 @@ StopwatchTimeAndControls.contextTypes = {
 
 StopwatchTimeAndControls.propTypes = {
   activityTotalTime: PropTypes.number,
+  getElapsedTimeObject: PropTypes.func.isRequired,
   isRunning: PropTypes.bool,
   startedAt: PropTypes.instanceOf(Date),
   onHourPick: PropTypes.func.isRequired,

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import addSeconds from 'date-fns/add_seconds';
-import differenceInSeconds from 'date-fns/difference_in_seconds';
 
 const styles = {
   container: {
@@ -46,7 +44,7 @@ class TimeElapsed extends Component {
   state = {
     hours: 0,
     minutes: 0,
-    seconds: '00',
+    seconds: 0,
   }
 
   // componentWillMount() is needed because when we navigate between screens
@@ -68,19 +66,10 @@ class TimeElapsed extends Component {
   }
 
   getTime = (startedAt, activityTotalTime) => {
-    const totalElapsedSeconds = this.getTotalElapsedSeconds(startedAt, activityTotalTime);
-    const hours = Math.floor(totalElapsedSeconds / 3600);
-    const minutes = Math.floor(totalElapsedSeconds / 60) - (hours * 60);
-    let seconds = totalElapsedSeconds - (minutes * 60) - (hours * 3600);
-    if (seconds < 10) seconds = `0${seconds}`;
-
-    return { hours, minutes, seconds };
+    const time = this.props.getElapsedTimeObject(startedAt, new Date(), activityTotalTime);
+    if (time.seconds < 10) time.seconds = `0${time.seconds}`;
+    return time;
   }
-
-  getTotalElapsedSeconds = (startedAt, activityTotalTime) => (
-    startedAt ?
-      differenceInSeconds(addSeconds(new Date(), activityTotalTime), startedAt) : activityTotalTime
-  );
 
   handleUpdate = (props) => {
     if (props.isRunning) {
@@ -149,6 +138,7 @@ class TimeElapsed extends Component {
 
 TimeElapsed.propTypes = {
   onHourPick: PropTypes.func.isRequired,
+  getElapsedTimeObject: PropTypes.func.isRequired,
   isRunning: PropTypes.bool,
   onMinutePick: PropTypes.func.isRequired,
   startedAt: PropTypes.instanceOf(Date),

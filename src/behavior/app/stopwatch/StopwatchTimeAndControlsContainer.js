@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
 import { getStopwatch } from './StopwatchState';
+import { getElapsedTimeObject } from './StopwatchUtils';
 import StopwatchTimeAndControls from '../../../ui/app/stopwatch/StopwatchTimeAndControls';
 
 const StopwatchTimeAndControlsContainer = (props) => {
@@ -17,18 +18,19 @@ const StopwatchTimeAndControlsContainer = (props) => {
   };
 
   const setStopwatchHours = (hours) => {
-    const { id, activityTotalTime, startedAt } = props;
-    props.actions.setStopwatchHours({ id, activityTotalTime, hours, startedAt });
+    const { id, activityTotalTime } = props;
+    props.actions.setStopwatchHours({ id, activityTotalTime, hours });
   };
 
   const setStopwatchMinutes = (minutes) => {
-    const { id, activityTotalTime, startedAt } = props;
-    props.actions.setStopwatchMinutes({ id, activityTotalTime, minutes, startedAt });
+    const { id, activityTotalTime } = props;
+    props.actions.setStopwatchMinutes({ id, activityTotalTime, minutes });
   };
 
   return (
     <StopwatchTimeAndControls
       activityTotalTime={props.activityTotalTime}
+      getElapsedTimeObject={getElapsedTimeObject}
       isConnecting={props.isConnecting}
       isRunning={props.isRunning}
       onHourPick={setStopwatchHours}
