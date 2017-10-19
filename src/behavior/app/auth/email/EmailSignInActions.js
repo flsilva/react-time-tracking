@@ -31,8 +31,8 @@ function* emailSignInSaga({ meta }) {
   try {
     yield put(emailSignInStarted());
     const { makeRequest, request } = meta.http;
-    const response = yield makeRequest(request);
-    yield put(emailSignInSucceeded(response.data.data));
+    const data = yield makeRequest(request);
+    yield put(emailSignInSucceeded(data.data));
   } catch (error) {
     yield put(emailSignInFailed(error));
   }

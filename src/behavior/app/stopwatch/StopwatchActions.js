@@ -229,10 +229,10 @@ function* readStopwatchSaga({ meta }) {
   try {
     yield put(readStopwatchStarted());
 
-    const response = yield makeRequest(request);
+    const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data: response.data }));
-    yield put(readStopwatchSucceeded({ data: response.data }));
+    yield put(updateDatabase({ data }));
+    yield put(readStopwatchSucceeded({ data }));
   } catch (error) {
     yield put(readStopwatchFailed(error));
   }
@@ -246,8 +246,8 @@ function* updateStopwatchSaga({ meta }) {
     yield put(updateDatabase({ data: request.data }));
     //
 
-    const response = yield makeRequest(request);
-    yield put(updateDatabase({ data: response.data }));
+    const data = yield makeRequest(request);
+    yield put(updateDatabase({ data }));
   } catch (error) {
     yield put(updateStopwatchFailed(error));
   }

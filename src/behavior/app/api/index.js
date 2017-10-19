@@ -15,6 +15,8 @@ const getFetcher = () => {
   return fetcher;
 };
 
+const extractData = response => response.data;
+
 const extractHttpAuthHeadersFromResponse = (dispatch, extractAuthDataFromObject) => (response) => {
   extractAuthDataFromObject(dispatch, response.headers);
   return response;
@@ -46,6 +48,7 @@ const addInterceptors = (dispatch, action, fetcher) => {
     );
   }
 
+  fetcher.interceptors.response.use(extractData, null);
   fetcher.interceptors.response.use(null, formatApiErrorHandler);
 };
 

@@ -25,8 +25,8 @@ function* restoreSessionSaga({ meta }) {
   try {
     yield put(restoreSessionStarted());
     const { makeRequest, request } = meta.http;
-    const response = yield makeRequest(request);
-    yield put(restoreSessionSucceeded(response.data.data));
+    const data = yield makeRequest(request);
+    yield put(restoreSessionSucceeded(data.data));
   } catch (error) {
     yield put(restoreSessionFailed(error));
   }

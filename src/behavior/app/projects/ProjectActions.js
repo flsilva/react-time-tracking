@@ -156,11 +156,11 @@ function* createEntitySaga({ meta }) {
     yield put(createEntityStarted());
 
     const { makeRequest, request, successCb } = meta.http;
-    const response = yield makeRequest(request);
+    const data = yield makeRequest(request);
 
     yield put(clearDatabase());
-    yield put(updateDatabase({ data: response.data }));
-    yield put(createEntitySucceeded({ data: response.data }));
+    yield put(updateDatabase({ data }));
+    yield put(createEntitySucceeded({ data }));
     if (successCb) successCb();
   } catch (error) {
     yield put(createEntityFailed(error));
@@ -179,10 +179,10 @@ function* readEntitiesSaga({ meta }) {
   try {
     yield put(readEntitiesStarted());
 
-    const response = yield makeRequest(request);
+    const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data: response.data }));
-    yield put(readEntitiesSucceeded({ data: response.data, query: request.params }));
+    yield put(updateDatabase({ data }));
+    yield put(readEntitiesSucceeded({ data, query: request.params }));
   } catch (error) {
     yield put(readEntitiesFailed(error));
   }
@@ -199,10 +199,10 @@ function* readEntitySaga({ meta }) {
   try {
     yield put(readEntityStarted());
 
-    const response = yield makeRequest(request);
+    const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data: response.data }));
-    yield put(readEntitySucceeded({ data: response.data }));
+    yield put(updateDatabase({ data }));
+    yield put(readEntitySucceeded({ data }));
   } catch (error) {
     yield put(readEntityFailed(error));
   }
@@ -213,10 +213,10 @@ function* updateEntitySaga({ meta }) {
     yield put(updateEntityStarted());
 
     const { makeRequest, request, successCb } = meta.http;
-    const response = yield makeRequest(request);
+    const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data: response.data }));
-    yield put(updateEntitySucceeded({ data: response.data }));
+    yield put(updateDatabase({ data }));
+    yield put(updateEntitySucceeded({ data }));
     if (successCb) successCb();
   } catch (error) {
     yield put(updateEntityFailed(error));

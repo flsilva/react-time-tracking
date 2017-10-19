@@ -42,8 +42,8 @@ function* emailSignUpSaga({ meta }) {
   try {
     yield put(emailSignUpStarted());
     const { makeRequest, request, successCb } = meta.http;
-    const response = yield makeRequest(request);
-    yield put(emailSignUpSucceeded(response.data.data));
+    const data = yield makeRequest(request);
+    yield put(emailSignUpSucceeded(data.data));
     if (successCb) successCb();
   } catch (error) {
     yield put(emailSignUpFailed(error));
