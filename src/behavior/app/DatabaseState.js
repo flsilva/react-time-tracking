@@ -4,10 +4,19 @@ import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectA
 import { entities as userEntitiesReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
 import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchState';
-import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './stopwatch/StopwatchActions';
+// import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './stopwatch/StopwatchActions';
 
-// export const CLEAR_DATABASE = 'CLEAR_DATABASE';
-// export const UPDATE_DATABASE = 'UPDATE_DATABASE';
+/*
+ * TODO: try to fix.
+ * Weird bug: commented out line above
+ * import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE }
+ * doesn't work, we get undefined as variable value.
+ * If I rename StopwatchActions.js file to StopwatchActions2.js
+ * and import from it it does work. Need more investigation.
+ * Keeping this ugly hack for now.
+ */
+const UPDATE_STOPWATCH_DATABASE = 'app/stopwatch/update/database';
+/**/
 
 const entityReducers = {
   projects: {
@@ -26,7 +35,6 @@ const entityReducers = {
 
 export default (state = {}, action) => {
   switch (action.type) {
-      // case UPDATE_DATABASE: {
     case UPDATE_PROJECTS_DATABASE:
     case UPDATE_STOPWATCH_DATABASE:
     case UPDATE_USERS_DATABASE: {

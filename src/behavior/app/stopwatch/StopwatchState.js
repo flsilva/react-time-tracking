@@ -11,10 +11,9 @@ import {
 
 export const entity = (state = {}, action) => {
   switch (action.type) {
-    case UPDATE_DATABASE: {
-      console.log('StopwatchState().data() - UPDATE_DATABASE - action.payload: ', action.payload);
+    case UPDATE_DATABASE:
+      console.log('$$$$$$$$$$$$$$$$$$$ StopwatchState().entity() - UPDATE_DATABASE - action.payload: ', action.payload);
       return merge({ ...state }, action.payload);
-    }
 
     default:
       return state;

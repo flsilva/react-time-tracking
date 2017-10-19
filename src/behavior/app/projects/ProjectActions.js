@@ -4,27 +4,27 @@ import { readEntityById, getEntities } from './ProjectState';
 export const CLEAR_DATABASE = 'app/projects/clear/database';
 export const UPDATE_DATABASE = 'app/projects/update/database';
 
-export const CREATE_ENTITY_REQUESTED = 'app/projects/create/entity/requested';
+const CREATE_ENTITY_REQUESTED = 'app/projects/create/entity/requested';
 export const CREATE_ENTITY_STARTED = 'app/projects/create/entity/started';
 export const CREATE_ENTITY_SUCCEEDED = 'app/projects/create/entity/succeeded';
 export const CREATE_ENTITY_FAILED = 'app/projects/create/entity/failed';
 
-export const READ_ENTITY_REQUESTED = 'app/projects/read/entity/requested';
+const READ_ENTITY_REQUESTED = 'app/projects/read/entity/requested';
 export const READ_ENTITY_STARTED = 'app/projects/read/entity/started';
 export const READ_ENTITY_SUCCEEDED = 'app/projects/read/entity/succeeded';
 export const READ_ENTITY_FAILED = 'app/projects/read/entity/failed';
 
-export const READ_ENTITIES_REQUESTED = 'app/projects/read/entities/requested';
+const READ_ENTITIES_REQUESTED = 'app/projects/read/entities/requested';
 export const READ_ENTITIES_STARTED = 'app/projects/read/entities/started';
 export const READ_ENTITIES_SUCCEEDED = 'app/projects/read/entities/succeeded';
 export const READ_ENTITIES_FAILED = 'app/projects/read/entities/failed';
 
-export const UPDATE_ENTITY_REQUESTED = 'app/projects/update/entity/requested';
+const UPDATE_ENTITY_REQUESTED = 'app/projects/update/entity/requested';
 export const UPDATE_ENTITY_STARTED = 'app/projects/update/entity/started';
 export const UPDATE_ENTITY_SUCCEEDED = 'app/projects/update/entity/succeeded';
 export const UPDATE_ENTITY_FAILED = 'app/projects/update/entity/failed';
 
-export const DELETE_ENTITY_REQUESTED = 'app/projects/delete/entity/requested';
+const DELETE_ENTITY_REQUESTED = 'app/projects/delete/entity/requested';
 export const DELETE_ENTITY_STARTED = 'app/projects/delete/entity/started';
 export const DELETE_ENTITY_SUCCEEDED = 'app/projects/delete/entity/succeeded';
 export const DELETE_ENTITY_FAILED = 'app/projects/delete/entity/failed';
@@ -86,23 +86,19 @@ const readEntityStarted = () => ({ type: READ_ENTITY_STARTED });
 const readEntitySucceeded = payload => ({ type: READ_ENTITY_SUCCEEDED, payload });
 const readEntityFailed = payload => ({ type: READ_ENTITY_FAILED, payload });
 
-export const readEntities = (params, killCache) => {
-  if (!params) throw new Error('Argument <params> must not be null.');
-
-  return {
-    type: READ_ENTITIES_REQUESTED,
-    meta: {
-      http: {
-        killCache,
-        request: {
-          method: 'GET',
-          params,
-          url: 'projects/',
-        },
+export const readEntities = (params, killCache) => ({
+  type: READ_ENTITIES_REQUESTED,
+  meta: {
+    http: {
+      killCache,
+      request: {
+        method: 'GET',
+        params,
+        url: 'projects/',
       },
     },
-  };
-};
+  },
+});
 
 const readEntitiesStarted = () => ({ type: READ_ENTITIES_STARTED });
 const readEntitiesSucceeded = payload => ({ type: READ_ENTITIES_SUCCEEDED, payload });
@@ -159,8 +155,8 @@ function* createEntitySaga({ meta }) {
   try {
     yield put(createEntityStarted());
 
-    const { fetcher, request, successCb } = meta.http;
-    const response = yield fetcher(request);
+    const { makeRequest, request, successCb } = meta.http;
+    const response = yield makeRequest(request);
 
     yield put(clearDatabase());
     yield put(updateDatabase({ data: response.data }));
@@ -172,7 +168,7 @@ function* createEntitySaga({ meta }) {
 }
 
 function* readEntitiesSaga({ meta }) {
-  const { fetcher, killCache, request } = meta.http;
+  const { makeRequest, killCache, request } = meta.http;
 
   if (!killCache) {
     const cachedProjects = yield select(getEntities, [request.params]);
@@ -182,7 +178,7 @@ function* readEntitiesSaga({ meta }) {
   try {
     yield put(readEntitiesStarted());
 
-    const response = yield fetcher(request);
+    const response = yield makeRequest(request);
 
     yield put(updateDatabase({ data: response.data }));
     yield put(readEntitiesSucceeded({ data: response.data, query: request.params }));
@@ -192,7 +188,7 @@ function* readEntitiesSaga({ meta }) {
 }
 
 function* readEntitySaga({ meta }) {
-  const { entity, fetcher, killCache, request } = meta.http;
+  const { entity, makeRequest, killCache, request } = meta.http;
 
   if (!killCache) {
     const cachedProject = yield select(readEntityById, entity.id, request.params);
@@ -202,7 +198,7 @@ function* readEntitySaga({ meta }) {
   try {
     yield put(readEntityStarted());
 
-    const response = yield fetcher(request);
+    const response = yield makeRequest(request);
 
     yield put(updateDatabase({ data: response.data }));
     yield put(readEntitySucceeded({ data: response.data }));
@@ -215,8 +211,8 @@ function* updateEntitySaga({ meta }) {
   try {
     yield put(updateEntityStarted());
 
-    const { fetcher, request, successCb } = meta.http;
-    const response = yield fetcher(request);
+    const { makeRequest, request, successCb } = meta.http;
+    const response = yield makeRequest(request);
 
     yield put(updateDatabase({ data: response.data }));
     yield put(updateEntitySucceeded({ data: response.data }));
@@ -228,10 +224,10 @@ function* updateEntitySaga({ meta }) {
 
 function* deleteEntitySaga({ meta }) {
   try {
-    const { fetcher, request, successCb } = meta.http;
+    const { makeRequest, request, successCb } = meta.http;
 
     yield put(deleteEntityStarted());
-    yield fetcher(request);
+    yield makeRequest(request);
     yield put(clearDatabase());
     yield put(deleteEntitySucceeded());
     if (successCb) successCb();

@@ -10,10 +10,11 @@ import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
 const DescriptionScreenContainer = (props) => {
-  const { description, error, isConnecting } = props;
+  const { error, isConnecting } = props;
 
-  const submitHandler = (data) => {
-    props.actions.setActivityDescription(data);
+  const submitHandler = (newDescription) => {
+    const { id } = props;
+    props.actions.setActivityDescription({ id, description: newDescription });
     browserHistory.push('/app');
   };
 
@@ -21,7 +22,6 @@ const DescriptionScreenContainer = (props) => {
     <div>
       <DescriptionScreen
         goBackHandler={() => browserHistory.push('/app')}
-        description={description}
         initialValues={props.initialValues}
         submitHandler={submitHandler}
         isConnecting={isConnecting}
@@ -37,6 +37,7 @@ DescriptionScreenContainer.propTypes = {
   }).isRequired,
 
   error: PropTypes.arrayOf(PropTypes.string),
+  id: PropTypes.string,
   isConnecting: PropTypes.bool,
   initialValues: PropTypes.shape({
     description: PropTypes.string,
@@ -44,17 +45,19 @@ DescriptionScreenContainer.propTypes = {
 };
 
 DescriptionScreenContainer.defaultProps = {
-  initialValues: {},
   error: null,
+  id: '',
+  initialValues: {},
   isConnecting: false,
 };
 
 const mapStateToProps = (state) => {
-  const stopwatch = getStopwatch(state);
-  const description = stopwatch && stopwatch.description ? stopwatch.description : '';
+  const stopwatch = getStopwatch(state) || {};
+  const description = stopwatch.description ? stopwatch.description : '';
 
   return {
     error: state.stopwatches.error,
+    id: stopwatch.id,
     initialValues: {
       description,
     },

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setActivityDescription } from '../stopwatch/StopwatchActions';
+import { setActivityDescription } from './StopwatchActions';
 import StopwatchFormButtons from '../../../ui/app/stopwatch/StopwatchFormButtons';
 
 const StopwatchFormButtonsContainer = (props) => {

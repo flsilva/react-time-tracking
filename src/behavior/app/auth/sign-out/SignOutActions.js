@@ -1,22 +1,31 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher } from '../../';
+import { put, takeLatest } from 'redux-saga/effects';
 
-export const SIGN_OUT_REQUESTED = 'SIGN_OUT_REQUESTED';
-export const SIGN_OUT_STARTED = 'SIGN_OUT_STARTED';
-export const SIGN_OUT_SUCCEEDED = 'SIGN_OUT_SUCCEEDED';
-export const SIGN_OUT_FAILED = 'SIGN_OUT_FAILED';
+const SIGN_OUT_REQUESTED = 'app/auth/sign-out/requested';
+export const SIGN_OUT_STARTED = 'app/auth/sign-out/started';
+export const SIGN_OUT_SUCCEEDED = 'app/auth/sign-out/suceeded';
+export const SIGN_OUT_FAILED = 'app/auth/sign-out/failed';
 
-export const signOut = () => ({ type: SIGN_OUT_REQUESTED });
+export const signOut = () => ({
+  type: SIGN_OUT_REQUESTED,
+  meta: {
+    http: {
+      request: {
+        method: 'DELETE',
+        url: 'auth/sign_out',
+      },
+    },
+  },
+});
+
 const signOutStarted = () => ({ type: SIGN_OUT_STARTED });
 const signOutSucceeded = payload => ({ type: SIGN_OUT_SUCCEEDED, payload });
 const signOutFailed = payload => ({ type: SIGN_OUT_FAILED, payload });
 
-const signOutPromise = () => getFetcher().delete('auth/sign_out');
-
-function* signOutSaga() {
+function* signOutSaga({ meta }) {
   try {
     yield put(signOutStarted());
-    yield call(signOutPromise);
+    const { makeRequest, request } = meta.http;
+    yield makeRequest(request);
     yield put(signOutSucceeded());
   } catch (error) {
     yield put(signOutFailed(error));

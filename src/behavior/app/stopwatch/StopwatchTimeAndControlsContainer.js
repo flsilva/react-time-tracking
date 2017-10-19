@@ -6,18 +6,39 @@ import * as StopwatchActions from './StopwatchActions';
 import { getStopwatch } from './StopwatchState';
 import StopwatchTimeAndControls from '../../../ui/app/stopwatch/StopwatchTimeAndControls';
 
-const StopwatchTimeAndControlsContainer = props => (
-  <StopwatchTimeAndControls
-    activityTotalTime={props.activityTotalTime}
-    isConnecting={props.isConnecting}
-    isRunning={props.isRunning}
-    onHourPick={props.actions.setStopwatchHours}
-    onMinutePick={props.actions.setStopwatchMinutes}
-    pauseStopwatch={props.actions.pauseStopwatch}
-    startedAt={props.startedAt}
-    startStopwatch={props.actions.startStopwatch}
-  />
-);
+const StopwatchTimeAndControlsContainer = (props) => {
+  const startStopwatch = () => {
+    props.actions.startStopwatch(props.id);
+  };
+
+  const pauseStopwatch = () => {
+    const { id, activityTotalTime, startedAt } = props;
+    props.actions.pauseStopwatch({ id, activityTotalTime, startedAt });
+  };
+
+  const setStopwatchHours = (hours) => {
+    const { id, activityTotalTime, startedAt } = props;
+    props.actions.setStopwatchHours({ id, activityTotalTime, hours, startedAt });
+  };
+
+  const setStopwatchMinutes = (minutes) => {
+    const { id, activityTotalTime, startedAt } = props;
+    props.actions.setStopwatchMinutes({ id, activityTotalTime, minutes, startedAt });
+  };
+
+  return (
+    <StopwatchTimeAndControls
+      activityTotalTime={props.activityTotalTime}
+      isConnecting={props.isConnecting}
+      isRunning={props.isRunning}
+      onHourPick={setStopwatchHours}
+      onMinutePick={setStopwatchMinutes}
+      pauseStopwatch={pauseStopwatch}
+      startedAt={props.startedAt}
+      startStopwatch={startStopwatch}
+    />
+  );
+};
 
 StopwatchTimeAndControlsContainer.propTypes = {
   actions: PropTypes.shape({
@@ -27,6 +48,7 @@ StopwatchTimeAndControlsContainer.propTypes = {
     startStopwatch: PropTypes.func.isRequired,
   }).isRequired,
   activityTotalTime: PropTypes.number,
+  id: PropTypes.string,
   isConnecting: PropTypes.bool,
   isRunning: PropTypes.bool,
   startedAt: PropTypes.instanceOf(Date),
@@ -34,6 +56,7 @@ StopwatchTimeAndControlsContainer.propTypes = {
 
 StopwatchTimeAndControlsContainer.defaultProps = {
   activityTotalTime: 0,
+  id: null,
   isConnecting: false,
   isRunning: false,
   startedAt: null,
@@ -41,10 +64,11 @@ StopwatchTimeAndControlsContainer.defaultProps = {
 
 const mapStateToProps = (state) => {
   const stopwatch = getStopwatch(state) || {};
-  const { activityTotalTime, isRunning, startedAt } = stopwatch;
+  const { activityTotalTime, id, isRunning, startedAt } = stopwatch;
 
   return {
     activityTotalTime,
+    id,
     isRunning,
     startedAt,
     isConnecting: state.stopwatches.isConnecting,

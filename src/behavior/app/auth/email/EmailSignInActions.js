@@ -1,25 +1,37 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher } from '../../';
+import { put, takeLatest } from 'redux-saga/effects';
 
-export const EMAIL_SIGN_IN_REQUESTED = 'EMAIL_SIGN_IN_REQUESTED';
-export const EMAIL_SIGN_IN_STARTED = 'EMAIL_SIGN_IN_STARTED';
-export const EMAIL_SIGN_IN_SUCCEEDED = 'EMAIL_SIGN_IN_SUCCEEDED';
-export const EMAIL_SIGN_IN_FAILED = 'EMAIL_SIGN_IN_FAILED';
+const EMAIL_SIGN_IN_REQUESTED = 'app/auth/email/sign-in/requested';
+export const EMAIL_SIGN_IN_STARTED = 'app/auth/email/sign-in/started';
+export const EMAIL_SIGN_IN_SUCCEEDED = 'app/auth/email/sign-in/suceeded';
+export const EMAIL_SIGN_IN_FAILED = 'app/auth/email/sign-in/failed';
 
-export const emailSignIn = (email, password) => ({
-  type: EMAIL_SIGN_IN_REQUESTED,
-  payload: { email, password },
-});
+export const emailSignIn = (email, password) => {
+  if (!email) throw new Error('Argument <email> must not be null.');
+  if (!password) throw new Error('Argument <password> must not be null.');
+
+  return {
+    type: EMAIL_SIGN_IN_REQUESTED,
+    meta: {
+      http: {
+        request: {
+          data: { email, password },
+          method: 'POST',
+          url: 'auth/sign_in/',
+        },
+      },
+    },
+  };
+};
+
 const emailSignInStarted = () => ({ type: EMAIL_SIGN_IN_STARTED });
 const emailSignInSucceeded = payload => ({ type: EMAIL_SIGN_IN_SUCCEEDED, payload });
 const emailSignInFailed = payload => ({ type: EMAIL_SIGN_IN_FAILED, payload });
 
-const emailSignInPromise = payload => getFetcher().post('auth/sign_in', payload);
-
-function* emailSignInSaga(action) {
+function* emailSignInSaga({ meta }) {
   try {
     yield put(emailSignInStarted());
-    const response = yield call(emailSignInPromise, action.payload);
+    const { makeRequest, request } = meta.http;
+    const response = yield makeRequest(request);
     yield put(emailSignInSucceeded(response.data.data));
   } catch (error) {
     yield put(emailSignInFailed(error));

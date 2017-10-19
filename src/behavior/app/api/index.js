@@ -1,18 +1,78 @@
+import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
-import { makeHttpRequest } from '../';
 import { addRelationshipToPayload, formatPayloadToApi } from './JsonApiUtils';
+import { formatApiError } from './ApiErrors';
 
-export const apiMiddleware = store => next => (action) => {
-  // console.log('formatApiPayloadMiddleware() - action', action);
+const getHeaders = () => ({ 'Content-Type': 'application/vnd.api+json' });
+
+const getFetcher = () => {
+  const fetcher = axios.create({
+    baseURL: 'http://192.168.0.3:3000/',
+    crossDomain: true,
+    timeout: 5000,
+  });
+
+  return fetcher;
+};
+
+const extractHttpAuthHeadersFromResponse = (dispatch, extractAuthDataFromObject) => (response) => {
+  extractAuthDataFromObject(dispatch, response.headers);
+  return response;
+};
+
+const formatApiErrorHandler = error => (
+  Promise.reject(formatApiError(error.response.data))
+);
+
+const unauthorizedHttpHandler = (dispatch, unauthorizedHandler) => (error) => {
+  if (error.response.status !== 401) return Promise.reject(error);
+  return Promise.reject(unauthorizedHandler(dispatch));
+};
+
+const addInterceptors = (dispatch, action, fetcher) => {
+  const auth = action.meta.auth || {};
+  const { extractAuthDataFromObject, unauthorizedHandler } = auth;
+
+  if (unauthorizedHandler) {
+    fetcher.interceptors.response.use(
+      null,
+      unauthorizedHttpHandler(dispatch, unauthorizedHandler),
+    );
+  }
+
+  if (extractAuthDataFromObject) {
+    fetcher.interceptors.response.use(
+      extractHttpAuthHeadersFromResponse(dispatch, extractAuthDataFromObject),
+    );
+  }
+
+  fetcher.interceptors.response.use(null, formatApiErrorHandler);
+};
+
+const makeRequest = fetcher => request => fetcher.request(request);
+
+// eslint-disable-next-line import/prefer-default-export
+export const middleware = store => next => (action) => {
+  // console.log('ApiModule().middleware() - action', action);
 
   if (!action.meta || !action.meta.http) return next(action);
+  if (!action.meta.http.request) return next(action);
 
   const newAction = cloneDeep(action);
-  newAction.meta.http.fetcher = makeHttpRequest;
-
   const { entity, request } = newAction.meta.http;
 
-  if (!entity || !request || !request.data) return next(newAction);
+  const { auth } = newAction.meta;
+  const token = (auth && auth.token) ? auth.token : null;
+  request.headers = {
+    ...getHeaders(),
+    ...token,
+  };
+
+  const fetcher = getFetcher();
+  addInterceptors(store.dispatch, action, fetcher);
+  newAction.meta.http.makeRequest = makeRequest(fetcher);
+
+  if (!entity || !request.data) return next(newAction);
 
   request.data = formatPayloadToApi(entity.type, request.data);
 

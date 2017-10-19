@@ -1,24 +1,31 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { getFetcher } from '../../';
+import { put, takeLatest } from 'redux-saga/effects';
 
-export const RESTORE_SESSION_REQUESTED = 'RESTORE_SESSION_REQUESTED';
-export const RESTORE_SESSION_STARTED = 'RESTORE_SESSION_STARTED';
-export const RESTORE_SESSION_SUCCEEDED = 'RESTORE_SESSION_SUCCEEDED';
-export const RESTORE_SESSION_FAILED = 'RESTORE_SESSION_FAILED';
+const RESTORE_SESSION_REQUESTED = 'app/auth/restore-session/requested';
+export const RESTORE_SESSION_STARTED = 'app/auth/restore-session/started';
+export const RESTORE_SESSION_SUCCEEDED = 'app/auth/restore-session/suceeded';
+export const RESTORE_SESSION_FAILED = 'app/auth/restore-session/failed';
 
-export const restoreSession = () => ({ type: RESTORE_SESSION_REQUESTED });
+export const restoreSession = () => ({
+  type: RESTORE_SESSION_REQUESTED,
+  meta: {
+    http: {
+      request: {
+        method: 'GET',
+        url: 'auth/validate_token',
+      },
+    },
+  },
+});
+
 const restoreSessionStarted = () => ({ type: RESTORE_SESSION_STARTED });
 const restoreSessionSucceeded = payload => ({ type: RESTORE_SESSION_SUCCEEDED, payload });
 const restoreSessionFailed = payload => ({ type: RESTORE_SESSION_FAILED, payload });
 
-const restoreSessionPromise = () => (
-  getFetcher().get('auth/validate_token')
-);
-
-function* restoreSessionSaga() {
+function* restoreSessionSaga({ meta }) {
   try {
     yield put(restoreSessionStarted());
-    const response = yield call(restoreSessionPromise);
+    const { makeRequest, request } = meta.http;
+    const response = yield makeRequest(request);
     yield put(restoreSessionSucceeded(response.data.data));
   } catch (error) {
     yield put(restoreSessionFailed(error));

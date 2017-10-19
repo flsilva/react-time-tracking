@@ -39,14 +39,14 @@ export const entities = (state = {}, action) => {
   }
 };
 
-const fetchedQueries = (state = {}, action) => {
-  switch (action.type) {
+const fetchedQueries = (state = {}, { payload, type }) => {
+  switch (type) {
     case READ_ENTITIES_SUCCEEDED:
       return {
         ...state,
-        [JSON.stringify(action.payload.query)]: {
-          ids: action.payload.data.data.map(entity => entity.id),
-          links: action.payload.data.links,
+        [JSON.stringify(payload.query || QUERY_ALL)]: {
+          ids: payload.data.data.map(entity => entity.id),
+          links: payload.data.links,
         },
       };
 
