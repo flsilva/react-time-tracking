@@ -159,8 +159,8 @@ function* createEntitySaga({ meta }) {
     const data = yield makeRequest(request);
 
     yield put(clearDatabase());
-    yield put(updateDatabase({ data }));
-    yield put(createEntitySucceeded({ data }));
+    yield put(updateDatabase(data));
+    yield put(createEntitySucceeded());
     if (successCb) successCb();
   } catch (error) {
     yield put(createEntityFailed(error));
@@ -181,7 +181,7 @@ function* readEntitiesSaga({ meta }) {
 
     const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data }));
+    yield put(updateDatabase(data));
     yield put(readEntitiesSucceeded({ data, query: request.params }));
   } catch (error) {
     yield put(readEntitiesFailed(error));
@@ -201,8 +201,8 @@ function* readEntitySaga({ meta }) {
 
     const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data }));
-    yield put(readEntitySucceeded({ data }));
+    yield put(updateDatabase(data));
+    yield put(readEntitySucceeded());
   } catch (error) {
     yield put(readEntityFailed(error));
   }
@@ -215,8 +215,8 @@ function* updateEntitySaga({ meta }) {
     const { makeRequest, request, successCb } = meta.http;
     const data = yield makeRequest(request);
 
-    yield put(updateDatabase({ data }));
-    yield put(updateEntitySucceeded({ data }));
+    yield put(updateDatabase(data));
+    yield put(updateEntitySucceeded());
     if (successCb) successCb();
   } catch (error) {
     yield put(updateEntityFailed(error));

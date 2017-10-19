@@ -7,7 +7,7 @@ import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchState';
 // import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './stopwatch/StopwatchActions';
 
 /*
- * TODO: try to fix.
+ * TODO: fix this.
  * Weird bug: commented out line above
  * import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE }
  * doesn't work, we get undefined as variable value.
@@ -38,10 +38,7 @@ export default (state = {}, action) => {
     case UPDATE_PROJECTS_DATABASE:
     case UPDATE_STOPWATCH_DATABASE:
     case UPDATE_USERS_DATABASE: {
-      const normalizedData = normalize(action.payload.data);
-      console.log('DatabaseState() - UPDATE_DATABASE - action.type: ', action.type);
-      console.log('DatabaseState() - UPDATE_DATABASE - action.payload.data: ', action.payload.data);
-      console.log('normalizedData: ', normalizedData);
+      const normalizedData = normalize(action.payload);
 
       // reconsider if it wouldn't be better to have this static:
       // return {
