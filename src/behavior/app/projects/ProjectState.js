@@ -1,5 +1,6 @@
 import merge from 'lodash/merge';
 import flatten from 'lodash/flatten';
+import isString from 'lodash/isString';
 import { combineReducers } from 'redux';
 import build from 'redux-object';
 import {
@@ -41,14 +42,18 @@ export const entities = (state = {}, action) => {
 
 const fetchedQueries = (state = {}, { payload, type }) => {
   switch (type) {
-    case READ_ENTITIES_SUCCEEDED:
+    case READ_ENTITIES_SUCCEEDED: {
+      let query = payload.query || QUERY_ALL;
+      query = isString(query) ? query : JSON.stringify(query);
+
       return {
         ...state,
-        [JSON.stringify(payload.query || QUERY_ALL)]: {
+        [query]: {
           ids: payload.data.data.map(entity => entity.id),
           links: payload.data.links,
         },
       };
+    }
 
     case CLEAR_DATABASE:
       return {};
@@ -122,7 +127,7 @@ export const getEntities = (state, queries = []) => {
   return flatten(
     // transform query objects into strings
     // so we can use them to index fetchedQueries
-    queries.map(query => JSON.stringify(query))
+    queries.map(query => (isString(query) ? query : JSON.stringify(query)))
     // filter out requested queries not stored
     .filter(query => state.projects.fetchedQueries[query])
     // map an array of queries (String objects)
@@ -136,7 +141,7 @@ export const getEntities = (state, queries = []) => {
 export const getEntitiesPaginationByQuery = (state, _query) => {
   if (!state.projects || !state.projects.fetchedQueries) return null;
 
-  const query = JSON.stringify(_query);
+  const query = isString(_query) ? _query : JSON.stringify(_query);
   const fetchedQuery = state.projects.fetchedQueries[query];
   if (!fetchedQuery) return null;
 
