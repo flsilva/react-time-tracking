@@ -1,6 +1,4 @@
-import { put, select, takeLatest } from 'redux-saga/effects';
 import isDate from 'date-fns/is_date';
-import { getStopwatch } from './StopwatchState';
 import {
   changeElapsedHours,
   changeElapsedMinutes,
@@ -53,9 +51,9 @@ export const readStopwatch = killCache => ({
   },
 });
 
-const readStopwatchStarted = () => ({ type: READ_STOPWATCH_STARTED });
-const readStopwatchSucceeded = payload => ({ type: READ_STOPWATCH_SUCCEEDED, payload });
-const readStopwatchFailed = payload => ({ type: READ_STOPWATCH_FAILED, payload });
+export const readStopwatchStarted = () => ({ type: READ_STOPWATCH_STARTED });
+export const readStopwatchSucceeded = payload => ({ type: READ_STOPWATCH_SUCCEEDED, payload });
+export const readStopwatchFailed = payload => ({ type: READ_STOPWATCH_FAILED, payload });
 
 export const updateStopwatchFailed = payload => ({ type: UPDATE_STOPWATCH_FAILED, payload });
 
@@ -186,54 +184,4 @@ export const resetStopwatch = (id) => {
   };
 };
 
-const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
-
-function* readStopwatchSaga({ meta }) {
-  const { makeRequest, killCache, request } = meta.http;
-
-  if (!killCache) {
-    const cachedStopwatch = yield select(getStopwatch);
-    if (cachedStopwatch) return;
-  }
-
-  try {
-    yield put(readStopwatchStarted());
-
-    const data = yield makeRequest(request);
-
-    yield put(updateDatabase(data));
-    yield put(readStopwatchSucceeded());
-  } catch (error) {
-    yield put(readStopwatchFailed(error));
-  }
-}
-
-function* updateStopwatchSaga({ meta }) {
-  const { makeRequest, request } = meta.http;
-
-  try {
-    // optimistic update
-    yield put(updateDatabase(request.data));
-    //
-
-    const data = yield makeRequest(request);
-    yield put(updateDatabase(data));
-  } catch (error) {
-    yield put(updateStopwatchFailed(error));
-  }
-}
-
-export function* bindActionsToSagas() {
-  yield takeLatest([
-    PAUSE_STOPWATCH_REQUESTED,
-    RESET_STOPWATCH_REQUESTED,
-    SET_ACTIVITY_DATE_REQUESTED,
-    SET_ACTIVITY_DESCRIPTION_REQUESTED,
-    SET_ACTIVITY_PROJECT_REQUESTED,
-    SET_STOPWATCH_HOURS_REQUESTED,
-    SET_STOPWATCH_MINUTES_REQUESTED,
-    START_STOPWATCH_REQUESTED,
-  ], updateStopwatchSaga);
-
-  yield takeLatest(READ_STOPWATCH_REQUESTED, readStopwatchSaga);
-}
+export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });

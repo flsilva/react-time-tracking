@@ -1,6 +1,4 @@
-import { put, takeLatest } from 'redux-saga/effects';
-
-const EMAIL_SIGN_UP_REQUESTED = 'app/auth/email/sign-up/requested';
+export const EMAIL_SIGN_UP_REQUESTED = 'app/auth/email/sign-up/requested';
 export const EMAIL_SIGN_UP_STARTED = 'app/auth/email/sign-up/started';
 export const EMAIL_SIGN_UP_SUCCEEDED = 'app/auth/email/sign-up/suceeded';
 export const EMAIL_SIGN_UP_FAILED = 'app/auth/email/sign-up/failed';
@@ -34,22 +32,6 @@ export const emailSignUp = (data, successCb) => {
   };
 };
 
-const emailSignUpStarted = () => ({ type: EMAIL_SIGN_UP_STARTED });
-const emailSignUpSucceeded = payload => ({ type: EMAIL_SIGN_UP_SUCCEEDED, payload });
-const emailSignUpFailed = payload => ({ type: EMAIL_SIGN_UP_FAILED, payload });
-
-function* emailSignUpSaga({ meta }) {
-  try {
-    yield put(emailSignUpStarted());
-    const { makeRequest, request, successCb } = meta.http;
-    const data = yield makeRequest(request);
-    yield put(emailSignUpSucceeded(data.data));
-    if (successCb) successCb();
-  } catch (error) {
-    yield put(emailSignUpFailed(error));
-  }
-}
-
-export function* bindActionsToSagas() {
-  yield takeLatest(EMAIL_SIGN_UP_REQUESTED, emailSignUpSaga);
-}
+export const emailSignUpStarted = () => ({ type: EMAIL_SIGN_UP_STARTED });
+export const emailSignUpSucceeded = payload => ({ type: EMAIL_SIGN_UP_SUCCEEDED, payload });
+export const emailSignUpFailed = payload => ({ type: EMAIL_SIGN_UP_FAILED, payload });

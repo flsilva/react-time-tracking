@@ -8,7 +8,7 @@ import { Router, browserHistory } from 'react-router';
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 import routes from './routes';
 import initApp, { appMiddleware } from './behavior/app';
-import { sagas } from './behavior/app/AppActions';
+import sagas from './behavior/app/AppSideEffects';
 import { reducers as appReducers } from './behavior/app/AppState';
 import './index.css';
 
