@@ -243,7 +243,7 @@ function* updateStopwatchSaga({ meta }) {
 
   try {
     // optimistic update
-    yield put(updateDatabase({ data: request.data }));
+    yield put(updateDatabase(request.data));
     //
 
     const data = yield makeRequest(request);
