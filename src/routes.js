@@ -14,6 +14,8 @@ import StopwatchScreenContainer from './behavior/app/stopwatch/StopwatchScreenCo
 import StopwatchDescriptionScreenContainer from './behavior/app/stopwatch/DescriptionScreenContainer';
 import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
+import TimeLogListScreenContainer from './behavior/app/time-logs/TimeLogListScreenContainer';
+import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
 import withPagination from './behavior/app/utils/withPagination';
 
 // const AuthenticatedAppContainer = UserIsAuthenticated((props) => props.children);
@@ -52,11 +54,12 @@ export default {
           childRoutes: [
             { path: '/app', component: StopwatchScreenContainer },
             { path: '/app/log-description', component: StopwatchDescriptionScreenContainer },
-            { path: '/app/projects',
-              component: withPagination(ProjectListScreenContainer),
-            },
+            { path: '/app/projects', component: withPagination(ProjectListScreenContainer) },
             { path: '/app/projects/new', component: ProjectFormScreenContainer },
             { path: '/app/projects/:projectId', component: ProjectFormScreenContainer },
+            { path: '/app/time-logs', component: withPagination(TimeLogListScreenContainer) },
+            { path: '/app/time-logs/new', component: TimeLogFormScreenContainer },
+            { path: '/app/time-logs/:timeLogId', component: TimeLogFormScreenContainer },
           ],
         },
       ],

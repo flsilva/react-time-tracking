@@ -24,9 +24,14 @@ const MainNav = (props, context) => {
     browserHistory.push('/app/projects');
   };
 
+  const navigateToTimeLogs = () => {
+    browserHistory.push('/app/time-logs');
+  };
+
   const signedInMenu = () => (
     <List>
       <ListItem primaryText="Stopwatch" onClick={navigateToStopwatch} />
+      <ListItem primaryText="Time Logs" onClick={navigateToTimeLogs} />
       <ListItem primaryText="Projects" onClick={navigateToProjects} />
       <ListItem primaryText="Sign Out" onClick={navigateToSignOut} />
     </List>
