@@ -19,7 +19,7 @@ const styles = {
   },
 };
 
-const StopwatchDescriptionButton = (props) => {
+const DescriptionButton = (props) => {
   let label = props.description ? props.description : 'Description (optional)';
   if (label.length > 36) {
     label = `${label.substr(0, 36)}...`;
@@ -35,13 +35,13 @@ const StopwatchDescriptionButton = (props) => {
   );
 };
 
-StopwatchDescriptionButton.propTypes = {
+DescriptionButton.propTypes = {
   description: PropTypes.string,
   onClick: PropTypes.func.isRequired,
 };
 
-StopwatchDescriptionButton.defaultProps = {
+DescriptionButton.defaultProps = {
   description: '',
 };
 
-export default StopwatchDescriptionButton;
+export default DescriptionButton;

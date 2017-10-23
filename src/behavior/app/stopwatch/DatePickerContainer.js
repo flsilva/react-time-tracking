@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
 import { getStopwatch } from './StopwatchState';
-import DatePicker from '../../../ui/app/stopwatch/DatePicker';
+import DatePicker from '../../../ui/app/common/DatePicker';
 
 const DatePickerContainer = (props) => {
   const setActivityDate = (date) => {
@@ -29,8 +29,8 @@ DatePickerContainer.propTypes = {
 };
 
 DatePickerContainer.defaultProps = {
-  activityDate: null,
-  id: null,
+  activityDate: undefined,
+  id: undefined,
 };
 
 const mapStateToProps = (state) => {

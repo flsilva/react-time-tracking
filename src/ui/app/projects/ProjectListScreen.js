@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import SimpleAppBar from '../header/SimpleAppBar';
 import ProjectList from './ProjectList';
 
@@ -22,7 +22,7 @@ const ProjectListScreen = props => (
     <ProjectList data={props.data} />
     {!props.isConnecting &&
       <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
-        <ContentAdd />
+        <ContentAddIcon />
       </FloatingActionButton>
     }
   </div>

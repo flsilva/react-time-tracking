@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { getStopwatch } from './StopwatchState';
-import Description from '../../../ui/app/stopwatch/Description';
+import DescriptionButton from '../../../ui/app/common/DescriptionButton';
 
 const DescriptionButtonContainer = props => (
-  <Description
+  <DescriptionButton
     description={props.description}
     onClick={() => browserHistory.push('/app/log-description')}
   />

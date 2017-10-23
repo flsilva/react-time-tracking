@@ -10,7 +10,7 @@ import DoneIconButton from '../../common/DoneIconButton';
 // otherwise it generates a new input component each time
 // DescriptionScreen() is invoked. this creates a bug
 // that the input field loses its focus at each keystroke,
-// as redux store changes.
+// because redux store changes, reinvoking DescriptionScreen() function.
 // eslint-disable-next-line react/prop-types
 const renderTextField = ({ input }) => (
   <TextField
