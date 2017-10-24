@@ -1,4 +1,3 @@
-import { reducer as form } from 'redux-form';
 import auth from './auth/AuthState';
 import database from './DatabaseState';
 import projects from './projects/ProjectState';
@@ -24,7 +23,6 @@ export const observeStore = (store, select, onChange) => {
 export const reducers = {
   auth,
   database,
-  form,
   projects,
   stopwatches,
   timeLogs,

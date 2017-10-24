@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { setActivityDescription } from '../stopwatch/StopwatchActions';
 import { getStopwatch } from '../stopwatch/StopwatchState';
-import DescriptionScreen from '../../../ui/app/stopwatch/DescriptionScreen';
+import DescriptionFormScreen from '../../../ui/app/stopwatch/DescriptionFormScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-const DescriptionScreenContainer = (props) => {
+const DescriptionFormScreenContainer = (props) => {
   const { error, isConnecting } = props;
 
   const submitHandler = (newDescription) => {
@@ -20,9 +20,9 @@ const DescriptionScreenContainer = (props) => {
 
   return (
     <div>
-      <DescriptionScreen
+      <DescriptionFormScreen
         goBackHandler={() => browserHistory.push('/app')}
-        initialValues={props.initialValues}
+        description={props.description}
         submitHandler={submitHandler}
         isConnecting={isConnecting}
       />
@@ -31,7 +31,7 @@ const DescriptionScreenContainer = (props) => {
   );
 };
 
-DescriptionScreenContainer.propTypes = {
+DescriptionFormScreenContainer.propTypes = {
   actions: PropTypes.shape({
     setActivityDescription: PropTypes.func.isRequired,
   }).isRequired,
@@ -39,15 +39,13 @@ DescriptionScreenContainer.propTypes = {
   error: PropTypes.arrayOf(PropTypes.string),
   id: PropTypes.string,
   isConnecting: PropTypes.bool,
-  initialValues: PropTypes.shape({
-    description: PropTypes.string,
-  }),
+  description: PropTypes.string,
 };
 
-DescriptionScreenContainer.defaultProps = {
+DescriptionFormScreenContainer.defaultProps = {
   error: null,
   id: '',
-  initialValues: {},
+  description: '',
   isConnecting: false,
 };
 
@@ -58,9 +56,7 @@ const mapStateToProps = (state) => {
   return {
     error: state.stopwatches.error,
     id: stopwatch.id,
-    initialValues: {
-      description,
-    },
+    description,
     isConnecting: state.stopwatches.isConnecting,
   };
 };
@@ -74,4 +70,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DescriptionScreenContainer);
+)(DescriptionFormScreenContainer);

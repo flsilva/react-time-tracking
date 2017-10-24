@@ -1,3 +1,4 @@
+import isString from 'lodash/isString';
 import merge from 'lodash/merge';
 import { combineReducers } from 'redux';
 import build from 'redux-object';
@@ -12,7 +13,6 @@ import {
 export const entity = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_DATABASE:
-      console.log('$$$$$$$$$$$$$$$$$$$ StopwatchState().entity() - UPDATE_DATABASE - action.payload: ', action.payload);
       return merge({ ...state }, action.payload);
 
     default:
@@ -33,7 +33,7 @@ export const getStopwatch = (state) => {
 
   const { activityDate, startedAt } = stopwatch;
   if (activityDate) stopwatch.activityDate = new Date(activityDate);
-  if (startedAt) stopwatch.startedAt = new Date(startedAt);
+  if (startedAt && isString(startedAt)) stopwatch.startedAt = new Date(startedAt);
   stopwatch.isRunning = isDate(stopwatch.startedAt);
 
   return stopwatch;
