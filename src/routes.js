@@ -11,7 +11,6 @@ import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirm
 import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import StopwatchScreenContainer from './behavior/app/stopwatch/StopwatchScreenContainer';
-import StopwatchDescriptionFormScreenContainer from './behavior/app/stopwatch/DescriptionFormScreenContainer';
 import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import TimeLogListScreenContainer from './behavior/app/time-logs/TimeLogListScreenContainer';
@@ -53,7 +52,6 @@ export default {
           component: AuthenticatedAppContainer,
           childRoutes: [
             { path: '/app', component: StopwatchScreenContainer },
-            { path: '/app/log-description', component: StopwatchDescriptionFormScreenContainer },
             { path: '/app/projects', component: withPagination(ProjectListScreenContainer) },
             { path: '/app/projects/new', component: ProjectFormScreenContainer },
             { path: '/app/projects/:projectId', component: ProjectFormScreenContainer },

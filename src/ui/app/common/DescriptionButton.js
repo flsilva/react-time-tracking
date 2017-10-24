@@ -19,8 +19,8 @@ const styles = {
   },
 };
 
-const DescriptionButton = (props) => {
-  let label = props.description ? props.description : 'Description (optional)';
+const DescriptionButton = ({ description, onClick }) => {
+  let label = description || 'Description (optional)';
   if (label.length > 36) {
     label = `${label.substr(0, 36)}...`;
   }
@@ -28,7 +28,7 @@ const DescriptionButton = (props) => {
   return (
     <FlatButton
       label={label}
-      onClick={props.onClick}
+      onClick={onClick}
       style={styles.button}
       labelStyle={styles.label}
     />

@@ -1,23 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { getStopwatch } from './StopwatchState';
+import withDialog from '../../../ui/common/withDialog';
 import DescriptionButton from '../../../ui/app/common/DescriptionButton';
+import DescriptionFormDialogContainer from './DescriptionFormDialogContainer';
 
-const DescriptionButtonContainer = props => (
+const DescriptionButtonContainer = ({ description, openHandler }) => (
   <DescriptionButton
-    description={props.description}
-    onClick={() => browserHistory.push('/app/log-description')}
+    description={description}
+    onClick={openHandler}
   />
 );
 
 DescriptionButtonContainer.propTypes = {
   description: PropTypes.string,
+  openHandler: PropTypes.func.isRequired,
 };
 
 DescriptionButtonContainer.defaultProps = {
-  description: null,
+  description: undefined,
 };
 
 const mapStateToProps = (state) => {
@@ -27,6 +29,5 @@ const mapStateToProps = (state) => {
   return { description };
 };
 
-export default connect(
-  mapStateToProps,
-)(DescriptionButtonContainer);
+const ConnectedContainer = connect(mapStateToProps)(DescriptionButtonContainer);
+export default withDialog(ConnectedContainer, DescriptionFormDialogContainer);
