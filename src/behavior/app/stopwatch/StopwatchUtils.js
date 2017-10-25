@@ -36,13 +36,14 @@ export const getElapsedTimeObject = (start, end, offset = 0) => {
   return { hours, minutes, seconds };
 };
 
-export const changeElapsedHours = (timeInSeconds, hours) => {
-  const currentHours = Math.floor(timeInSeconds / 3600);
-  return timeInSeconds + ((hours - currentHours) * 3600);
+export const changeElapsedHours = (start, hours, offset = 0) => {
+  const now = new Date();
+  const currentHours = getElapsedHours(start, now, offset);
+  return offset + ((hours - currentHours) * 3600);
 };
 
-export const changeElapsedMinutes = (timeInSeconds, minutes) => {
-  const currentHours = Math.floor(timeInSeconds / 3600);
-  const currentMinutes = Math.floor(timeInSeconds / 60) - (currentHours * 60);
-  return timeInSeconds + ((minutes - currentMinutes) * 60);
+export const changeElapsedMinutes = (start, minutes, offset = 0) => {
+  const now = new Date();
+  const currentMinutes = getElapsedMinutes(start, now, offset);
+  return offset + ((minutes - currentMinutes) * 60);
 };

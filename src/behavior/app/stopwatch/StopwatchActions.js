@@ -84,7 +84,7 @@ export const pauseStopwatch = ({ id, startedAt, activityTotalTime = 0 }) => {
   };
 };
 
-export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0 }) => {
+export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0, startedAt }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
 
@@ -96,13 +96,13 @@ export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0 }) => {
     type: SET_STOPWATCH_HOURS_REQUESTED,
     meta: {
       http: generatePatchHttpRequest(id, {
-        activityTotalTime: changeElapsedHours(activityTotalTime, hours),
+        activityTotalTime: changeElapsedHours(startedAt, hours, activityTotalTime),
       }),
     },
   };
 };
 
-export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0 }) => {
+export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0, startedAt }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
 
@@ -114,7 +114,7 @@ export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0 }) 
     type: SET_STOPWATCH_MINUTES_REQUESTED,
     meta: {
       http: generatePatchHttpRequest(id, {
-        activityTotalTime: changeElapsedMinutes(activityTotalTime, minutes),
+        activityTotalTime: changeElapsedMinutes(startedAt, minutes, activityTotalTime),
       }),
     },
   };

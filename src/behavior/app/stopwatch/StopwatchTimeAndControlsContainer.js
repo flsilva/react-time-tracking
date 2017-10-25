@@ -18,13 +18,13 @@ const StopwatchTimeAndControlsContainer = (props) => {
   };
 
   const setStopwatchHours = (hours) => {
-    const { id, activityTotalTime } = props;
-    props.actions.setStopwatchHours({ id, activityTotalTime, hours });
+    const { id, activityTotalTime, startedAt } = props;
+    props.actions.setStopwatchHours({ id, activityTotalTime, hours, startedAt });
   };
 
   const setStopwatchMinutes = (minutes) => {
-    const { id, activityTotalTime } = props;
-    props.actions.setStopwatchMinutes({ id, activityTotalTime, minutes });
+    const { id, activityTotalTime, startedAt } = props;
+    props.actions.setStopwatchMinutes({ id, activityTotalTime, minutes, startedAt });
   };
 
   return (
