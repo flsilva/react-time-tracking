@@ -81,31 +81,29 @@ class TimeElapsed extends Component {
 
   render() {
     return (
-      <div>
+      <div style={styles.container}>
         <div style={styles.container}>
-          <div style={styles.container}>
-            <NumberDropDown
-              prependZero
-              maxHeight={300}
-              onChange={this.props.onHourPick}
-              startNum={0}
-              endNum={24}
-              value={this.state.hours}
-            />
-          </div>
-          <div style={styles.container}>
-            <NumberDropDown
-              prependZero
-              maxHeight={300}
-              onChange={this.props.onMinutePick}
-              startNum={0}
-              endNum={59}
-              value={this.state.minutes}
-            />
-          </div>
-          <div style={styles.container}>
-            <h1 style={styles.numSeconds}>{this.state.seconds}</h1>
-          </div>
+          <NumberDropDown
+            prependZero
+            maxHeight={300}
+            onChange={this.props.onHourPick}
+            startNum={0}
+            endNum={24}
+            value={this.state.hours}
+          />
+        </div>
+        <div style={styles.container}>
+          <NumberDropDown
+            prependZero
+            maxHeight={300}
+            onChange={this.props.onMinutePick}
+            startNum={0}
+            endNum={59}
+            value={this.state.minutes}
+          />
+        </div>
+        <div style={styles.container}>
+          <h1 style={styles.numSeconds}>{this.state.seconds}</h1>
         </div>
       </div>
     );
