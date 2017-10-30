@@ -16,6 +16,7 @@ class ProjectDropDownContainer extends Component {
     return (
       <ProjectDropDown
         isConnecting={this.props.isConnecting}
+        name={this.props.name}
         onCreateProjectClick={() => browserHistory.push('/app/projects/new')}
         onItemPick={this.props.onItemPick}
         projects={this.props.entities}
@@ -31,6 +32,7 @@ ProjectDropDownContainer.propTypes = {
   }).isRequired,
   entities: PropTypes.arrayOf(PropTypes.object),
   isConnecting: PropTypes.bool,
+  name: PropTypes.string,
   onItemPick: PropTypes.func.isRequired,
   selectedItemId: PropTypes.string,
 };
@@ -38,6 +40,7 @@ ProjectDropDownContainer.propTypes = {
 ProjectDropDownContainer.defaultProps = {
   entities: undefined,
   isConnecting: false,
+  name: undefined,
   selectedItemId: undefined,
 };
 

@@ -33,13 +33,13 @@ const createItems = (start, end, prependZero) => {
 };
 
 const NumberDropDown = (props) => {
-  const { endNum, maxHeight, onChange, prependZero, startNum, value } = props;
+  const { endNum, maxHeight, name, onChange, prependZero, startNum, value } = props;
 
   return (
     <DropDownMenu
       maxHeight={maxHeight}
       value={value}
-      onChange={(e, index, newValue) => onChange(newValue)}
+      onChange={(e, index, newValue) => onChange(name, newValue)}
       iconStyle={styles.icon}
       menuItemStyle={styles.menuItem}
       labelStyle={styles.label}
@@ -53,6 +53,7 @@ const NumberDropDown = (props) => {
 NumberDropDown.propTypes = {
   endNum: PropTypes.number.isRequired,
   maxHeight: PropTypes.number,
+  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   prependZero: PropTypes.bool,
   startNum: PropTypes.number.isRequired,
@@ -61,6 +62,7 @@ NumberDropDown.propTypes = {
 
 NumberDropDown.defaultProps = {
   maxHeight: 100,
+  name: undefined,
   prependZero: false,
   value: undefined,
 };
