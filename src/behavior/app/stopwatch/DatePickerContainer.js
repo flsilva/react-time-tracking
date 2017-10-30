@@ -15,7 +15,7 @@ const DatePickerContainer = (props) => {
   return (
     <DatePicker
       date={props.activityDate}
-      onDatePick={setActivityDate}
+      onDatePick={(name, value) => setActivityDate(value)}
     />
   );
 };
