@@ -114,23 +114,28 @@ const isConnecting = (state = false, action) => {
 };
 
 export const readEntityById = (state, id) => {
-  if (!id) return null;
-  return build(state.database, 'time_logs', id, { eager: true, ignoreLinks: true });
+  if (!id) return undefined;
+  const entity = build(state.database, 'timeLogs', id, { eager: true, ignoreLinks: true });
+  return entity || undefined;
 };
 
-export const getEntities = (state, queries = []) => {
-  if (!state.timeLogs) return null;
+export const getEntities = (state, _queries = []) => {
+  if (!state.timeLogs) return undefined;
+  const queries = _queries.concat([]);
   if (!queries.length) queries.push(QUERY_ALL);
 
   return flatten(
     // transform query objects into strings
     // so we can use them to index fetchedQueries
     queries.map(query => (isString(query) ? query : JSON.stringify(query)))
+
     // filter out requested queries not stored
     .filter(query => state.timeLogs.fetchedQueries[query])
+
     // map an array of queries (String objects)
     // to an array of arrays of entity IDs
     .map(query => state.timeLogs.fetchedQueries[query].ids
+
       // map an array of entity IDs to entity Objects
       .map(id => readEntityById(state, id)),
     ));
