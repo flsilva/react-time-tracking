@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
 
-const buildQuery = (page, itemsPerPage) => ({
-  include: 'author',
-  'page[number]': page,
-  'page[size]': itemsPerPage,
-  sort: '-created-at',
-});
-
-const withPagination = WrappedComponent => (
+const withPagination = getNextPageQuery => WrappedComponent => (
   class extends Component {
-    state = { currentPage: 0, queries: [] };
+    state = { currentPage: 0, queries: {} };
 
-    nextPage = (itemsPerPage) => {
+    getAllPageQueries = () => (
+      Object.keys(this.state.queries).map(key => this.state.queries[key])
+    )
+
+    getNextPageQuery = () => {
       const nextPage = this.state.currentPage + 1;
-      const query = buildQuery(nextPage, itemsPerPage);
+      const query = getNextPageQuery(nextPage);
 
       this.setState(prevState => ({
         currentPage: nextPage,
-        queries: [...prevState.queries, ...[query]],
+        queries: {
+          ...prevState.queries,
+          ...{
+            [nextPage.toString()]: query,
+          },
+        },
       }));
 
       return query;
     }
 
+    getQueryByPage = (page) => {
+      if (isNaN(page) || page < 1) {
+        throw new Error(`Argument <page> must be a positive integer. Got: ${page}`);
+      }
+
+      return this.state.queries[page.toString()];
+    }
+
     render() {
       return (
         <WrappedComponent
-          {...this.props}
-          getNextPageQuery={this.nextPage}
+          getNextPageQuery={this.getNextPageQuery}
           queries={this.state.queries}
         />
       );

@@ -18,31 +18,31 @@ class TimeLogListScreenContainer extends Component {
   itemsPerPage = 3;
 
   readMore = () => {
-    this.props.actions.readEntities(this.props.getNextPageQuery(this.itemsPerPage));
+    const query = this.props.getNextPageQuery();
+    this.props.actions.readEntities(query);
   }
 
   shouldDisplayLoadButton = () => {
-    const { pagination, isConnecting } = this.props.timeLogs;
+    const { pagination, isConnecting } = this.props;
     return pagination && pagination.next && !isConnecting;
   };
 
   render() {
-    const { isConnecting, error } = this.props.timeLogs;
+    const { entities, error, isConnecting } = this.props;
 
     return (
       <div>
         <TimeLogListScreen
           createEntity={this.props.actions.createEntity}
+          entities={entities}
           error={error}
-          isConnecting={this.props.timeLogs.isConnecting}
-          data={this.props.timeLogs.list}
-          user={this.props.user}
+          isConnecting={isConnecting}
         />
         {this.shouldDisplayLoadButton() &&
           <RaisedButton
             primary
             fullWidth
-            disabled={this.props.timeLogs.isConnecting}
+            disabled={isConnecting}
             style={{ marginTop: 20 }}
             label="Load More"
             onClick={this.readMore}
@@ -52,48 +52,42 @@ class TimeLogListScreenContainer extends Component {
       </div>
     );
   }
-
 }
 
 TimeLogListScreenContainer.propTypes = {
-  getNextPageQuery: PropTypes.func.isRequired,
-
   actions: PropTypes.shape({
     createEntity: PropTypes.func.isRequired,
     readEntities: PropTypes.func.isRequired,
   }).isRequired,
-
-  timeLogs: PropTypes.shape({
-    list: PropTypes.arrayOf(PropTypes.object),
-    pagination: PropTypes.shape({
-      next: PropTypes.string,
-    }),
-    error: PropTypes.arrayOf(PropTypes.object),
-    isConnecting: PropTypes.bool,
-  }),
-
-  user: PropTypes.shape({
-    email: PropTypes.string,
+  entities: PropTypes.arrayOf(PropTypes.object),
+  error: PropTypes.arrayOf(PropTypes.object),
+  getNextPageQuery: PropTypes.func.isRequired,
+  isConnecting: PropTypes.bool,
+  pagination: PropTypes.shape({
+    next: PropTypes.string,
   }),
 };
 
 TimeLogListScreenContainer.defaultProps = {
-  timeLogs: null,
-  user: null,
+  entities: undefined,
+  error: undefined,
+  isConnecting: false,
+  pagination: undefined,
 };
 
-const mapStateToProps = (state, { queries = [] }) => {
-  const pagination = queries.length ?
-    getEntitiesPaginationByQuery(state, queries[queries.length - 1]) : null;
+const mapStateToProps = (state, { queries }) => {
+  const queriesArray = Object.keys(queries)
+    .map(key => queries[key]);
 
-  return ({
-    timeLogs: {
-      list: getEntities(state, queries),
-      pagination,
-      error: state.timeLogs.error,
-      isConnecting: state.timeLogs.isConnecting,
-    },
-  });
+  const pagination = queriesArray.length ?
+    getEntitiesPaginationByQuery(state, queriesArray[queriesArray.length - 1]) : null;
+
+  return {
+    entities: getEntities(state, queriesArray),
+    pagination,
+    error: state.timeLogs.error,
+    isConnecting: state.timeLogs.isConnecting,
+  };
 };
 
 const mapDispatchToProps = dispatch => ({

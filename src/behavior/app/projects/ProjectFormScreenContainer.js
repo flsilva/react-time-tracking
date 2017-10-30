@@ -13,7 +13,8 @@ class ProjectFormScreenContainer extends Component {
 
   componentDidMount() {
     const id = this.props.params.projectId;
-    if (id) this.props.actions.readEntity(id, { include: 'author' });
+    const query = this.props.getQuery();
+    if (id) this.props.actions.readEntity(id, query);
   }
 
   getSubmitHandler = () => (
@@ -72,6 +73,8 @@ ProjectFormScreenContainer.propTypes = {
     updateEntity: PropTypes.func.isRequired,
     deleteEntity: PropTypes.func.isRequired,
   }).isRequired,
+
+  getQuery: PropTypes.func.isRequired,
 
   params: PropTypes.shape({
     projectId: PropTypes.string,

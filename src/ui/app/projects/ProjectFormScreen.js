@@ -46,7 +46,6 @@ class ProjectFormScreen extends Component {
         <div style={bodyStyles}>
           <ProjectForm
             ref={(node) => { this.projectForm = node; }}
-            isConnecting={isConnecting}
             project={project}
             submitHandler={this.props.submitHandler}
           />

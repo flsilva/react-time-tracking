@@ -10,15 +10,13 @@ import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
 class ProjectListScreenContainer extends Component {
-
   componentDidMount() {
     this.readMore();
   }
 
-  itemsPerPage = 3;
-
   readMore = () => {
-    this.props.actions.readEntities(this.props.getNextPageQuery(this.itemsPerPage));
+    const query = this.props.getNextPageQuery();
+    this.props.actions.readEntities(query);
   }
 
   shouldDisplayLoadButton = () => {
@@ -82,13 +80,16 @@ ProjectListScreenContainer.defaultProps = {
   user: null,
 };
 
-const mapStateToProps = (state, { queries = [] }) => {
-  const pagination = queries.length ?
-    getEntitiesPaginationByQuery(state, queries[queries.length - 1]) : null;
+const mapStateToProps = (state, { queries }) => {
+  const queriesArray = Object.keys(queries)
+    .map(key => queries[key]);
+
+  const pagination = queriesArray.length ?
+    getEntitiesPaginationByQuery(state, queriesArray[queriesArray.length - 1]) : null;
 
   return ({
     projects: {
-      list: getEntities(state, queries),
+      list: getEntities(state, queriesArray),
       pagination,
       error: state.projects.error,
       isConnecting: state.projects.isConnecting,
