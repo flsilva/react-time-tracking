@@ -12,21 +12,30 @@ const createMenuItem = item => (
 const getItems = items => items.map(item => createMenuItem(item));
 
 const ProjectListDropDown = (props) => {
-  if (props.isConnecting) {
+  const {
+    isConnecting,
+    name,
+    onCreateProjectClick,
+    onItemPick,
+    projects,
+    selectedItemId,
+  } = props;
+
+  if (isConnecting) {
     return <CircularProgress color={'rgb(0, 188, 212)'} size={20} thickness={2} />;
   }
 
-  if (props.projects && props.projects.length) {
+  if (projects && projects.length) {
     return (
       <DropDownMenu
         maxHeight={200}
-        value={props.selectedItemId ? props.selectedItemId : undefined}
-        onChange={(e, key, value) => props.onItemPick(value)}
+        value={selectedItemId}
+        onChange={(e, key, value) => onItemPick(name, value)}
         labelStyle={{ height: 48, lineHeight: '48px', paddingLeft: 0 }}
         underlineStyle={{ display: 'none' }}
         style={{ boxSizing: 'border-box', paddingTop: 2 }}
       >
-        {getItems(props.projects)}
+        {getItems(projects)}
       </DropDownMenu>
     );
   }
@@ -34,20 +43,22 @@ const ProjectListDropDown = (props) => {
   return (
     <FlatButton
       label="Create a Project"
-      onClick={props.onCreateProjectClick}
+      onClick={onCreateProjectClick}
     />
   );
 };
 
 ProjectListDropDown.propTypes = {
-  onCreateProjectClick: PropTypes.func.isRequired,
+  name: PropTypes.string,
   isConnecting: PropTypes.bool,
+  onCreateProjectClick: PropTypes.func.isRequired,
   onItemPick: PropTypes.func.isRequired,
   projects: PropTypes.arrayOf(PropTypes.object),
   selectedItemId: PropTypes.string,
 };
 
 ProjectListDropDown.defaultProps = {
+  name: undefined,
   isConnecting: false,
   projects: undefined,
   selectedItemId: undefined,

@@ -14,12 +14,12 @@ const formatDate = (date) => {
   return format(date, 'MMM Do');
 };
 
-const SimpleDatePicker = props => (
+const SimpleDatePicker = ({ date, name, onDatePick }) => (
   <DatePicker
     autoOk
     hintText="Pick a date"
-    value={props.date ? props.date : new Date()}
-    onChange={(e, value) => props.onDatePick(value)}
+    value={date}
+    onChange={(e, value) => onDatePick(name, value)}
     formatDate={formatDate}
     textFieldStyle={{ width: 105 }}
     underlineStyle={{ display: 'none' }}
@@ -27,12 +27,14 @@ const SimpleDatePicker = props => (
 );
 
 SimpleDatePicker.propTypes = {
-  onDatePick: PropTypes.func.isRequired,
   date: PropTypes.instanceOf(Date),
+  name: PropTypes.string,
+  onDatePick: PropTypes.func.isRequired,
 };
 
 SimpleDatePicker.defaultProps = {
   date: new Date(),
+  name: undefined,
 };
 
 export default SimpleDatePicker;
