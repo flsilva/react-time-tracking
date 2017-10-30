@@ -11,11 +11,11 @@ import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirm
 import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import StopwatchScreenContainer from './behavior/app/stopwatch/StopwatchScreenContainer';
-import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
+import ProjectListScreenContainerWithPagination from './behavior/app/projects/ProjectListScreenContainerWithPagination';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
-import TimeLogListScreenContainer from './behavior/app/time-logs/TimeLogListScreenContainer';
+import TimeLogListScreenContainerWithPagination from './behavior/app/time-logs/TimeLogListScreenContainerWithPagination';
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
-import withPagination from './behavior/app/utils/withPagination';
+import { getRelationshipQuery } from './behavior/app/utils/QueryUtils';
 
 // const AuthenticatedAppContainer = UserIsAuthenticated((props) => props.children);
 const AuthenticatedAppContainer = UserIsAuthenticated(props =>
@@ -23,7 +23,13 @@ const AuthenticatedAppContainer = UserIsAuthenticated(props =>
 );
 const NotAuthenticatedAppContainer = UserIsNotAuthenticated(props => props.children);
 
-// eslint-disable-next-line import/prefer-default-export
+const ProjectListScreenContainer = ProjectListScreenContainerWithPagination(3);
+const TimeLogListScreenContainer = TimeLogListScreenContainerWithPagination(3);
+
+const ProjectFormScreenContainerWithQuery = props => (
+  <ProjectFormScreenContainer getQuery={getRelationshipQuery('author')} {...props} />
+);
+
 export default {
   component: Layout,
   childRoutes: [
@@ -52,10 +58,12 @@ export default {
           component: AuthenticatedAppContainer,
           childRoutes: [
             { path: '/app', component: StopwatchScreenContainer },
-            { path: '/app/projects', component: withPagination(ProjectListScreenContainer) },
+            // { path: '/app/projects', component: withPagination(ProjectListScreenContainer) },
+            { path: '/app/projects', component: ProjectListScreenContainer },
             { path: '/app/projects/new', component: ProjectFormScreenContainer },
-            { path: '/app/projects/:projectId', component: ProjectFormScreenContainer },
-            { path: '/app/time-logs', component: withPagination(TimeLogListScreenContainer) },
+            { path: '/app/projects/:projectId', component: ProjectFormScreenContainerWithQuery },
+            // { path: '/app/time-logs', component: withPagination(TimeLogListScreenContainer) },
+            { path: '/app/time-logs', component: TimeLogListScreenContainer },
             { path: '/app/time-logs/new', component: TimeLogFormScreenContainer },
             { path: '/app/time-logs/:timeLogId', component: TimeLogFormScreenContainer },
           ],
