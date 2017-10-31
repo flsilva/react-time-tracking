@@ -4,9 +4,9 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import { Router, browserHistory } from 'react-router';
-import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
-import routes from './routes';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+import Routes from './routes';
 import initApp, { appMiddleware } from './behavior/app';
 import sagas from './behavior/app/AppSideEffects';
 import { reducers as appReducers } from './behavior/app/AppState';
@@ -18,6 +18,8 @@ const reducers = combineReducers({
 });
 
 const sagaMiddleware = createSagaMiddleware();
+
+const browserHistory = createHistory();
 const routingMiddleware = routerMiddleware(browserHistory);
 
 // eslint-disable-next-line no-underscore-dangle
@@ -38,11 +40,11 @@ const store = createStore(
 sagaMiddleware.run(sagas);
 initApp(store);
 
-const history = syncHistoryWithStore(browserHistory, store);
-
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history} routes={routes} />
+    <ConnectedRouter history={browserHistory}>
+      <Routes />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root'),
 );

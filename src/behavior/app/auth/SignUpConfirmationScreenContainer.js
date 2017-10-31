@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
+import { parse } from 'query-string';
 import SignUpConfirmationScreen from '../../../ui/app/auth/SignUpConfirmationScreen';
 
 class SignUpConfirmationScreenContainer extends Component {
   constructor(props) {
     super(props);
 
-    const email = this.props.location.query.uid;
-    let success = this.props.location.query.account_confirmation_success;
+    const query = parse(this.props.location.search);
+    const email = query.uid;
+    let success = query.account_confirmation_success;
     success = success === 'true';
 
     this.state = { email, success, seconds: 15 };
@@ -27,13 +28,13 @@ class SignUpConfirmationScreenContainer extends Component {
 
     if (this.state.seconds === 0) {
       const path = {
-        pathname: '/sign-in',
+        pathname: '/account/sign-in',
         query: {
           email: this.state.email,
         },
       };
 
-      browserHistory.push(path);
+      this.props.history.push(path);
     }
   }
 
@@ -48,11 +49,11 @@ class SignUpConfirmationScreenContainer extends Component {
 }
 
 SignUpConfirmationScreenContainer.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   location: PropTypes.shape({
-    query: PropTypes.shape({
-      uid: PropTypes.string,
-      account_confirmation_success: PropTypes.string,
-    }),
+    search: PropTypes.string,
   }).isRequired,
 };
 

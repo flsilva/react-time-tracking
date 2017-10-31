@@ -18,7 +18,7 @@ export const emailSignUp = (data, successCb) => {
       http: {
         request: {
           data: {
-            confirm_success_url: 'http://127.0.0.1:3001/sign-up/confirmation',
+            confirm_success_url: 'http://127.0.0.1:3001/account/sign-up/confirmation',
             email,
             password,
             password_confirmation: confirmPassword,

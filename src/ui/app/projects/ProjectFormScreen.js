@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
 import ProjectForm from './ProjectForm';
@@ -15,10 +14,6 @@ const bodyStyles = {
 };
 
 class ProjectFormScreen extends Component {
-  backHandler = () => {
-    browserHistory.goBack();
-  }
-
   submitHandler = () => {
     this.projectForm.saveHandler();
   }
@@ -35,7 +30,7 @@ class ProjectFormScreen extends Component {
 
     return (
       <div>
-        <ArrowBackAppBar title={title} onClickBackButton={this.backHandler}>
+        <ArrowBackAppBar title={title} onClickBackButton={this.props.goBackHandler}>
           <ToolbarGroup lastChild>
             <DoneIconButton onClick={this.submitHandler} disabled={isConnecting} />
             <MoreVertIconMenu onItemTouchTap={this.iconMenuItemClickHandler}>
@@ -57,16 +52,13 @@ class ProjectFormScreen extends Component {
 
 ProjectFormScreen.propTypes = {
   delete: PropTypes.func.isRequired,
-
+  goBackHandler: PropTypes.func.isRequired,
   isEditing: PropTypes.bool,
-
   isConnecting: PropTypes.bool,
-
   project: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
   }),
-
   submitHandler: PropTypes.func.isRequired,
 };
 

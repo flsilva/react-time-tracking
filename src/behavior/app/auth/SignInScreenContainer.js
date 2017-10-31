@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { parse } from 'query-string';
 import * as EmailSignInActions from './email/EmailSignInActions';
 import SignInScreen from '../../../ui/app/auth/SignInScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
@@ -9,11 +10,12 @@ import { getNotifications } from '../utils';
 
 const SignInScreenContainer = (props) => {
   const { isConnecting, error } = props.auth.emailSignIn;
+  const email = parse(props.location.search).email;
 
   return (
     <div>
       <SignInScreen
-        email={props.location.query.email}
+        email={email}
         error={props.auth.emailSignIn.error}
         isConnecting={props.auth.emailSignIn.isConnecting}
         submitHandler={props.actions.emailSignIn}
@@ -38,9 +40,7 @@ SignInScreenContainer.propTypes = {
   }).isRequired,
 
   location: PropTypes.shape({
-    query: PropTypes.shape({
-      email: PropTypes.string,
-    }),
+    search: PropTypes.string,
   }).isRequired,
 };
 

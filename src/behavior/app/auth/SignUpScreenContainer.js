@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import * as EmailSignUpActions from './email/EmailSignUpActions';
 import SignUpScreen from '../../../ui/app/auth/SignUpScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
@@ -14,7 +13,7 @@ class SignUpScreenContainer extends Component {
   }
 
   submitHandlerSuccess = () => {
-    browserHistory.push('/sign-up/success');
+    this.props.history.push('/account/sign-up/success');
   }
 
   render() {
@@ -43,6 +42,9 @@ SignUpScreenContainer.propTypes = {
       isConnecting: PropTypes.bool,
     }).isRequired,
     user: PropTypes.object,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 };
 

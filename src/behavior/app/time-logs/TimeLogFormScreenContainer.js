@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { Formik } from 'formik';
 import CircularProgress from 'material-ui/CircularProgress';
 import Notifications from '../../../ui/app/utils/Notifications';
@@ -17,7 +16,7 @@ import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
 class TimeLogFormScreenContainer extends Component {
 
   componentDidMount() {
-    const id = this.props.params.timeLogId;
+    const id = this.props.match.params.timeLogId;
     if (id) this.props.actions.readEntity(id, { include: 'author,project' });
   }
 
@@ -38,7 +37,7 @@ class TimeLogFormScreenContainer extends Component {
   };
 
   redirectToList = () => {
-    browserHistory.push('/app/time-logs');
+    this.props.history.push('/app/time-logs');
   };
 
   toFormValues = (entity = {}) => {
@@ -105,7 +104,7 @@ class TimeLogFormScreenContainer extends Component {
               <TimeLogAppBar
                 deleteHandler={this.deleteEntity}
                 entityId={entity && entity.id ? entity.id : undefined}
-                goBackHandler={browserHistory.goBack}
+                goBackHandler={this.props.history.goBack}
                 submitHandler={handleSubmit}
               />
               <TimeLogForm
@@ -133,10 +132,18 @@ TimeLogFormScreenContainer.propTypes = {
 
   entity: PropTypes.shape({ id: PropTypes.string }),
   error: PropTypes.arrayOf(PropTypes.object),
+
+  history: PropTypes.shape({
+    goBack: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+
   isConnecting: PropTypes.bool,
 
-  params: PropTypes.shape({
-    timeLogId: PropTypes.string,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      timeLogId: PropTypes.string,
+    }).isRequired,
   }).isRequired,
 };
 
@@ -146,8 +153,8 @@ TimeLogFormScreenContainer.defaultProps = {
   isConnecting: false,
 };
 
-const mapStateToProps = (state, { params }) => ({
-  entity: params && params.timeLogId ? readEntityById(state, params.timeLogId) : undefined,
+const mapStateToProps = (state, { match }) => ({
+  entity: readEntityById(state, match.params.timeLogId),
   error: state.timeLogs.error,
   isConnecting: state.timeLogs.isConnecting,
 });

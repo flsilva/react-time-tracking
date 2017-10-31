@@ -5,7 +5,7 @@ import {
   RESTORE_SESSION_FAILED,
 } from './RestoreSessionActions';
 
-const isConnecting = (state = null, action) => {
+const isConnecting = (state = false, action) => {
   switch (action.type) {
     case RESTORE_SESSION_STARTED:
       return true;

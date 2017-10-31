@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 import './MainNav.css';
 
-const MainNav = (props) => {
+const MainNav = (props, { router, user }) => {
   const navigateToStopwatch = () => {
-    browserHistory.push('/app');
+    router.history.push('/app');
   };
 
   const navigateToSignUp = () => {
-    browserHistory.push('/sign-up');
+    router.history.push('/account/sign-up');
   };
 
   const navigateToSignIn = () => {
-    browserHistory.push('/sign-in');
+    router.history.push('/account/sign-in');
   };
 
   const signedInMenu = () => (
@@ -34,19 +33,20 @@ const MainNav = (props) => {
     </List>
   );
 
-  const menu = (props.user) ? signedInMenu() : signedOutMenu();
+  const menu = (user) ? signedInMenu() : signedOutMenu();
 
   return menu;
 };
 
-MainNav.propTypes = {
+MainNav.contextTypes = {
+  router: PropTypes.shape({
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
   user: PropTypes.shape({
     name: PropTypes.string,
   }),
-};
-
-MainNav.defaultProps = {
-  user: null,
 };
 
 export default MainNav;

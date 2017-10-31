@@ -1,5 +1,9 @@
 import React from 'react';
-import { UserIsAuthenticated, UserIsNotAuthenticated } from './behavior/app/auth/UserAuthWrappers';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import {
+  UserIsAuthenticatedRedir,
+  UserIsNotAuthenticatedRedir,
+} from './behavior/app/auth/UserAuthWrappers';
 import Layout from './ui/Layout';
 import WebsiteLayout from './behavior/website/WebsiteLayout';
 import FaqScreen from './ui/website/faq/FaqScreen';
@@ -17,11 +21,17 @@ import TimeLogListScreenContainerWithPagination from './behavior/app/time-logs/T
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
 import { getRelationshipQuery } from './behavior/app/utils/QueryUtils';
 
-// const AuthenticatedAppContainer = UserIsAuthenticated((props) => props.children);
-const AuthenticatedAppContainer = UserIsAuthenticated(props =>
-  React.cloneElement(props.children, { user: props.authData.user }),
+// const AuthenticatedAppContainer = UserIsAuthenticatedRedir(props => props.children);
+
+const AuthenticatedAppContainer = withRouter(
+  UserIsAuthenticatedRedir(props => React.cloneElement(props.children, props)),
 );
-const NotAuthenticatedAppContainer = UserIsNotAuthenticated(props => props.children);
+
+// const NotAuthenticatedAppContainer = UserIsNotAuthenticatedRedir(props => props.children);
+
+const NotAuthenticatedAppContainer = withRouter(
+  UserIsNotAuthenticatedRedir(props => React.cloneElement(props.children, props)),
+);
 
 const ProjectListScreenContainer = ProjectListScreenContainerWithPagination(3);
 const TimeLogListScreenContainer = TimeLogListScreenContainerWithPagination(3);
@@ -30,6 +40,60 @@ const ProjectFormScreenContainerWithQuery = props => (
   <ProjectFormScreenContainer getQuery={getRelationshipQuery('author')} {...props} />
 );
 
+export default () => (
+  <Layout>
+    <Switch>
+      <Route exact path="/sign-out" component={SignOutScreenContainer} />
+      <Route
+        path="/"
+        exact
+        render={() => (
+          <WebsiteLayout>
+            <Switch>
+              <Route exact path="/" component={LandingScreenContainer} />
+              <Route path="/faq" component={FaqScreen} />
+            </Switch>
+          </WebsiteLayout>
+        )}
+      />
+      <Route
+        path="/account"
+        render={() => (
+          <AppLayoutContainer>
+            <NotAuthenticatedAppContainer>
+              <Switch>
+                <Route exact path="/account/sign-in" component={SignInScreenContainer} />
+                <Route exact path="/account/sign-up" component={SignUpScreenContainer} />
+                <Route exact path="/account/sign-up/success" component={SignUpSuccessScreen} />
+                <Route exact path="/account/sign-up/confirmation" component={SignUpConfirmationScreenContainer} />
+              </Switch>
+            </NotAuthenticatedAppContainer>
+          </AppLayoutContainer>
+        )}
+      />
+      <Route
+        path="/app"
+        render={() => (
+          <AppLayoutContainer>
+            <AuthenticatedAppContainer>
+              <Switch>
+                <Route exact path="/app" component={StopwatchScreenContainer} />
+                <Route exact path="/app/projects" component={ProjectListScreenContainer} />
+                <Route exact path="/app/projects/new" component={ProjectFormScreenContainer} />
+                <Route exact path="/app/projects/:projectId" component={ProjectFormScreenContainerWithQuery} />
+                <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />
+                <Route exact path="/app/time-logs/new" component={TimeLogFormScreenContainer} />
+                <Route exact path="/app/time-logs/:timeLogId" component={TimeLogFormScreenContainer} />
+              </Switch>
+            </AuthenticatedAppContainer>
+          </AppLayoutContainer>
+        )}
+      />
+    </Switch>
+  </Layout>
+);
+
+/*
 export default {
   component: Layout,
   childRoutes: [
@@ -72,3 +136,4 @@ export default {
     },
   ],
 };
+*/

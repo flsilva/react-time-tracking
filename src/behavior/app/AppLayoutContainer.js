@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import AppLayout from '../../ui/app/AppLayout';
 
 class AppLayoutContainer extends Component {
-  state = { user: null };
+  state = { user: undefined };
 
   getChildContext() {
     return { user: this.props.user };
@@ -31,7 +31,7 @@ AppLayoutContainer.propTypes = {
 };
 
 AppLayoutContainer.defaultProps = {
-  user: null,
+  user: undefined,
 };
 
 const mapStateToProps = state => ({

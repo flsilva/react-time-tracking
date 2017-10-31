@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 
-const TimeLogList = (props) => {
-  const navigateToTimeLog = (id) => {
-    browserHistory.push(`/app/time-logs/${id}`);
-  };
-
-  const renderItem = (item) => {
+const TimeLogList = ({ entities, onClickItem }) => {
+  const renderItem = (item, onClick) => {
     const { id, project } = item;
 
     return (
@@ -17,14 +12,14 @@ const TimeLogList = (props) => {
         primaryText={project.name}
         key={id}
         leftAvatar={<Avatar>F</Avatar>}
-        onClick={() => navigateToTimeLog(id)}
+        onClick={() => onClick(id)}
       />
     );
   };
 
   return (
     <List>
-      {props.entities ? props.entities.map(renderItem) : undefined}
+      {entities ? entities.map(item => renderItem(item, onClickItem)) : undefined}
     </List>
   );
 };
@@ -36,10 +31,11 @@ TimeLogList.propTypes = {
       description: PropTypes.string.isRequired,
     }),
   ),
+  onClickItem: PropTypes.func.isRequired,
 };
 
 TimeLogList.defaultProps = {
-  entities: null,
+  entities: undefined,
 };
 
 export default TimeLogList;

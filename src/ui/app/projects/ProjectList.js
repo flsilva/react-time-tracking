@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 
-const ProjectList = (props) => {
-  const navigateToProject = (id) => {
-    browserHistory.push(`/app/projects/${id}`);
-  };
-
-  const renderItem = (item) => {
+const ProjectList = ({ data, onClickProjectItem }) => {
+  const renderItem = (item, onClick) => {
     const { id, name } = item;
 
     return (
@@ -17,14 +12,14 @@ const ProjectList = (props) => {
         primaryText={name}
         key={id}
         leftAvatar={<Avatar>F</Avatar>}
-        onClick={() => navigateToProject(id)}
+        onClick={() => onClick(id)}
       />
     );
   };
 
   return (
     <List>
-      {props.data ? props.data.map(renderItem) : null}
+      {data ? data.map(item => renderItem(item, onClickProjectItem)) : undefined}
     </List>
   );
 };
@@ -36,6 +31,7 @@ ProjectList.propTypes = {
       name: PropTypes.string.isRequired,
     }),
   ),
+  onClickProjectItem: PropTypes.func.isRequired,
 };
 
 ProjectList.defaultProps = {

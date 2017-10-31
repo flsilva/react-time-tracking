@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
@@ -12,8 +11,8 @@ import { getNotifications } from '../utils';
 class ProjectFormScreenContainer extends Component {
 
   componentDidMount() {
-    const id = this.props.params.projectId;
-    const query = this.props.getQuery();
+    const id = this.props.match.params.projectId;
+    const query = (this.props.getQuery) ? this.props.getQuery() : undefined;
     if (id) this.props.actions.readEntity(id, query);
   }
 
@@ -43,7 +42,7 @@ class ProjectFormScreenContainer extends Component {
   }
 
   redirectToList = () => {
-    browserHistory.push('/app/projects');
+    this.props.history.push('/app/projects');
   }
 
   render() {
@@ -53,12 +52,12 @@ class ProjectFormScreenContainer extends Component {
       <div>
         <ProjectFormScreen
           delete={this.deleteHandler}
+          goBackHandler={this.props.history.goBack}
           submitHandler={this.getSubmitHandler()}
           error={this.props.projects.error}
-          isEditing={this.props.params.projectId != null}
+          isEditing={this.props.match.params.projectId != null}
           isConnecting={isConnecting}
           project={data}
-          user={this.props.user}
         />
         <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
@@ -74,20 +73,23 @@ ProjectFormScreenContainer.propTypes = {
     deleteEntity: PropTypes.func.isRequired,
   }).isRequired,
 
-  getQuery: PropTypes.func.isRequired,
+  getQuery: PropTypes.func,
 
-  params: PropTypes.shape({
-    projectId: PropTypes.string,
+  history: PropTypes.shape({
+    goBack: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      projectId: PropTypes.string,
+    }).isRequired,
   }).isRequired,
 
   projects: PropTypes.shape({
     data: PropTypes.object,
     error: PropTypes.array,
     isConnecting: PropTypes.bool,
-  }).isRequired,
-
-  user: PropTypes.shape({
-    name: PropTypes.string,
   }).isRequired,
 };
 
@@ -97,9 +99,9 @@ ProjectFormScreenContainer.defaultProps = {
   },
 };
 
-const mapStateToProps = (state, { params }) => ({
+const mapStateToProps = (state, { match }) => ({
   projects: {
-    data: readEntityById(state, params.projectId),
+    data: readEntityById(state, match.params.projectId),
     error: state.projects.error,
     isConnecting: state.projects.isConnecting,
   },

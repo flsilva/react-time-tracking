@@ -1,31 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 
-const MainNav = (props, context) => {
+const MainNav = (props, { router, user }) => {
   const navigateToStopwatch = () => {
-    browserHistory.push('/app');
+    router.history.push('/app');
   };
 
   const navigateToSignUp = () => {
-    browserHistory.push('/sign-up');
+    router.history.push('/account/sign-up');
   };
 
   const navigateToSignIn = () => {
-    browserHistory.push('/sign-in');
+    router.history.push('/account/sign-in');
   };
 
   const navigateToSignOut = () => {
-    browserHistory.push('/sign-out');
+    router.history.push('/sign-out');
   };
 
   const navigateToProjects = () => {
-    browserHistory.push('/app/projects');
+    router.history.push('/app/projects');
   };
 
   const navigateToTimeLogs = () => {
-    browserHistory.push('/app/time-logs');
+    router.history.push('/app/time-logs');
   };
 
   const signedInMenu = () => (
@@ -44,12 +43,17 @@ const MainNav = (props, context) => {
     </List>
   );
 
-  const menu = (context.user) ? signedInMenu() : signedOutMenu();
+  const menu = (user) ? signedInMenu() : signedOutMenu();
 
   return menu;
 };
 
 MainNav.contextTypes = {
+  router: PropTypes.shape({
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
   user: PropTypes.shape({
     name: PropTypes.string,
   }),

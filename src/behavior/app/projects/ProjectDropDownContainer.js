@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { readEntities } from '../projects/ProjectActions';
 import { getEntities } from '../projects/ProjectState';
 import ProjectDropDown from '../../../ui/app/projects/ProjectDropDown';
@@ -17,7 +16,7 @@ class ProjectDropDownContainer extends Component {
       <ProjectDropDown
         isConnecting={this.props.isConnecting}
         name={this.props.name}
-        onCreateProjectClick={() => browserHistory.push('/app/projects/new')}
+        onCreateProjectClick={() => this.context.router.history.push('/app/projects/new')}
         onItemPick={this.props.onItemPick}
         projects={this.props.entities}
         selectedItemId={this.props.selectedItemId}
@@ -25,6 +24,14 @@ class ProjectDropDownContainer extends Component {
     );
   }
 }
+
+ProjectDropDownContainer.contextTypes = {
+  router: PropTypes.shape({
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
 
 ProjectDropDownContainer.propTypes = {
   actions: PropTypes.shape({

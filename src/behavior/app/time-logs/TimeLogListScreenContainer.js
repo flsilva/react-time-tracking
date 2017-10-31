@@ -37,6 +37,8 @@ class TimeLogListScreenContainer extends Component {
           entities={entities}
           error={error}
           isConnecting={isConnecting}
+          onClickNewTimeLog={() => this.props.history.push('/app/time-logs/new')}
+          onClickItem={id => this.props.history.push(`/app/time-logs/${id}`)}
         />
         {this.shouldDisplayLoadButton() &&
           <RaisedButton
@@ -62,6 +64,9 @@ TimeLogListScreenContainer.propTypes = {
   entities: PropTypes.arrayOf(PropTypes.object),
   error: PropTypes.arrayOf(PropTypes.object),
   getNextPageQuery: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   isConnecting: PropTypes.bool,
   pagination: PropTypes.shape({
     next: PropTypes.string,

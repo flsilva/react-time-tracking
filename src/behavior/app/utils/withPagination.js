@@ -38,6 +38,7 @@ const withPagination = getNextPageQuery => WrappedComponent => (
         <WrappedComponent
           getNextPageQuery={this.getNextPageQuery}
           queries={this.state.queries}
+          {...this.props}
         />
       );
     }

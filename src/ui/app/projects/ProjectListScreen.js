@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import SimpleAppBar from '../header/SimpleAppBar';
@@ -12,16 +11,12 @@ const fabStyles = {
   right: '20px',
 };
 
-const navToNewProject = () => {
-  browserHistory.push('/app/projects/new');
-};
-
 const ProjectListScreen = props => (
   <div>
     <SimpleAppBar title="Projects" />
-    <ProjectList data={props.data} />
+    <ProjectList data={props.data} onClickProjectItem={props.onClickProjectItem} />
     {!props.isConnecting &&
-      <FloatingActionButton style={fabStyles} onClick={navToNewProject}>
+      <FloatingActionButton style={fabStyles} onClick={props.onClickNewProject}>
         <ContentAddIcon />
       </FloatingActionButton>
     }
@@ -31,6 +26,8 @@ const ProjectListScreen = props => (
 ProjectListScreen.propTypes = {
   isConnecting: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.object),
+  onClickNewProject: PropTypes.func.isRequired,
+  onClickProjectItem: PropTypes.func.isRequired,
 };
 
 ProjectListScreen.defaultProps = {

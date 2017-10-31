@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAddIcon from 'material-ui/svg-icons/content/add';
 import SimpleAppBar from '../header/SimpleAppBar';
@@ -12,21 +11,17 @@ const fabStyles = {
   right: '20px',
 };
 
-const navToNewTimeLog = () => {
-  browserHistory.push('/app/time-logs/new');
-};
-
 const noHoursLoggedMessage = 'You didn\'t log any hours. Start now!';
 
-const TimeLogListScreen = ({ entities, isConnecting }) => (
+const TimeLogListScreen = ({ entities, isConnecting, onClickItem, onClickNewTimeLog }) => (
   <div>
     <SimpleAppBar title="Logged Time" />
-    <TimeLogList entities={entities} />
+    <TimeLogList entities={entities} onClickItem={onClickItem} />
     {!isConnecting && (!entities || !entities.length) &&
       <p style={{ margin: '0px 10px', textAlign: 'center' }}>{noHoursLoggedMessage}</p>
     }
     {!isConnecting &&
-      <FloatingActionButton style={fabStyles} onClick={navToNewTimeLog}>
+      <FloatingActionButton style={fabStyles} onClick={onClickNewTimeLog}>
         <ContentAddIcon />
       </FloatingActionButton>
     }
@@ -36,6 +31,8 @@ const TimeLogListScreen = ({ entities, isConnecting }) => (
 TimeLogListScreen.propTypes = {
   entities: PropTypes.arrayOf(PropTypes.object),
   isConnecting: PropTypes.bool,
+  onClickItem: PropTypes.func.isRequired,
+  onClickNewTimeLog: PropTypes.func.isRequired,
 };
 
 TimeLogListScreen.defaultProps = {

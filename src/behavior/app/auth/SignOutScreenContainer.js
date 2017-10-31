@@ -2,21 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import * as SignOutActions from './sign-out/SignOutActions';
-
-const mapStateToProps = state => ({
-  auth: state.auth,
-});
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(SignOutActions, dispatch),
-});
 
 class SignOutScreenContainer extends Component {
   componentDidMount() {
     this.props.actions.signOut();
-    browserHistory.push('/')
+    this.props.history.push('/');
   }
 
   render() {
@@ -28,7 +19,18 @@ SignOutScreenContainer.propTypes = {
   actions: PropTypes.shape({
     signOut: PropTypes.func.isRequired,
   }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(SignOutActions, dispatch),
+});
 
 export default connect(
   mapStateToProps,

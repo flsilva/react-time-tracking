@@ -35,6 +35,8 @@ class ProjectListScreenContainer extends Component {
           isConnecting={this.props.projects.isConnecting}
           data={this.props.projects.list}
           user={this.props.user}
+          onClickNewProject={() => this.props.history.push('/app/projects/new')}
+          onClickProjectItem={id => this.props.history.push(`/app/projects/${id}`)}
         />
         {this.shouldDisplayLoadButton() &&
           <RaisedButton
@@ -59,6 +61,10 @@ ProjectListScreenContainer.propTypes = {
   actions: PropTypes.shape({
     createEntity: PropTypes.func.isRequired,
     readEntities: PropTypes.func.isRequired,
+  }).isRequired,
+
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 
   projects: PropTypes.shape({
