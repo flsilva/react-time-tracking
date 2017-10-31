@@ -1,6 +1,8 @@
 import normalize from 'json-api-normalizer';
 import { entities as projectEntitiesReducer } from './projects/ProjectState';
 import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectActions';
+import { entities as timeLogEntitiesReducer } from './time-logs/TimeLogState';
+import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLogActions';
 import { entities as userEntitiesReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
 import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchState';
@@ -27,6 +29,10 @@ const entityReducers = {
     reducer: stopwatchEntityReducer,
     updateDbAction: UPDATE_STOPWATCH_DATABASE,
   },
+  timeLogs: {
+    reducer: timeLogEntitiesReducer,
+    updateDbAction: UPDATE_TIME_LOGS_DATABASE,
+  },
   users: {
     reducer: userEntitiesReducer,
     updateDbAction: UPDATE_USERS_DATABASE,
@@ -37,6 +43,7 @@ export default (state = {}, action) => {
   switch (action.type) {
     case UPDATE_PROJECTS_DATABASE:
     case UPDATE_STOPWATCH_DATABASE:
+    case UPDATE_TIME_LOGS_DATABASE:
     case UPDATE_USERS_DATABASE: {
       const normalizedData = normalize(action.payload);
 

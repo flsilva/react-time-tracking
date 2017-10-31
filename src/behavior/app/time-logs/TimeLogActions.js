@@ -31,6 +31,10 @@ export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 export const createEntity = (data, successCb) => {
   if (!data) throw new Error('Argument <data> must not be null.');
+  if (!data.projectId) throw new Error('Argument <data.projectId> must not be null.');
+
+  // like lodash _.omit(), but it also grabs projectId value
+  const { projectId, ...newData } = data;
 
   return {
     type: CREATE_ENTITY_REQUESTED,
@@ -40,10 +44,11 @@ export const createEntity = (data, successCb) => {
           type: 'time_logs',
           relationships: [
             { attrName: 'author', type: 'users', id: 'AUTH_USER_ID' },
+            { attrName: 'project', type: 'projects', id: projectId },
           ],
         },
         request: {
-          data,
+          data: newData,
           method: 'POST',
           url: 'time-logs/',
         },
@@ -105,15 +110,21 @@ export const updateEntity = (id, data, successCb) => {
   if (!id) throw new Error('Argument <data> must not be null.');
   if (!data) throw new Error('Argument <data> must not be null.');
 
+  // like lodash _.omit(), but it also grabs projectId value
+  const { projectId, ...newData } = data;
+
   return {
     type: UPDATE_ENTITY_REQUESTED,
     meta: {
       http: {
         entity: {
           type: 'time_logs',
+          relationships: [
+            { attrName: 'project', type: 'projects', id: projectId },
+          ],
         },
         request: {
-          data: { ...data, id },
+          data: { ...newData, id },
           method: 'PATCH',
           url: `time-logs/${id}`,
         },

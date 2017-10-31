@@ -10,11 +10,11 @@ const TimeLogList = (props) => {
   };
 
   const renderItem = (item) => {
-    const { id, name } = item;
+    const { id, project } = item;
 
     return (
       <ListItem
-        primaryText={name}
+        primaryText={project.name}
         key={id}
         leftAvatar={<Avatar>F</Avatar>}
         onClick={() => navigateToTimeLog(id)}
@@ -24,22 +24,22 @@ const TimeLogList = (props) => {
 
   return (
     <List>
-      {props.data ? props.data.map(renderItem) : null}
+      {props.entities ? props.entities.map(renderItem) : undefined}
     </List>
   );
 };
 
 TimeLogList.propTypes = {
-  data: PropTypes.arrayOf(
+  entities: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
     }),
   ),
 };
 
 TimeLogList.defaultProps = {
-  data: null,
+  entities: null,
 };
 
 export default TimeLogList;

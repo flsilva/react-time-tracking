@@ -1,60 +1,91 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
+import CalendarIcon from 'material-ui/svg-icons/action/event';
+import WorkIcon from 'material-ui/svg-icons/action/work';
+import SheetIcon from 'material-ui/svg-icons/action/description';
+import WithIcon from '../common/WithIcon';
+import DatePicker from '../common/DatePicker';
+import NumberDropDown from '../common/NumberDropDown';
 
-const bodyStyles = {
-  margin: '20px',
+const styles = {
+  body: {
+    margin: '20px',
+  },
+  timeContainer: {
+    alignItems: 'baseline',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '10px 0px 35px',
+  },
 };
 
-class TimeLogForm extends Component {
+const TimeLogForm = (props, context) => {
+  const { onCustomInputChange, onInputChange, values } = props;
+  const timeBgColor = context.muiTheme.palette.primary1Color;
+  const ProjectDropDown = props.projectDropDownClass;
 
-  state = {
-    description: (this.props.timeLog && this.props.timeLog.description) ? this.props.timeLog.description : '',
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    // console.log('TimeLogForm().componentWillReceiveProps() - nextProps: ', nextProps);
-
-    if (!nextProps.timeLog) return;
-
-    this.setState({
-      description: nextProps.timeLog.description,
-    });
-  }
-
-  changeHandler = (e) => {
-    this.setState({ description: e.target.value });
-  }
-
-  saveHandler = () => {
-    const data = {
-      name: this.state.name,
-    };
-
-    this.props.submitHandler(data);
-  }
-
-  render() {
-    const timeBgColor = this.context.muiTheme.palette.primary1Color;
-
-    return (
-      <div>
-        <div style={{ backgroundColor: timeBgColor, height: '130px' }}></div>
-        <div style={bodyStyles}>
-          <TextField
-            hintText="Description"
-            onChange={this.changeHandler}
-            type="text"
-            value={this.state.description}
-          />
-          {this.props.timeLog && this.props.timeLog.author &&
-            <p>Author: {this.props.timeLog.author.email}</p>
-          }
-        </div>
+  return (
+    <div>
+      <div style={{ ...styles.timeContainer, ...{ backgroundColor: timeBgColor } }}>
+        <NumberDropDown
+          name="hours"
+          prependZero
+          maxHeight={300}
+          onChange={onCustomInputChange}
+          startNum={0}
+          endNum={24}
+          value={values.hours}
+        />
+        <NumberDropDown
+          name="minutes"
+          prependZero
+          maxHeight={300}
+          onChange={onCustomInputChange}
+          startNum={0}
+          endNum={59}
+          value={values.minutes}
+        />
       </div>
-    );
-  }
-}
+      <div style={styles.body}>
+        <WithIcon icon={<CalendarIcon color={'#3f2da5'} />}>
+          <DatePicker
+            name="date"
+            date={values.date}
+            onDatePick={onCustomInputChange}
+          />
+        </WithIcon>
+        <WithIcon icon={<WorkIcon color={'#3f2da5'} />}>
+          <ProjectDropDown
+            name="projectId"
+            onItemPick={onCustomInputChange}
+            selectedItemId={values.projectId}
+          />
+        </WithIcon>
+        <WithIcon
+          icon={<SheetIcon color={'#3f2da5'} />}
+          iconStyle={{ marginTop: '12px' }}
+          style={{ alignItems: 'flex-start' }}
+        >
+          <TextField
+            fullWidth
+            name="description"
+            hintText="Description (optional)"
+            multiLine
+            onChange={onInputChange}
+            rows={6}
+            rowsMax={6}
+            textareaStyle={{ backgroundColor: '#f7f7f7', padding: '3px 6px' }}
+            value={values.description}
+          />
+        </WithIcon>
+        {props.entity && props.entity.author &&
+          <p>Author: {props.entity.author.email}</p>
+        }
+      </div>
+    </div>
+  );
+};
 
 TimeLogForm.contextTypes = {
   muiTheme: PropTypes.shape({
@@ -63,17 +94,24 @@ TimeLogForm.contextTypes = {
 };
 
 TimeLogForm.propTypes = {
-  timeLog: PropTypes.shape({
-    description: PropTypes.string,
+  entity: PropTypes.shape({
     author: PropTypes.shape({
       email: PropTypes.string,
     }),
   }),
-  submitHandler: PropTypes.func.isRequired,
+  onCustomInputChange: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  projectDropDownClass: PropTypes.func.isRequired,
+  values: PropTypes.shape({
+    description: PropTypes.string,
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+  }),
 };
 
 TimeLogForm.defaultProps = {
-  timeLog: null,
+  entity: undefined,
+  values: undefined,
 };
 
 export default TimeLogForm;

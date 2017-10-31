@@ -18,14 +18,14 @@ const navToNewTimeLog = () => {
 
 const noHoursLoggedMessage = 'You didn\'t log any hours. Start now!';
 
-const TimeLogListScreen = props => (
+const TimeLogListScreen = ({ entities, isConnecting }) => (
   <div>
     <SimpleAppBar title="Logged Time" />
-    <TimeLogList data={props.data} />
-    {!props.isConnecting && (!props.data || !props.data.length) &&
+    <TimeLogList entities={entities} />
+    {!isConnecting && (!entities || !entities.length) &&
       <p style={{ margin: '0px 10px', textAlign: 'center' }}>{noHoursLoggedMessage}</p>
     }
-    {!props.isConnecting &&
+    {!isConnecting &&
       <FloatingActionButton style={fabStyles} onClick={navToNewTimeLog}>
         <ContentAddIcon />
       </FloatingActionButton>
@@ -34,12 +34,12 @@ const TimeLogListScreen = props => (
 );
 
 TimeLogListScreen.propTypes = {
+  entities: PropTypes.arrayOf(PropTypes.object),
   isConnecting: PropTypes.bool,
-  data: PropTypes.arrayOf(PropTypes.object),
 };
 
 TimeLogListScreen.defaultProps = {
-  data: null,
+  entities: undefined,
   isConnecting: false,
 };
 

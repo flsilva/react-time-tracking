@@ -115,8 +115,12 @@ const isConnecting = (state = false, action) => {
 
 export const readEntityById = (state, id) => {
   if (!id) return undefined;
+
   const entity = build(state.database, 'timeLogs', id, { eager: true, ignoreLinks: true });
-  return entity || undefined;
+  if (entity === null) return undefined;
+
+  if (entity.logDate) entity.logDate = new Date(entity.logDate);
+  return entity;
 };
 
 export const getEntities = (state, _queries = []) => {
