@@ -21,13 +21,9 @@ import TimeLogListScreenContainerWithPagination from './behavior/app/time-logs/T
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
 import { getRelationshipQuery } from './behavior/app/utils/QueryUtils';
 
-// const AuthenticatedAppContainer = UserIsAuthenticatedRedir(props => props.children);
-
 const AuthenticatedAppContainer = withRouter(
   UserIsAuthenticatedRedir(props => React.cloneElement(props.children, props)),
 );
-
-// const NotAuthenticatedAppContainer = UserIsNotAuthenticatedRedir(props => props.children);
 
 const NotAuthenticatedAppContainer = withRouter(
   UserIsNotAuthenticatedRedir(props => React.cloneElement(props.children, props)),
@@ -92,48 +88,3 @@ export default () => (
     </Switch>
   </Layout>
 );
-
-/*
-export default {
-  component: Layout,
-  childRoutes: [
-    {
-      path: '/',
-      component: WebsiteLayout,
-      indexRoute: { component: LandingScreenContainer },
-      childRoutes: [
-        { path: '/faq', component: FaqScreen },
-      ],
-    },
-    {
-      component: AppLayoutContainer,
-      childRoutes: [
-        { path: '/sign-out', component: SignOutScreenContainer },
-        {
-          component: NotAuthenticatedAppContainer,
-          childRoutes: [
-            { path: '/sign-up', component: SignUpScreenContainer },
-            { path: '/sign-up/success', component: SignUpSuccessScreen },
-            { path: '/sign-up/confirmation', component: SignUpConfirmationScreenContainer },
-            { path: '/sign-in', component: SignInScreenContainer },
-          ],
-        },
-        {
-          component: AuthenticatedAppContainer,
-          childRoutes: [
-            { path: '/app', component: StopwatchScreenContainer },
-            // { path: '/app/projects', component: withPagination(ProjectListScreenContainer) },
-            { path: '/app/projects', component: ProjectListScreenContainer },
-            { path: '/app/projects/new', component: ProjectFormScreenContainer },
-            { path: '/app/projects/:projectId', component: ProjectFormScreenContainerWithQuery },
-            // { path: '/app/time-logs', component: withPagination(TimeLogListScreenContainer) },
-            { path: '/app/time-logs', component: TimeLogListScreenContainer },
-            { path: '/app/time-logs/new', component: TimeLogFormScreenContainer },
-            { path: '/app/time-logs/:timeLogId', component: TimeLogFormScreenContainer },
-          ],
-        },
-      ],
-    },
-  ],
-};
-*/
