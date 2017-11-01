@@ -33,8 +33,8 @@ const StopwatchTimeAndControlsContainer = (props) => {
       getElapsedTimeObject={getElapsedTimeObject}
       isConnecting={props.isConnecting}
       isRunning={props.isRunning}
-      onHourPick={setStopwatchHours}
-      onMinutePick={setStopwatchMinutes}
+      onHourPick={(attrName, value) => setStopwatchHours(value)}
+      onMinutePick={(attrName, value) => setStopwatchMinutes(value)}
       pauseStopwatch={pauseStopwatch}
       startedAt={props.startedAt}
       startStopwatch={startStopwatch}
