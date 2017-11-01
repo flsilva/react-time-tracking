@@ -40,6 +40,7 @@ export const UPDATE_PROJECT_REQUESTED = 'app/stopwatch/set/project/requested';
 //--------------------------------
 
 export const UPDATE_DATABASE = 'app/stopwatch/update/database';
+export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 //-------------------------
 // BEGIN BASIC CRUD ACTIONS
@@ -222,5 +223,3 @@ export const updateProject = ({ id, projectId }) => {
 //------------------------------
 // END UPDATE ATTRIBUTES ACTIONS
 //------------------------------
-
-export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
