@@ -15,7 +15,7 @@ class StopwatchProjectDropDownContainer extends Component {
   render() {
     return (
       <ProjectDropDownContainer
-        onItemPick={this.setActivityProject}
+        onItemPick={(attrName, value) => this.setActivityProject(value)}
         selectedItemId={this.props.projectId}
       />
     );
