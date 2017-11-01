@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setStopwatchDescription } from '../stopwatch/StopwatchActions';
+import { updateDescription } from '../stopwatch/StopwatchActions';
 import { getStopwatch } from './StopwatchState';
 import DescriptionFormDialog from '../../../ui/app/common/DescriptionFormDialog';
 
@@ -10,7 +10,7 @@ const DescriptionFormDialogContainer = (props) => {
   const { actions, closeHandler, description, id, isEditing, open } = props;
 
   const saveHandler = (newDescription) => {
-    actions.setStopwatchDescription({ id, description: newDescription });
+    actions.updateDescription({ id, description: newDescription });
     closeHandler();
   };
 
@@ -27,7 +27,7 @@ const DescriptionFormDialogContainer = (props) => {
 
 DescriptionFormDialogContainer.propTypes = {
   actions: PropTypes.shape({
-    setStopwatchDescription: PropTypes.func.isRequired,
+    updateDescription: PropTypes.func.isRequired,
   }).isRequired,
   closeHandler: PropTypes.func.isRequired,
   description: PropTypes.string,
@@ -53,7 +53,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
   actions: {
-    ...bindActionCreators({ setStopwatchDescription }, dispatch),
+    ...bindActionCreators({ updateDescription }, dispatch),
   },
 });
 

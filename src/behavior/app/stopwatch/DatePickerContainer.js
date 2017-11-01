@@ -7,22 +7,22 @@ import { getStopwatch } from './StopwatchState';
 import DatePicker from '../../../ui/app/common/DatePicker';
 
 const DatePickerContainer = (props) => {
-  const setStopwatchDate = (date) => {
+  const updateDate = (date) => {
     const { id } = props;
-    props.actions.setStopwatchDate({ id, date });
+    props.actions.updateDate({ id, date });
   };
 
   return (
     <DatePicker
       date={props.activityDate}
-      onDatePick={(name, value) => setStopwatchDate(value)}
+      onDatePick={(name, value) => updateDate(value)}
     />
   );
 };
 
 DatePickerContainer.propTypes = {
   actions: PropTypes.shape({
-    setStopwatchDate: PropTypes.func.isRequired,
+    updateDate: PropTypes.func.isRequired,
   }).isRequired,
   activityDate: PropTypes.instanceOf(Date),
   id: PropTypes.string,

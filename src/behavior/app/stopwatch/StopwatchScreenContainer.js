@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getNotifications } from '../utils';
 import Notifications from '../../../ui/app/utils/Notifications';
-import { readStopwatch } from './StopwatchActions';
+import { readEntity } from './StopwatchActions';
 import StopwatchAppBarContainer from './StopwatchAppBarContainer';
 import StopwatchTimeAndControlsContainer from './StopwatchTimeAndControlsContainer';
 import StopwatchScreenBodyContainer from './StopwatchScreenBodyContainer';
@@ -12,7 +12,7 @@ import StopwatchScreenBodyContainer from './StopwatchScreenBodyContainer';
 class StopwatchScreenContainer extends Component {
 
   componentDidMount() {
-    this.props.actions.readStopwatch();
+    this.props.actions.readEntity();
   }
 
   render() {
@@ -29,7 +29,7 @@ class StopwatchScreenContainer extends Component {
 
 StopwatchScreenContainer.propTypes = {
   actions: PropTypes.shape({
-    readStopwatch: PropTypes.func.isRequired,
+    readEntity: PropTypes.func.isRequired,
   }).isRequired,
   error: PropTypes.arrayOf(PropTypes.object),
 };
@@ -43,7 +43,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ readStopwatch }, dispatch),
+  actions: bindActionCreators({ readEntity }, dispatch),
 });
 
 export default connect(

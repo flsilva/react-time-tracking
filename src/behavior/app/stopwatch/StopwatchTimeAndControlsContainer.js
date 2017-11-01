@@ -17,14 +17,14 @@ const StopwatchTimeAndControlsContainer = (props) => {
     props.actions.pauseStopwatch({ id, activityTotalTime, startedAt });
   };
 
-  const setStopwatchHours = (hours) => {
+  const updateHours = (hours) => {
     const { id, activityTotalTime, startedAt } = props;
-    props.actions.setStopwatchHours({ id, activityTotalTime, hours, startedAt });
+    props.actions.updateHours({ id, activityTotalTime, hours, startedAt });
   };
 
-  const setStopwatchMinutes = (minutes) => {
+  const updateMinutes = (minutes) => {
     const { id, activityTotalTime, startedAt } = props;
-    props.actions.setStopwatchMinutes({ id, activityTotalTime, minutes, startedAt });
+    props.actions.updateMinutes({ id, activityTotalTime, minutes, startedAt });
   };
 
   return (
@@ -33,8 +33,8 @@ const StopwatchTimeAndControlsContainer = (props) => {
       getElapsedTimeObject={getElapsedTimeObject}
       isConnecting={props.isConnecting}
       isRunning={props.isRunning}
-      onHourPick={(attrName, value) => setStopwatchHours(value)}
-      onMinutePick={(attrName, value) => setStopwatchMinutes(value)}
+      onHourPick={(attrName, value) => updateHours(value)}
+      onMinutePick={(attrName, value) => updateMinutes(value)}
       pauseStopwatch={pauseStopwatch}
       startedAt={props.startedAt}
       startStopwatch={startStopwatch}
@@ -44,8 +44,8 @@ const StopwatchTimeAndControlsContainer = (props) => {
 
 StopwatchTimeAndControlsContainer.propTypes = {
   actions: PropTypes.shape({
-    setStopwatchHours: PropTypes.func.isRequired,
-    setStopwatchMinutes: PropTypes.func.isRequired,
+    updateHours: PropTypes.func.isRequired,
+    updateMinutes: PropTypes.func.isRequired,
     pauseStopwatch: PropTypes.func.isRequired,
     startStopwatch: PropTypes.func.isRequired,
   }).isRequired,

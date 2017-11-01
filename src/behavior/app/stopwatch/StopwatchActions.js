@@ -5,49 +5,50 @@ import {
   getElapsedTimeInSeconds,
 } from './StopwatchUtils';
 
-//---------------------
-// BEGIN CRUD CONSTANTS
-//---------------------
+//---------------------------
+// BEGIN BASIC CRUD CONSTANTS
+//---------------------------
 
 /* users cannot create or delete stopwatches */
 
-export const READ_STOPWATCH_REQUESTED = 'app/stopwatch/read/requested';
-export const READ_STOPWATCH_STARTED = 'app/stopwatch/read/started';
-export const READ_STOPWATCH_SUCCEEDED = 'app/stopwatch/read/succeeded';
-export const READ_STOPWATCH_FAILED = 'app/stopwatch/read/failed';
-export const UPDATE_STOPWATCH_FAILED = 'app/stopwatch/update/failed';
+export const READ_ENTITY_REQUESTED = 'app/stopwatch/read/requested';
+export const READ_ENTITY_STARTED = 'app/stopwatch/read/started';
+export const READ_ENTITY_SUCCEEDED = 'app/stopwatch/read/succeeded';
+export const READ_ENTITY_FAILED = 'app/stopwatch/read/failed';
 
-//-------------------
-// END CRUD CONSTANTS
-//-------------------
+export const UPDATE_ENTITY_FAILED = 'app/stopwatch/update/failed';
 
-//--------------------------------------------
-// BEGIN UPDATE INDIVIDUAL ATTRIBUTE CONSTANTS
-//--------------------------------------------
+//-------------------------
+// END BASIC CRUD CONSTANTS
+//-------------------------
+
+//----------------------------------
+// BEGIN UPDATE ATTRIBUTES CONSTANTS
+//----------------------------------
 
 export const PAUSE_STOPWATCH_REQUESTED = 'app/stopwatch/pause/requested';
 export const RESET_STOPWATCH_REQUESTED = 'app/stopwatch/reset/requested';
-export const SET_STOPWATCH_DATE_REQUESTED = 'app/stopwatch/set/date/requested';
-export const SET_STOPWATCH_DESCRIPTION_REQUESTED = 'app/stopwatch/set/description/requested';
-export const SET_STOPWATCH_HOURS_REQUESTED = 'app/stopwatch/set/hours/requested';
-export const SET_STOPWATCH_MINUTES_REQUESTED = 'app/stopwatch/set/minutes/requested';
-export const SET_STOPWATCH_PROJECT_REQUESTED = 'app/stopwatch/set/project/requested';
 export const START_STOPWATCH_REQUESTED = 'app/stopwatch/start/requested';
+export const UPDATE_DATE_REQUESTED = 'app/stopwatch/set/date/requested';
+export const UPDATE_DESCRIPTION_REQUESTED = 'app/stopwatch/set/description/requested';
+export const UPDATE_HOURS_REQUESTED = 'app/stopwatch/set/hours/requested';
+export const UPDATE_MINUTES_REQUESTED = 'app/stopwatch/set/minutes/requested';
+export const UPDATE_PROJECT_REQUESTED = 'app/stopwatch/set/project/requested';
 
-//------------------------------------------
-// END UPDATE INDIVIDUAL ATTRIBUTE CONSTANTS
-//------------------------------------------
+//--------------------------------
+// END UPDATE ATTRIBUTES CONSTANTS
+//--------------------------------
 
 export const UPDATE_DATABASE = 'app/stopwatch/update/database';
 
-//-------------------
-// BEGIN CRUD ACTIONS
-//-------------------
+//-------------------------
+// BEGIN BASIC CRUD ACTIONS
+//-------------------------
 
 /* users cannot create or delete stopwatches */
 
-export const readStopwatch = killCache => ({
-  type: READ_STOPWATCH_REQUESTED,
+export const readEntity = killCache => ({
+  type: READ_ENTITY_REQUESTED,
   meta: {
     http: {
       killCache,
@@ -59,9 +60,9 @@ export const readStopwatch = killCache => ({
   },
 });
 
-export const readStopwatchStarted = () => ({ type: READ_STOPWATCH_STARTED });
-export const readStopwatchSucceeded = payload => ({ type: READ_STOPWATCH_SUCCEEDED, payload });
-export const readStopwatchFailed = payload => ({ type: READ_STOPWATCH_FAILED, payload });
+export const readEntityStarted = () => ({ type: READ_ENTITY_STARTED });
+export const readEntitySucceeded = payload => ({ type: READ_ENTITY_SUCCEEDED, payload });
+export const readEntityFailed = payload => ({ type: READ_ENTITY_FAILED, payload });
 
 const generateUpdateRequest = (id, payload = {}) => {
   if (!id) throw new Error('Argument <id> must not be null.');
@@ -81,15 +82,15 @@ const generateUpdateRequest = (id, payload = {}) => {
   };
 };
 
-export const updateStopwatchFailed = payload => ({ type: UPDATE_STOPWATCH_FAILED, payload });
+export const updateEntityFailed = payload => ({ type: UPDATE_ENTITY_FAILED, payload });
 
-//-----------------
-// END CRUD ACTIONS
-//-----------------
+//-----------------------
+// END BASIC CRUD ACTIONS
+//-----------------------
 
-//------------------------------------------
-// BEGIN UPDATE INDIVIDUAL ATTRIBUTE ACTIONS
-//------------------------------------------
+//--------------------------------
+// BEGIN UPDATE ATTRIBUTES ACTIONS
+//--------------------------------
 
 export const pauseStopwatch = ({ id, startedAt, activityTotalTime = 0 }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
@@ -123,7 +124,18 @@ export const resetStopwatch = (id) => {
   };
 };
 
-export const setStopwatchDate = ({ id, date }) => {
+export const startStopwatch = (id) => {
+  if (!id) throw new Error('Argument <id> must not be null.');
+
+  return {
+    type: START_STOPWATCH_REQUESTED,
+    meta: {
+      http: generateUpdateRequest(id, { startedAt: new Date() }),
+    },
+  };
+};
+
+export const updateDate = ({ id, date }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (!date) throw new Error('Argument <date> must not be null.');
   if (!isDate(date)) {
@@ -131,25 +143,25 @@ export const setStopwatchDate = ({ id, date }) => {
   }
 
   return {
-    type: SET_STOPWATCH_DATE_REQUESTED,
+    type: UPDATE_DATE_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, { activityDate: date }),
     },
   };
 };
 
-export const setStopwatchDescription = ({ id, description }) => {
+export const updateDescription = ({ id, description }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
 
   return {
-    type: SET_STOPWATCH_DESCRIPTION_REQUESTED,
+    type: UPDATE_DESCRIPTION_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, { description }),
     },
   };
 };
 
-export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0, startedAt }) => {
+export const updateHours = ({ id, activityTotalTime = 0, hours = 0, startedAt }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
 
@@ -158,7 +170,7 @@ export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0, starte
   }
 
   return {
-    type: SET_STOPWATCH_HOURS_REQUESTED,
+    type: UPDATE_HOURS_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, {
         activityTotalTime: changeElapsedHours(startedAt, hours, activityTotalTime),
@@ -167,7 +179,7 @@ export const setStopwatchHours = ({ id, activityTotalTime = 0, hours = 0, starte
   };
 };
 
-export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0, startedAt }) => {
+export const updateMinutes = ({ id, activityTotalTime = 0, minutes = 0, startedAt }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
 
@@ -176,7 +188,7 @@ export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0, st
   }
 
   return {
-    type: SET_STOPWATCH_MINUTES_REQUESTED,
+    type: UPDATE_MINUTES_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, {
         activityTotalTime: changeElapsedMinutes(startedAt, minutes, activityTotalTime),
@@ -185,12 +197,12 @@ export const setStopwatchMinutes = ({ id, activityTotalTime = 0, minutes = 0, st
   };
 };
 
-export const setStopwatchProject = ({ id, projectId }) => {
+export const updateProject = ({ id, projectId }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (!projectId) throw new Error('Argument <projectId> must not be null.');
 
   return {
-    type: SET_STOPWATCH_PROJECT_REQUESTED,
+    type: UPDATE_PROJECT_REQUESTED,
     meta: {
       http: {
         ...generateUpdateRequest(id),
@@ -207,19 +219,8 @@ export const setStopwatchProject = ({ id, projectId }) => {
   };
 };
 
-export const startStopwatch = (id) => {
-  if (!id) throw new Error('Argument <id> must not be null.');
-
-  return {
-    type: START_STOPWATCH_REQUESTED,
-    meta: {
-      http: generateUpdateRequest(id, { startedAt: new Date() }),
-    },
-  };
-};
-
-//----------------------------------------
-// END UPDATE INDIVIDUAL ATTRIBUTE ACTIONS
-//----------------------------------------
+//------------------------------
+// END UPDATE ATTRIBUTES ACTIONS
+//------------------------------
 
 export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });

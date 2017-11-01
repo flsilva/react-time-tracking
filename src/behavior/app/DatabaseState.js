@@ -6,18 +6,18 @@ import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLo
 import { entities as userEntitiesReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
 import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchState';
-// import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE } from './stopwatch/StopwatchActions';
+// import { UPDATE_DATABASE as UPDATE_ENTITY_DATABASE } from './stopwatch/StopwatchActions';
 
 /*
  * TODO: fix this.
  * Weird bug: commented out line above
- * import { UPDATE_DATABASE as UPDATE_STOPWATCH_DATABASE }
+ * import { UPDATE_DATABASE as UPDATE_ENTITY_DATABASE }
  * doesn't work, we get undefined as variable value.
  * If I rename StopwatchActions.js file to StopwatchActions2.js
  * and import from it it does work. Need more investigation.
  * Keeping this ugly hack for now.
  */
-const UPDATE_STOPWATCH_DATABASE = 'app/stopwatch/update/database';
+const UPDATE_ENTITY_DATABASE = 'app/stopwatch/update/database';
 /**/
 
 const entityReducers = {
@@ -27,7 +27,7 @@ const entityReducers = {
   },
   stopwatches: {
     reducer: stopwatchEntityReducer,
-    updateDbAction: UPDATE_STOPWATCH_DATABASE,
+    updateDbAction: UPDATE_ENTITY_DATABASE,
   },
   timeLogs: {
     reducer: timeLogEntitiesReducer,
@@ -42,7 +42,7 @@ const entityReducers = {
 export default (state = {}, action) => {
   switch (action.type) {
     case UPDATE_PROJECTS_DATABASE:
-    case UPDATE_STOPWATCH_DATABASE:
+    case UPDATE_ENTITY_DATABASE:
     case UPDATE_TIME_LOGS_DATABASE:
     case UPDATE_USERS_DATABASE: {
       const normalizedData = normalize(action.payload);

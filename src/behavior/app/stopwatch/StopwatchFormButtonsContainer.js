@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { pauseStopwatch, resetStopwatch, setStopwatchDescription } from './StopwatchActions';
+import { pauseStopwatch, resetStopwatch, updateDescription } from './StopwatchActions';
 import { getStopwatch } from './StopwatchState';
 import StopwatchFormButtons from '../../../ui/app/stopwatch/StopwatchFormButtons';
 
@@ -53,7 +53,7 @@ StopwatchFormButtonsContainer.contextTypes = {
 StopwatchFormButtonsContainer.propTypes = {
   actions: PropTypes.shape({
     pauseStopwatch: PropTypes.func.isRequired,
-    setStopwatchDescription: PropTypes.func.isRequired,
+    updateDescription: PropTypes.func.isRequired,
   }).isRequired,
 
   entity: PropTypes.shape({
@@ -78,7 +78,7 @@ const mapDispatchToProps = dispatch => ({
     ...bindActionCreators({
       pauseStopwatch,
       resetStopwatch,
-      setStopwatchDescription,
+      updateDescription,
     }, dispatch),
   },
 });
