@@ -153,11 +153,16 @@ TimeLogFormScreenContainer.defaultProps = {
   isConnecting: false,
 };
 
-const mapStateToProps = (state, { match }) => ({
-  entity: readEntityById(state, match.params.timeLogId),
-  error: state.timeLogs.error,
-  isConnecting: state.timeLogs.isConnecting,
-});
+const mapStateToProps = (state, { location, match }) => {
+  const entity = match.params.timeLogId ?
+    readEntityById(state, match.params.timeLogId) : location.state;
+
+  return {
+    entity: entity || undefined,
+    error: state.timeLogs.error,
+    isConnecting: state.timeLogs.isConnecting,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(TimeLogActions, dispatch),
