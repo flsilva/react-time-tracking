@@ -71,7 +71,7 @@ const DescriptionFormDialogWithFormik = withFormik({
    * Perhaps it's because the target input field is within a closed Dialog,
    * and so its DOM element (<textarea> in this case) is not attached to the DOM tree.
    */
-  mapPropsToValues: props => ({ description: props.description }),
+  mapPropsToValues: props => ({ description: props.description || '' }),
   /**/
   handleSubmit: (values, { props }) => {
     props.onSaveClick(values.description);
