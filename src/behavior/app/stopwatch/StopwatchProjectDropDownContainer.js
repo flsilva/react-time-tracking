@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setActivityProject } from './StopwatchActions';
+import { setStopwatchProject } from './StopwatchActions';
 import { getStopwatch } from './StopwatchState';
 import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
 
 class StopwatchProjectDropDownContainer extends Component {
-  setActivityProject = (projectId) => {
+  setStopwatchProject = (projectId) => {
     const { id } = this.props;
-    this.props.actions.setActivityProject({ id, projectId });
+    this.props.actions.setStopwatchProject({ id, projectId });
   }
 
   render() {
     return (
       <ProjectDropDownContainer
-        onItemPick={(attrName, value) => this.setActivityProject(value)}
+        onItemPick={(attrName, value) => this.setStopwatchProject(value)}
         selectedItemId={this.props.projectId}
       />
     );
@@ -24,7 +24,7 @@ class StopwatchProjectDropDownContainer extends Component {
 
 StopwatchProjectDropDownContainer.propTypes = {
   actions: PropTypes.shape({
-    setActivityProject: PropTypes.func.isRequired,
+    setStopwatchProject: PropTypes.func.isRequired,
   }).isRequired,
   id: PropTypes.string,
   projectId: PropTypes.string,
@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ setActivityProject }, dispatch),
+  actions: bindActionCreators({ setStopwatchProject }, dispatch),
 });
 
 export default connect(
