@@ -5,7 +5,7 @@ import { entities as timeLogEntitiesReducer } from './time-logs/TimeLogState';
 import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLogActions';
 import { entities as userEntitiesReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
-import { entities as stopwatchEntitiesReducer } from './stopwatch/StopwatchState';
+import { entities as stopwatchEntitiesReducer } from './stopwatches/StopwatchState';
 // import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
 
 /*

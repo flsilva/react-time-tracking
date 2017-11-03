@@ -15,7 +15,7 @@ import {
   UPDATE_DATABASE,
 } from './StopwatchActions';
 
-const QUERY_ALL = 'app/stopwatche/query/entity/all';
+const QUERY_ALL = './stopwatchese/query/entity/all';
 
 export const entities = (state = {}, action) => {
   switch (action.type) {

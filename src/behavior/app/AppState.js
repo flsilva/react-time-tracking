@@ -1,7 +1,7 @@
 import auth from './auth/AuthState';
 import database from './DatabaseState';
 import projects from './projects/ProjectState';
-import stopwatches from './stopwatch/StopwatchState';
+import stopwatches from './stopwatches/StopwatchState';
 import timeLogs from './time-logs/TimeLogState';
 
 export const observeStore = (store, select, onChange) => {

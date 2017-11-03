@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { updateDescription } from '../stopwatch/StopwatchActions';
+import { updateDescription } from '../stopwatches/StopwatchActions';
 import DescriptionFormDialog from '../../../ui/app/common/DescriptionFormDialog';
 
 const DescriptionFormDialogContainer = ({ actions, entity = {}, onClickClose, open }) => {

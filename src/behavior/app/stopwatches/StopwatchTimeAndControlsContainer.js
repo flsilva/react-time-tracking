@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
 import { getElapsedTimeObject } from './StopwatchUtils';
-import StopwatchTimeAndControls from '../../../ui/app/stopwatch/StopwatchTimeAndControls';
+import StopwatchTimeAndControls from '../../../ui/app/stopwatches/StopwatchTimeAndControls';
 
 const StopwatchTimeAndControlsContainer = ({ actions, entity = {}, isConnecting }) => {
   const { activityTotalTime, id, isRunning, startedAt } = entity;

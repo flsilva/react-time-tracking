@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
-import StopwatchAppBar from '../../../ui/app/stopwatch/StopwatchAppBar';
+import StopwatchAppBar from '../../../ui/app/stopwatches/StopwatchAppBar';
 
 const StopwatchAppBarContainer = ({ actions, entityId }) => {
   const resetStopwatch = () => {

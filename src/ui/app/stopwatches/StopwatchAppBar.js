@@ -5,7 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIconMenu from '../../common/MoreVertIconMenu';
 import SimpleAppBar from '../header/SimpleAppBar';
 
-const RESET_TIMER = 'app/stopwatch/reset/requested';
+const RESET_TIMER = './stopwatches/reset/requested';
 
 const StopwatchAppBar = (props) => {
   const iconMenuItemClickHandler = (event, child) => {

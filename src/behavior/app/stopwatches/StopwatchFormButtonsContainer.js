@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { pauseStopwatch, resetStopwatch, updateDescription } from './StopwatchActions';
-import StopwatchFormButtons from '../../../ui/app/stopwatch/StopwatchFormButtons';
+import StopwatchFormButtons from '../../../ui/app/stopwatches/StopwatchFormButtons';
 
 const StopwatchFormButtonsContainer = (props, { router }) => {
   const { actions, entity, isConnecting } = props;

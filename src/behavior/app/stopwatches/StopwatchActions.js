@@ -88,7 +88,7 @@ export const readEntity = (id, params, killCache) => {
         request: {
           method: 'GET',
           params,
-          url: 'stopwatches/',
+          url: `stopwatches/${id}`,
         },
       },
     },

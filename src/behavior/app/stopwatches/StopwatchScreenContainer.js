@@ -11,7 +11,6 @@ import StopwatchTimeAndControlsContainer from './StopwatchTimeAndControlsContain
 import StopwatchScreenBodyContainer from './StopwatchScreenBodyContainer';
 
 class StopwatchScreenContainer extends Component {
-
   componentDidMount() {
     const id = this.props.match.params.stopwatchId;
     const query = (this.props.getQuery) ? this.props.getQuery() : undefined;
@@ -21,6 +20,7 @@ class StopwatchScreenContainer extends Component {
   render() {
     const { entity, error, isConnecting } = this.props;
     const id = entity ? entity.id : undefined;
+    console.log('StopwatchScreenContainer().render() - entity: ', entity);
 
     return (
       <div>
