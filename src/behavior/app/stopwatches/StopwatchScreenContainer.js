@@ -20,7 +20,6 @@ class StopwatchScreenContainer extends Component {
   render() {
     const { entity, error, isConnecting } = this.props;
     const id = entity ? entity.id : undefined;
-    console.log('StopwatchScreenContainer().render() - entity: ', entity);
 
     return (
       <div>

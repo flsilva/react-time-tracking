@@ -22,18 +22,25 @@ import { getEntities } from './StopwatchState';
  */
 class StopwatchListScreenContainer extends Component {
   componentDidMount() {
+    const { entities } = this.props;
+    if (entities && entities.length) {
+      this.redirect();
+    }
+
     const query = this.props.getQuery ? this.props.getQuery() : undefined;
     this.props.actions.readEntities(query);
   }
 
   componentDidUpdate() {
     const { entities } = this.props;
-    console.log('StopwatchListScreenContainer().componentDidUpdate() - entities: ', entities);
 
     if (entities && entities.length) {
-      const entity = entities[0];
-      this.props.history.push(`app/stopwatches/${entity.id}`);
+      this.redirect();
     }
+  }
+
+  redirect() {
+    this.props.history.push(`app/stopwatches/${this.props.entities[0].id}`);
   }
 
   render() {
