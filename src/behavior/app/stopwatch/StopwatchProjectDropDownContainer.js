@@ -3,20 +3,23 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateProject } from './StopwatchActions';
-import { getStopwatch } from './StopwatchState';
 import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
 
 class StopwatchProjectDropDownContainer extends Component {
   updateProject = (projectId) => {
-    const { id } = this.props;
+    const { entity } = this.props;
+    const { id } = entity;
     this.props.actions.updateProject({ id, projectId });
   }
 
   render() {
+    const entity = this.props.entity || {};
+    const projectId = entity.project ? entity.project.id : undefined;
+
     return (
       <ProjectDropDownContainer
         onItemPick={(attrName, value) => this.updateProject(value)}
-        selectedItemId={this.props.projectId}
+        selectedItemId={projectId}
       />
     );
   }
@@ -26,24 +29,11 @@ StopwatchProjectDropDownContainer.propTypes = {
   actions: PropTypes.shape({
     updateProject: PropTypes.func.isRequired,
   }).isRequired,
-  id: PropTypes.string,
-  projectId: PropTypes.string,
+  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
 };
 
 StopwatchProjectDropDownContainer.defaultProps = {
-  id: undefined,
-  projectId: undefined,
-};
-
-const mapStateToProps = (state) => {
-  const stopwatch = getStopwatch(state) || {};
-  const { id, project } = stopwatch;
-  const projectId = project ? project.id : undefined;
-
-  return {
-    id,
-    projectId,
-  };
+  entity: undefined,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -51,6 +41,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps,
 )(StopwatchProjectDropDownContainer);

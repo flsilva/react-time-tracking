@@ -22,7 +22,6 @@ import {
   CLEAR_DATABASE,
   UPDATE_DATABASE,
 } from './ProjectActions';
-import { USER_SIGN_OUT_SUCCEEDED } from '../auth/AuthActions';
 
 const QUERY_ALL = 'app/projects/query/entity/all';
 
@@ -32,7 +31,6 @@ export const entities = (state = {}, action) => {
       return merge({ ...state }, action.payload);
 
     case CLEAR_DATABASE:
-    case USER_SIGN_OUT_SUCCEEDED:
       return {};
 
     default:
@@ -116,7 +114,7 @@ const isConnecting = (state = false, action) => {
 };
 
 export const readEntityById = (state, id) => {
-  if (!id) return undefined;
+  if (!id) throw new Error('Argument <id> must not be null.');
 
   const entity = build(state.database, 'projects', id, { eager: true, ignoreLinks: true });
   return entity || undefined;

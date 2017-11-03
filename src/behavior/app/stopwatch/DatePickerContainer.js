@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
-import { getStopwatch } from './StopwatchState';
 import DatePicker from '../../../ui/app/common/DatePicker';
 
-const DatePickerContainer = (props) => {
+const DatePickerContainer = ({ actions, entity = {} }) => {
   const updateDate = (date) => {
-    const { id } = props;
-    props.actions.updateDate({ id, date });
+    const { id } = entity;
+    actions.updateDate({ id, date });
   };
 
   return (
     <DatePicker
-      date={props.activityDate}
+      date={entity.activityDate || new Date()}
       onDatePick={(name, value) => updateDate(value)}
     />
   );
@@ -24,20 +23,11 @@ DatePickerContainer.propTypes = {
   actions: PropTypes.shape({
     updateDate: PropTypes.func.isRequired,
   }).isRequired,
-  activityDate: PropTypes.instanceOf(Date),
-  id: PropTypes.string,
+  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
 };
 
 DatePickerContainer.defaultProps = {
-  activityDate: undefined,
-  id: undefined,
-};
-
-const mapStateToProps = (state) => {
-  const stopwatch = getStopwatch(state) || {};
-  const { activityDate, id } = stopwatch;
-
-  return { activityDate, id };
+  entity: undefined,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -45,6 +35,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps,
 )(DatePickerContainer);

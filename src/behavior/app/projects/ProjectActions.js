@@ -59,7 +59,6 @@ export const createEntityFailed = payload => ({ type: CREATE_ENTITY_FAILED, payl
 
 export const readEntity = (id, params, killCache) => {
   if (!id) throw new Error('Argument <id> must not be null.');
-  if (!params) throw new Error('Argument <params> must not be null.');
 
   return {
     type: READ_ENTITY_REQUESTED,

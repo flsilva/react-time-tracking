@@ -5,8 +5,8 @@ import { entities as timeLogEntitiesReducer } from './time-logs/TimeLogState';
 import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLogActions';
 import { entities as userEntitiesReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
-import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchState';
-// import { UPDATE_DATABASE as UPDATE_ENTITY_DATABASE } from './stopwatch/StopwatchActions';
+import { entities as stopwatchEntitiesReducer } from './stopwatch/StopwatchState';
+// import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
 
 /*
  * TODO: fix this.
@@ -17,7 +17,7 @@ import { entity as stopwatchEntityReducer } from './stopwatch/StopwatchState';
  * and import from it it does work. Need more investigation.
  * Keeping this ugly hack for now.
  */
-const UPDATE_ENTITY_DATABASE = 'app/stopwatch/update/database';
+const UPDATE_STOPWATCHES_DATABASE = 'app/stopwatches/update/database';
 /**/
 
 const entityReducers = {
@@ -26,8 +26,8 @@ const entityReducers = {
     updateDbAction: UPDATE_PROJECTS_DATABASE,
   },
   stopwatches: {
-    reducer: stopwatchEntityReducer,
-    updateDbAction: UPDATE_ENTITY_DATABASE,
+    reducer: stopwatchEntitiesReducer,
+    updateDbAction: UPDATE_STOPWATCHES_DATABASE,
   },
   timeLogs: {
     reducer: timeLogEntitiesReducer,
@@ -42,7 +42,7 @@ const entityReducers = {
 export default (state = {}, action) => {
   switch (action.type) {
     case UPDATE_PROJECTS_DATABASE:
-    case UPDATE_ENTITY_DATABASE:
+    case UPDATE_STOPWATCHES_DATABASE:
     case UPDATE_TIME_LOGS_DATABASE:
     case UPDATE_USERS_DATABASE: {
       const normalizedData = normalize(action.payload);

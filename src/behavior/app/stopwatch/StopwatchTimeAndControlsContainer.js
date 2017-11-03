@@ -3,40 +3,38 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
-import { getStopwatch } from './StopwatchState';
 import { getElapsedTimeObject } from './StopwatchUtils';
 import StopwatchTimeAndControls from '../../../ui/app/stopwatch/StopwatchTimeAndControls';
 
-const StopwatchTimeAndControlsContainer = (props) => {
+const StopwatchTimeAndControlsContainer = ({ actions, entity = {}, isConnecting }) => {
+  const { activityTotalTime, id, isRunning, startedAt } = entity;
+
   const startStopwatch = () => {
-    props.actions.startStopwatch(props.id);
+    actions.startStopwatch(id);
   };
 
   const pauseStopwatch = () => {
-    const { id, activityTotalTime, startedAt } = props;
-    props.actions.pauseStopwatch({ id, activityTotalTime, startedAt });
+    actions.pauseStopwatch({ id, activityTotalTime, startedAt });
   };
 
   const updateHours = (hours) => {
-    const { id, activityTotalTime, startedAt } = props;
-    props.actions.updateHours({ id, activityTotalTime, hours, startedAt });
+    actions.updateHours({ id, activityTotalTime, hours, startedAt });
   };
 
   const updateMinutes = (minutes) => {
-    const { id, activityTotalTime, startedAt } = props;
-    props.actions.updateMinutes({ id, activityTotalTime, minutes, startedAt });
+    actions.updateMinutes({ id, activityTotalTime, minutes, startedAt });
   };
 
   return (
     <StopwatchTimeAndControls
-      activityTotalTime={props.activityTotalTime}
+      activityTotalTime={activityTotalTime}
       getElapsedTimeObject={getElapsedTimeObject}
-      isConnecting={props.isConnecting}
-      isRunning={props.isRunning}
+      isConnecting={isConnecting}
+      isRunning={isRunning}
       onHourPick={(attrName, value) => updateHours(value)}
       onMinutePick={(attrName, value) => updateMinutes(value)}
       pauseStopwatch={pauseStopwatch}
-      startedAt={props.startedAt}
+      startedAt={startedAt}
       startStopwatch={startStopwatch}
     />
   );
@@ -49,32 +47,13 @@ StopwatchTimeAndControlsContainer.propTypes = {
     pauseStopwatch: PropTypes.func.isRequired,
     startStopwatch: PropTypes.func.isRequired,
   }).isRequired,
-  activityTotalTime: PropTypes.number,
-  id: PropTypes.string,
+  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
   isConnecting: PropTypes.bool,
-  isRunning: PropTypes.bool,
-  startedAt: PropTypes.instanceOf(Date),
 };
 
 StopwatchTimeAndControlsContainer.defaultProps = {
-  activityTotalTime: 0,
-  id: null,
+  entity: undefined,
   isConnecting: false,
-  isRunning: false,
-  startedAt: null,
-};
-
-const mapStateToProps = (state) => {
-  const stopwatch = getStopwatch(state) || {};
-  const { activityTotalTime, id, isRunning, startedAt } = stopwatch;
-
-  return {
-    activityTotalTime,
-    id,
-    isRunning,
-    startedAt,
-    isConnecting: state.stopwatches.isConnecting,
-  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -82,6 +61,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps,
 )(StopwatchTimeAndControlsContainer);

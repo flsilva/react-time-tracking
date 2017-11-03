@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StopwatchActions from './StopwatchActions';
-import { getStopwatch } from './StopwatchState';
 import StopwatchAppBar from '../../../ui/app/stopwatch/StopwatchAppBar';
 
-const StopwatchAppBarContainer = (props) => {
+const StopwatchAppBarContainer = ({ actions, entityId }) => {
   const resetStopwatch = () => {
-    props.actions.resetStopwatch(props.id);
+    actions.resetStopwatch(entityId);
   };
 
   return <StopwatchAppBar resetStopwatch={resetStopwatch} />;
@@ -18,18 +17,11 @@ StopwatchAppBarContainer.propTypes = {
   actions: PropTypes.shape({
     resetStopwatch: PropTypes.func.isRequired,
   }).isRequired,
-  id: PropTypes.string,
+  entityId: PropTypes.string,
 };
 
 StopwatchAppBarContainer.defaultProps = {
-  id: null,
-};
-
-const mapStateToProps = (state) => {
-  const stopwatch = getStopwatch(state) || {};
-  const { id } = stopwatch;
-
-  return { id };
+  entityId: undefined,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -37,6 +29,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps,
 )(StopwatchAppBarContainer);

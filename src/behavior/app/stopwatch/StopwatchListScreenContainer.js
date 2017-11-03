@@ -1,0 +1,72 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { getNotifications } from '../utils';
+import Notifications from '../../../ui/app/utils/Notifications';
+import { readEntities } from './StopwatchActions';
+import { getEntities } from './StopwatchState';
+
+/*
+ * This is a special, but very simple screen / container.
+ * Since there's no stopwatch listing screen, we just fetch
+ * all available stopwatches here and redirect user to first one.
+ * This is needed for example when users are coming from sign in,
+ * when we need to first fetch all stopwatches, and then redirect to
+ * "app/stopwatches/:id".
+ * We know the app only supports one stopwatch, so there's only one
+ * stopwatch available, and that users can't create or delete stopwatches,
+ * but dealing with data like that, i.e., like an usual list of entities,
+ * allows us to have an uniform way to deal with entities, i.e., same way
+ * to read, update, etc.
+ */
+class StopwatchListScreenContainer extends Component {
+  componentDidMount() {
+    this.props.actions.readEntities();
+  }
+
+  componentDidUpdate() {
+    const { entities } = this.props;
+
+    if (entities && entities.length) {
+      const entity = entities[0];
+      this.props.history.push(`app/stopwatches/${entity.id}`);
+    }
+  }
+
+  render() {
+    return (
+      <Notifications notifications={getNotifications(this.props.error, false)} />
+    );
+  }
+}
+
+StopwatchListScreenContainer.propTypes = {
+  actions: PropTypes.shape({
+    readEntities: PropTypes.func.isRequired,
+  }).isRequired,
+  entities: PropTypes.arrayOf(PropTypes.object),
+  error: PropTypes.arrayOf(PropTypes.object),
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+StopwatchListScreenContainer.defaultProps = {
+  entities: undefined,
+  error: undefined,
+};
+
+const mapStateToProps = state => ({
+  entities: getEntities(state),
+  error: state.stopwatches.error,
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({ readEntities }, dispatch),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(StopwatchListScreenContainer);

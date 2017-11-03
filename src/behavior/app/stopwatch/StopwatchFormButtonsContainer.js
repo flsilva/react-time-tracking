@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { pauseStopwatch, resetStopwatch, updateDescription } from './StopwatchActions';
-import { getStopwatch } from './StopwatchState';
 import StopwatchFormButtons from '../../../ui/app/stopwatch/StopwatchFormButtons';
 
 const StopwatchFormButtonsContainer = (props, { router }) => {
@@ -55,11 +54,7 @@ StopwatchFormButtonsContainer.propTypes = {
     pauseStopwatch: PropTypes.func.isRequired,
     updateDescription: PropTypes.func.isRequired,
   }).isRequired,
-
-  entity: PropTypes.shape({
-    description: PropTypes.string,
-  }),
-
+  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
   isConnecting: PropTypes.bool,
 };
 
@@ -69,7 +64,6 @@ StopwatchFormButtonsContainer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  entity: getStopwatch(state) || undefined,
   isConnecting: state.stopwatches.isConnecting,
 });
 

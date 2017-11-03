@@ -11,12 +11,17 @@ import {
 
 /* users cannot create or delete stopwatches */
 
-export const READ_ENTITY_REQUESTED = 'app/stopwatch/read/requested';
-export const READ_ENTITY_STARTED = 'app/stopwatch/read/started';
-export const READ_ENTITY_SUCCEEDED = 'app/stopwatch/read/succeeded';
-export const READ_ENTITY_FAILED = 'app/stopwatch/read/failed';
+export const READ_ENTITIES_REQUESTED = 'app/stopwatches/read/entities/requested';
+export const READ_ENTITIES_STARTED = 'app/stopwatches/read/entities/started';
+export const READ_ENTITIES_SUCCEEDED = 'app/stopwatches/read/entities/succeeded';
+export const READ_ENTITIES_FAILED = 'app/stopwatches/read/entities/failed';
 
-export const UPDATE_ENTITY_FAILED = 'app/stopwatch/update/failed';
+export const READ_ENTITY_REQUESTED = 'app/stopwatches/read/entity/requested';
+export const READ_ENTITY_STARTED = 'app/stopwatches/read/entity/started';
+export const READ_ENTITY_SUCCEEDED = 'app/stopwatches/read/entity/succeeded';
+export const READ_ENTITY_FAILED = 'app/stopwatches/read/entity/failed';
+
+export const UPDATE_ENTITY_FAILED = 'app/stopwatches/update/entity/failed';
 
 //-------------------------
 // END BASIC CRUD CONSTANTS
@@ -26,20 +31,23 @@ export const UPDATE_ENTITY_FAILED = 'app/stopwatch/update/failed';
 // BEGIN UPDATE ATTRIBUTES CONSTANTS
 //----------------------------------
 
-export const PAUSE_STOPWATCH_REQUESTED = 'app/stopwatch/pause/requested';
-export const RESET_STOPWATCH_REQUESTED = 'app/stopwatch/reset/requested';
-export const START_STOPWATCH_REQUESTED = 'app/stopwatch/start/requested';
-export const UPDATE_DATE_REQUESTED = 'app/stopwatch/set/date/requested';
-export const UPDATE_DESCRIPTION_REQUESTED = 'app/stopwatch/set/description/requested';
-export const UPDATE_HOURS_REQUESTED = 'app/stopwatch/set/hours/requested';
-export const UPDATE_MINUTES_REQUESTED = 'app/stopwatch/set/minutes/requested';
-export const UPDATE_PROJECT_REQUESTED = 'app/stopwatch/set/project/requested';
+export const PAUSE_STOPWATCH_REQUESTED = 'app/stopwatches/pause/requested';
+export const RESET_STOPWATCH_REQUESTED = 'app/stopwatches/reset/requested';
+export const START_STOPWATCH_REQUESTED = 'app/stopwatches/start/requested';
+export const UPDATE_DATE_REQUESTED = 'app/stopwatches/set/date/requested';
+export const UPDATE_DESCRIPTION_REQUESTED = 'app/stopwatches/set/description/requested';
+export const UPDATE_HOURS_REQUESTED = 'app/stopwatches/set/hours/requested';
+export const UPDATE_MINUTES_REQUESTED = 'app/stopwatches/set/minutes/requested';
+export const UPDATE_PROJECT_REQUESTED = 'app/stopwatches/set/project/requested';
 
 //--------------------------------
 // END UPDATE ATTRIBUTES CONSTANTS
 //--------------------------------
 
-export const UPDATE_DATABASE = 'app/stopwatch/update/database';
+export const CLEAR_DATABASE = 'app/stopwatches/clear/database';
+export const UPDATE_DATABASE = 'app/stopwatches/update/database';
+
+export const clearDatabase = () => ({ type: CLEAR_DATABASE });
 export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 //-------------------------
@@ -48,18 +56,44 @@ export const updateDatabase = payload => ({ type: UPDATE_DATABASE, payload });
 
 /* users cannot create or delete stopwatches */
 
-export const readEntity = killCache => ({
-  type: READ_ENTITY_REQUESTED,
+export const readEntities = (params, killCache) => ({
+  type: READ_ENTITIES_REQUESTED,
   meta: {
     http: {
       killCache,
       request: {
         method: 'GET',
+        params,
         url: 'stopwatches/',
       },
     },
   },
 });
+
+export const readEntitiesStarted = () => ({ type: READ_ENTITIES_STARTED });
+export const readEntitiesSucceeded = payload => ({ type: READ_ENTITIES_SUCCEEDED, payload });
+export const readEntitiesFailed = payload => ({ type: READ_ENTITIES_FAILED, payload });
+
+export const readEntity = (id, params, killCache) => {
+  if (!id) throw new Error('Argument <id> must not be null.');
+
+  return {
+    type: READ_ENTITY_REQUESTED,
+    meta: {
+      http: {
+        entity: {
+          id,
+        },
+        killCache,
+        request: {
+          method: 'GET',
+          params,
+          url: 'stopwatches/',
+        },
+      },
+    },
+  };
+};
 
 export const readEntityStarted = () => ({ type: READ_ENTITY_STARTED });
 export const readEntitySucceeded = payload => ({ type: READ_ENTITY_SUCCEEDED, payload });
@@ -76,7 +110,7 @@ const generateUpdateRequest = (id, payload = {}) => {
       data: { ...payload, id },
       method: 'PATCH',
       params: {
-        include: 'author,project',
+        include: 'project',
       },
       url: `stopwatches/${id}`,
     },

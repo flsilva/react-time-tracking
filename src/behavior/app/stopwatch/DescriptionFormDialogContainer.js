@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateDescription } from '../stopwatch/StopwatchActions';
-import { getStopwatch } from './StopwatchState';
 import DescriptionFormDialog from '../../../ui/app/common/DescriptionFormDialog';
 
-const DescriptionFormDialogContainer = (props) => {
-  const { actions, closeHandler, description, id, isEditing, open } = props;
+const DescriptionFormDialogContainer = ({ actions, entity = {}, onClickClose, open }) => {
+  const { description, id } = entity;
+  const isEditing = description !== '';
 
   const saveHandler = (newDescription) => {
     actions.updateDescription({ id, description: newDescription });
-    closeHandler();
+    onClickClose();
   };
 
   return (
     <DescriptionFormDialog
-      closeHandler={closeHandler}
+      closeHandler={onClickClose}
       description={description}
       isEditing={isEditing}
       onSaveClick={saveHandler}
@@ -29,26 +29,14 @@ DescriptionFormDialogContainer.propTypes = {
   actions: PropTypes.shape({
     updateDescription: PropTypes.func.isRequired,
   }).isRequired,
-  closeHandler: PropTypes.func.isRequired,
-  description: PropTypes.string,
-  id: PropTypes.string,
-  isEditing: PropTypes.bool,
+  onClickClose: PropTypes.func.isRequired,
+  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
   open: PropTypes.bool,
 };
 
 DescriptionFormDialogContainer.defaultProps = {
-  description: '',
-  id: undefined,
-  isEditing: false,
+  entity: undefined,
   open: false,
-};
-
-const mapStateToProps = (state) => {
-  const stopwatch = getStopwatch(state) || {};
-  const { description, id } = stopwatch;
-  const isEditing = description !== '';
-
-  return { description, id, isEditing };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -58,6 +46,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps,
 )(DescriptionFormDialogContainer);
