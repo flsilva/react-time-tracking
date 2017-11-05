@@ -18,6 +18,7 @@ class StopwatchProjectDropDownContainer extends Component {
 
     return (
       <ProjectDropDownContainer
+        getQuery={this.props.getQuery}
         onItemPick={(attrName, value) => this.updateProject(value)}
         selectedItemId={projectId}
       />
@@ -30,10 +31,12 @@ StopwatchProjectDropDownContainer.propTypes = {
     updateProject: PropTypes.func.isRequired,
   }).isRequired,
   entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
+  getQuery: PropTypes.func,
 };
 
 StopwatchProjectDropDownContainer.defaultProps = {
   entity: undefined,
+  getQuery: undefined,
 };
 
 const mapDispatchToProps = dispatch => ({

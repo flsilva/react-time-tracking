@@ -6,12 +6,20 @@ import SheetIcon from 'material-ui/svg-icons/action/description';
 import ScreenBody from '../../../ui/app/common/ScreenBody';
 import WithIcon from '../../../ui/app/common/WithIcon';
 import withDialog from '../../../ui/common/withDialog';
+import { getRelationshipQuery } from '../utils/QueryUtils';
 import DatePickerContainer from './DatePickerContainer';
 import StopwatchProjectDropDownContainer from './StopwatchProjectDropDownContainer';
 import DescriptionButtonContainer from './DescriptionButtonContainer';
 import StopwatchFormButtonsContainer from './StopwatchFormButtonsContainer';
 import DescriptionFormDialogContainer from './DescriptionFormDialogContainer';
 
+/*
+ * Although we don't need the "author" relationship object
+ * into projects entities for the stopwatch screen, we include it
+ * here as a cache strategy regarding overall app performance.
+ * That way when we navigate between stopwatch and project listing
+ * screens only one http request is needed.
+ */
 const StopwatchScreenBodyContainer = ({ entity }) => {
   const description = entity ? entity.description : undefined;
 
@@ -34,7 +42,10 @@ const StopwatchScreenBodyContainer = ({ entity }) => {
         <DatePickerContainer entity={entity} />
       </WithIcon>
       <WithIcon icon={<WorkIcon color={'#3f2da5'} />}>
-        <StopwatchProjectDropDownContainer entity={entity} />
+        <StopwatchProjectDropDownContainer
+          entity={entity}
+          getQuery={getRelationshipQuery('author')}
+        />
       </WithIcon>
       <WithIcon icon={<SheetIcon color={'#3f2da5'} />}>
         <DescriptionButtonContainerWithDialog entity={entity} />

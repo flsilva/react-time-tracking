@@ -8,7 +8,8 @@ import ProjectDropDown from '../../../ui/app/projects/ProjectDropDown';
 
 class ProjectDropDownContainer extends Component {
   componentDidMount() {
-    this.props.actions.readEntities();
+    const query = this.props.getQuery ? this.props.getQuery() : undefined;
+    this.props.actions.readEntities(query);
   }
 
   render() {
@@ -38,6 +39,7 @@ ProjectDropDownContainer.propTypes = {
     readEntities: PropTypes.func.isRequired,
   }).isRequired,
   entities: PropTypes.arrayOf(PropTypes.object),
+  getQuery: PropTypes.func,
   isConnecting: PropTypes.bool,
   name: PropTypes.string,
   onItemPick: PropTypes.func.isRequired,
@@ -46,15 +48,20 @@ ProjectDropDownContainer.propTypes = {
 
 ProjectDropDownContainer.defaultProps = {
   entities: undefined,
+  getQuery: undefined,
   isConnecting: false,
   name: undefined,
   selectedItemId: undefined,
 };
 
-const mapStateToProps = state => ({
-  entities: getEntities(state),
-  isConnecting: state.projects.isConnecting,
-});
+const mapStateToProps = (state, { getQuery }) => {
+  const queries = getQuery ? [getQuery()] : undefined;
+
+  return {
+    entities: getEntities(state, queries),
+    isConnecting: state.projects.isConnecting,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({ readEntities }, dispatch),
