@@ -7,27 +7,27 @@ import { getElapsedTimeObject } from './StopwatchUtils';
 import StopwatchTimeAndControls from '../../../ui/app/stopwatches/StopwatchTimeAndControls';
 
 const StopwatchTimeAndControlsContainer = ({ actions, entity = {}, isConnecting }) => {
-  const { activityTotalTime, id, isRunning, startedAt } = entity;
+  const { elapsedTime, id, isRunning, startedAt } = entity;
 
   const startStopwatch = () => {
     actions.startStopwatch(id);
   };
 
   const pauseStopwatch = () => {
-    actions.pauseStopwatch({ id, activityTotalTime, startedAt });
+    actions.pauseStopwatch({ id, elapsedTime, startedAt });
   };
 
   const updateHours = (hours) => {
-    actions.updateHours({ id, activityTotalTime, hours, startedAt });
+    actions.updateHours({ id, elapsedTime, hours, startedAt });
   };
 
   const updateMinutes = (minutes) => {
-    actions.updateMinutes({ id, activityTotalTime, minutes, startedAt });
+    actions.updateMinutes({ id, elapsedTime, minutes, startedAt });
   };
 
   return (
     <StopwatchTimeAndControls
-      activityTotalTime={activityTotalTime}
+      elapsedTime={elapsedTime}
       getElapsedTimeObject={getElapsedTimeObject}
       isConnecting={isConnecting}
       isRunning={isRunning}

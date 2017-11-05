@@ -35,7 +35,7 @@ class TimeElapsed extends Component {
   /**/
 
   /*
-   * when we pick up an hour or minute we get an updated activityTotalTime
+   * when we pick up an hour or minute we get an updated elapsedTime
    * via componentWillReceiveProps(), so we need to handle recalculation here.
    */
   componentWillReceiveProps(nextProps) {
@@ -47,8 +47,8 @@ class TimeElapsed extends Component {
     this.killInterval();
   }
 
-  getTime = (startedAt, activityTotalTime) => {
-    const time = this.props.getElapsedTimeObject(startedAt, new Date(), activityTotalTime);
+  getTime = (startedAt, elapsedTime) => {
+    const time = this.props.getElapsedTimeObject(startedAt, new Date(), elapsedTime);
     if (time.seconds < 10) time.seconds = `0${time.seconds}`;
     return time;
   }
@@ -74,8 +74,8 @@ class TimeElapsed extends Component {
   }
 
   updateTime = (props) => {
-    const { startedAt, activityTotalTime } = props;
-    const time = this.getTime(startedAt, activityTotalTime);
+    const { startedAt, elapsedTime } = props;
+    const time = this.getTime(startedAt, elapsedTime);
     this.setState(time);
   }
 
@@ -118,13 +118,13 @@ TimeElapsed.propTypes = {
   isRunning: PropTypes.bool,
   onMinutePick: PropTypes.func.isRequired,
   startedAt: PropTypes.instanceOf(Date),
-  activityTotalTime: PropTypes.number,
+  elapsedTime: PropTypes.number,
 };
 
 TimeElapsed.defaultProps = {
   isRunning: false,
   startedAt: null,
-  activityTotalTime: 0,
+  elapsedTime: 0,
 };
 
 export default TimeElapsed;

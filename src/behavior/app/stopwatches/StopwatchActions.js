@@ -127,16 +127,16 @@ export const updateEntityFailed = payload => ({ type: UPDATE_ENTITY_FAILED, payl
 // BEGIN UPDATE ATTRIBUTES ACTIONS
 //--------------------------------
 
-export const pauseStopwatch = ({ id, startedAt, activityTotalTime = 0 }) => {
+export const pauseStopwatch = ({ id, startedAt, elapsedTime = 0 }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
   if (!startedAt) throw new Error('Argument <startedAt> must not be null.');
-  if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
+  if (isNaN(elapsedTime)) throw new Error('Argument <elapsedTime> must be an integer.');
 
   return {
     type: PAUSE_STOPWATCH_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, {
-        activityTotalTime: getElapsedTimeInSeconds(startedAt, new Date(), activityTotalTime),
+        elapsedTime: getElapsedTimeInSeconds(startedAt, new Date(), elapsedTime),
         startedAt: null,
       }),
     },
@@ -151,7 +151,7 @@ export const resetStopwatch = (id) => {
     meta: {
       http: generateUpdateRequest(id, {
         activityDate: null,
-        activityTotalTime: null,
+        elapsedTime: null,
         description: null,
         startedAt: null,
       }),
@@ -196,9 +196,9 @@ export const updateDescription = ({ id, description }) => {
   };
 };
 
-export const updateHours = ({ id, activityTotalTime = 0, hours = 0, startedAt }) => {
+export const updateHours = ({ id, elapsedTime = 0, hours = 0, startedAt }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
-  if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
+  if (isNaN(elapsedTime)) throw new Error('Argument <elapsedTime> must be an integer.');
 
   if (isNaN(hours)) {
     throw new Error('Argument <hours> must be an integer.');
@@ -208,15 +208,15 @@ export const updateHours = ({ id, activityTotalTime = 0, hours = 0, startedAt })
     type: UPDATE_HOURS_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, {
-        activityTotalTime: changeElapsedHours(startedAt, hours, activityTotalTime),
+        elapsedTime: changeElapsedHours(startedAt, hours, elapsedTime),
       }),
     },
   };
 };
 
-export const updateMinutes = ({ id, activityTotalTime = 0, minutes = 0, startedAt }) => {
+export const updateMinutes = ({ id, elapsedTime = 0, minutes = 0, startedAt }) => {
   if (!id) throw new Error('Argument <id> must not be null.');
-  if (isNaN(activityTotalTime)) throw new Error('Argument <activityTotalTime> must be an integer.');
+  if (isNaN(elapsedTime)) throw new Error('Argument <elapsedTime> must be an integer.');
 
   if (isNaN(minutes)) {
     throw new Error('Argument <minutes> must be an integer.');
@@ -226,7 +226,7 @@ export const updateMinutes = ({ id, activityTotalTime = 0, minutes = 0, startedA
     type: UPDATE_MINUTES_REQUESTED,
     meta: {
       http: generateUpdateRequest(id, {
-        activityTotalTime: changeElapsedMinutes(startedAt, minutes, activityTotalTime),
+        elapsedTime: changeElapsedMinutes(startedAt, minutes, elapsedTime),
       }),
     },
   };

@@ -20,7 +20,7 @@ const styles = {
 };
 
 const StopwatchTimeAndControls = (props) => {
-  const { activityTotalTime, isRunning, startedAt } = props;
+  const { elapsedTime, isRunning, startedAt } = props;
 
   let controls;
 
@@ -42,7 +42,7 @@ const StopwatchTimeAndControls = (props) => {
         {controls}
       </div>
       <TimeElapsed
-        activityTotalTime={activityTotalTime}
+        elapsedTime={elapsedTime}
         getElapsedTimeObject={props.getElapsedTimeObject}
         onHourPick={props.onHourPick}
         isRunning={isRunning}
@@ -60,7 +60,7 @@ StopwatchTimeAndControls.contextTypes = {
 };
 
 StopwatchTimeAndControls.propTypes = {
-  activityTotalTime: PropTypes.number,
+  elapsedTime: PropTypes.number,
   getElapsedTimeObject: PropTypes.func.isRequired,
   isRunning: PropTypes.bool,
   startedAt: PropTypes.instanceOf(Date),
@@ -72,7 +72,7 @@ StopwatchTimeAndControls.propTypes = {
 };
 
 StopwatchTimeAndControls.defaultProps = {
-  activityTotalTime: 0,
+  elapsedTime: 0,
   data: {},
   isConnecting: false,
   isRunning: false,

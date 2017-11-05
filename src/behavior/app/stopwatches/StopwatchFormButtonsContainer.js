@@ -11,7 +11,7 @@ const StopwatchFormButtonsContainer = (props, { router }) => {
   const onSaveClick = () => {
     const {
       activityDate,
-      activityTotalTime,
+      elapsedTime,
       description,
       id,
       project,
@@ -21,11 +21,11 @@ const StopwatchFormButtonsContainer = (props, { router }) => {
     const timeLogValues = {
       description,
       logDate: activityDate,
-      loggedTime: activityTotalTime,
+      loggedTime: elapsedTime,
       project,
     };
 
-    if (startedAt) actions.pauseStopwatch({ activityTotalTime, id, startedAt });
+    if (startedAt) actions.pauseStopwatch({ elapsedTime, id, startedAt });
     actions.resetStopwatch(id);
     router.history.push({
       pathname: '/app/time-logs/new',
