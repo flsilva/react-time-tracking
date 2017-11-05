@@ -1,5 +1,5 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { getEntities, getEntityById } from './StopwatchState';
+import { getEntities } from './StopwatchState';
 import {
   READ_ENTITIES_REQUESTED,
   UPDATE_DATE_REQUESTED,
@@ -13,9 +13,6 @@ import {
   readEntitiesFailed,
   readEntitiesStarted,
   readEntitiesSucceeded,
-  readEntityFailed,
-  readEntityStarted,
-  readEntitySucceeded,
   updateEntityFailed,
   updateDatabase,
 } from './StopwatchActions';
