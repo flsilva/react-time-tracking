@@ -8,9 +8,6 @@ import {
   READ_ENTITIES_STARTED,
   READ_ENTITIES_SUCCEEDED,
   READ_ENTITIES_FAILED,
-  READ_ENTITY_STARTED,
-  READ_ENTITY_SUCCEEDED,
-  READ_ENTITY_FAILED,
   CLEAR_DATABASE,
   UPDATE_DATABASE,
 } from './StopwatchActions';
@@ -33,13 +30,10 @@ export const entities = (state = {}, action) => {
 const error = (state = null, action) => {
   switch (action.type) {
     case READ_ENTITIES_FAILED:
-    case READ_ENTITY_FAILED:
       return action.payload || null;
 
     case READ_ENTITIES_STARTED:
     case READ_ENTITIES_SUCCEEDED:
-    case READ_ENTITY_STARTED:
-    case READ_ENTITY_SUCCEEDED:
       return null;
 
     default:
@@ -115,12 +109,9 @@ const isConnecting = (state = false, action) => {
   switch (action.type) {
     case READ_ENTITIES_SUCCEEDED:
     case READ_ENTITIES_FAILED:
-    case READ_ENTITY_SUCCEEDED:
-    case READ_ENTITY_FAILED:
       return false;
 
     case READ_ENTITIES_STARTED:
-    case READ_ENTITY_STARTED:
       return true;
 
     default:

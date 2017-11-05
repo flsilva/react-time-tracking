@@ -2,7 +2,6 @@ import { put, select, takeLatest } from 'redux-saga/effects';
 import { getEntities, getEntityById } from './StopwatchState';
 import {
   READ_ENTITIES_REQUESTED,
-  READ_ENTITY_REQUESTED,
   UPDATE_DATE_REQUESTED,
   UPDATE_DESCRIPTION_REQUESTED,
   UPDATE_PROJECT_REQUESTED,
@@ -42,26 +41,6 @@ function* readEntitiesSaga({ meta }) {
   }
 }
 
-function* readEntitySaga({ meta }) {
-  const { entity, makeRequest, killCache, request } = meta.http;
-
-  if (!killCache) {
-    const cachedStopwatch = yield select(getEntityById, entity.id, request.params);
-    if (cachedStopwatch) return;
-  }
-
-  try {
-    yield put(readEntityStarted());
-
-    const data = yield makeRequest(request);
-
-    yield put(updateDatabase(data));
-    yield put(readEntitySucceeded());
-  } catch (error) {
-    yield put(readEntityFailed(error));
-  }
-}
-
 function* updateStopwatchSaga({ meta }) {
   const { makeRequest, request } = meta.http;
 
@@ -90,5 +69,4 @@ export default function* () {
   ], updateStopwatchSaga);
 
   yield takeLatest(READ_ENTITIES_REQUESTED, readEntitiesSaga);
-  yield takeLatest(READ_ENTITY_REQUESTED, readEntitySaga);
 }

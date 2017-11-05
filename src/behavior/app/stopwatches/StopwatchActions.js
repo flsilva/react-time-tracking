@@ -16,11 +16,6 @@ export const READ_ENTITIES_STARTED = 'app/stopwatches/read/entities/started';
 export const READ_ENTITIES_SUCCEEDED = 'app/stopwatches/read/entities/succeeded';
 export const READ_ENTITIES_FAILED = 'app/stopwatches/read/entities/failed';
 
-export const READ_ENTITY_REQUESTED = 'app/stopwatches/read/entity/requested';
-export const READ_ENTITY_STARTED = 'app/stopwatches/read/entity/started';
-export const READ_ENTITY_SUCCEEDED = 'app/stopwatches/read/entity/succeeded';
-export const READ_ENTITY_FAILED = 'app/stopwatches/read/entity/failed';
-
 export const UPDATE_ENTITY_FAILED = 'app/stopwatches/update/entity/failed';
 
 //-------------------------
@@ -73,31 +68,6 @@ export const readEntities = (params, killCache) => ({
 export const readEntitiesStarted = () => ({ type: READ_ENTITIES_STARTED });
 export const readEntitiesSucceeded = payload => ({ type: READ_ENTITIES_SUCCEEDED, payload });
 export const readEntitiesFailed = payload => ({ type: READ_ENTITIES_FAILED, payload });
-
-export const readEntity = (id, params, killCache) => {
-  if (!id) throw new Error('Argument <id> must not be null.');
-
-  return {
-    type: READ_ENTITY_REQUESTED,
-    meta: {
-      http: {
-        entity: {
-          id,
-        },
-        killCache,
-        request: {
-          method: 'GET',
-          params,
-          url: `stopwatches/${id}`,
-        },
-      },
-    },
-  };
-};
-
-export const readEntityStarted = () => ({ type: READ_ENTITY_STARTED });
-export const readEntitySucceeded = payload => ({ type: READ_ENTITY_SUCCEEDED, payload });
-export const readEntityFailed = payload => ({ type: READ_ENTITY_FAILED, payload });
 
 const generateUpdateRequest = (id, payload = {}) => {
   if (!id) throw new Error('Argument <id> must not be null.');
