@@ -14,7 +14,6 @@ import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
 import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirmationScreenContainer';
 import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
-import StopwatchListScreenContainer from './behavior/app/stopwatches/StopwatchListScreenContainer';
 import StopwatchScreenContainer from './behavior/app/stopwatches/StopwatchScreenContainer';
 import ProjectListScreenContainerWithPagination from './behavior/app/projects/ProjectListScreenContainerWithPagination';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
@@ -35,10 +34,6 @@ const TimeLogListScreenContainer = TimeLogListScreenContainerWithPagination(3);
 
 const ProjectFormScreenContainerWithQuery = props => (
   <ProjectFormScreenContainer getQuery={getRelationshipQuery('author')} {...props} />
-);
-
-const StopwatchListScreenContainerWithQuery = props => (
-  <StopwatchListScreenContainer getQuery={getRelationshipQuery('project')} {...props} />
 );
 
 const StopwatchScreenContainerWithQuery = props => (
@@ -82,8 +77,7 @@ export default () => (
           <AppLayoutContainer>
             <AuthenticatedAppContainer>
               <Switch>
-                <Route exact path="/app" component={StopwatchListScreenContainerWithQuery} />
-                <Route exact path="/app/stopwatches/:stopwatchId" component={StopwatchScreenContainerWithQuery} />
+                <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
                 <Route exact path="/app/projects" component={ProjectListScreenContainer} />
                 <Route exact path="/app/projects/new" component={ProjectFormScreenContainer} />
                 <Route exact path="/app/projects/:projectId" component={ProjectFormScreenContainerWithQuery} />

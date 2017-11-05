@@ -4,17 +4,18 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getNotifications } from '../utils';
 import Notifications from '../../../ui/app/utils/Notifications';
-import { readEntity } from './StopwatchActions';
-import { getEntityById } from './StopwatchState';
+import { readEntities } from './StopwatchActions';
+import { getEntities } from './StopwatchState';
 import StopwatchAppBarContainer from './StopwatchAppBarContainer';
 import StopwatchTimeAndControlsContainer from './StopwatchTimeAndControlsContainer';
 import StopwatchScreenBodyContainer from './StopwatchScreenBodyContainer';
 
 class StopwatchScreenContainer extends Component {
+  state = { entity: undefined };
+
   componentDidMount() {
-    const id = this.props.match.params.stopwatchId;
-    const query = (this.props.getQuery) ? this.props.getQuery() : undefined;
-    if (id) this.props.actions.readEntity(id, query);
+    const query = this.props.getQuery ? this.props.getQuery() : undefined;
+    this.props.actions.readEntities(query);
   }
 
   render() {
@@ -34,17 +35,12 @@ class StopwatchScreenContainer extends Component {
 
 StopwatchScreenContainer.propTypes = {
   actions: PropTypes.shape({
-    readEntity: PropTypes.func.isRequired,
+    readEntities: PropTypes.func.isRequired,
   }).isRequired,
   entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
   error: PropTypes.arrayOf(PropTypes.object),
   getQuery: PropTypes.func,
   isConnecting: PropTypes.bool,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      stopwatchId: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
 };
 
 StopwatchScreenContainer.defaultProps = {
@@ -54,14 +50,20 @@ StopwatchScreenContainer.defaultProps = {
   isConnecting: false,
 };
 
-const mapStateToProps = (state, { match }) => ({
-  entity: getEntityById(state, match.params.stopwatchId),
-  error: state.stopwatches.error,
-  isConnecting: state.stopwatches.isConnecting,
-});
+const mapStateToProps = (state, { getQuery }) => {
+  const queries = getQuery ? [getQuery()] : undefined;
+  const entities = getEntities(state, queries);
+  const entity = entities && entities.length ? entities[0] : undefined;
+
+  return {
+    entity,
+    error: state.stopwatches.error,
+    isConnecting: state.stopwatches.isConnecting,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ readEntity }, dispatch),
+  actions: bindActionCreators({ readEntities }, dispatch),
 });
 
 export default connect(
