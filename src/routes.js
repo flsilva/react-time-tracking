@@ -15,7 +15,7 @@ import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirm
 import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import StopwatchScreenContainer from './behavior/app/stopwatches/StopwatchScreenContainer';
-import ProjectListScreenContainerWithPagination from './behavior/app/projects/ProjectListScreenContainerWithPagination';
+import ProjectListScreenContainer from './behavior/app/projects/ProjectListScreenContainer';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import TimeLogListScreenContainerWithPagination from './behavior/app/time-logs/TimeLogListScreenContainerWithPagination';
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
@@ -29,7 +29,10 @@ const NotAuthenticatedAppContainer = withRouter(
   UserIsNotAuthenticatedRedir(props => React.cloneElement(props.children, props)),
 );
 
-const ProjectListScreenContainer = ProjectListScreenContainerWithPagination(3);
+const ProjectListScreenContainerWithQuery = props => (
+  <ProjectListScreenContainer getQuery={getRelationshipQuery('author')} {...props} />
+);
+
 const TimeLogListScreenContainer = TimeLogListScreenContainerWithPagination(3);
 
 const ProjectFormScreenContainerWithQuery = props => (
@@ -78,7 +81,7 @@ export default () => (
             <AuthenticatedAppContainer>
               <Switch>
                 <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
-                <Route exact path="/app/projects" component={ProjectListScreenContainer} />
+                <Route exact path="/app/projects" component={ProjectListScreenContainerWithQuery} />
                 <Route exact path="/app/projects/new" component={ProjectFormScreenContainer} />
                 <Route exact path="/app/projects/:projectId" component={ProjectFormScreenContainerWithQuery} />
                 <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />

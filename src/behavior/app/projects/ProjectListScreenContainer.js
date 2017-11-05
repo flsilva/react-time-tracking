@@ -2,27 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
 import * as ProjectActions from './ProjectActions';
-import { getEntities, getEntitiesPaginationByQuery } from './ProjectState';
+import { getEntities } from './ProjectState';
 import ProjectListScreen from '../../../ui/app/projects/ProjectListScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
 class ProjectListScreenContainer extends Component {
   componentDidMount() {
-    this.readMore();
-  }
-
-  readMore = () => {
-    const query = this.props.getNextPageQuery();
+    const query = this.props.getQuery ? this.props.getQuery() : undefined;
     this.props.actions.readEntities(query);
   }
-
-  shouldDisplayLoadButton = () => {
-    const { pagination, isConnecting } = this.props.projects;
-    return pagination && pagination.next && !isConnecting;
-  };
 
   render() {
     const { isConnecting, error } = this.props.projects;
@@ -38,16 +28,6 @@ class ProjectListScreenContainer extends Component {
           onClickNewProject={() => this.props.history.push('/app/projects/new')}
           onClickProjectItem={id => this.props.history.push(`/app/projects/${id}`)}
         />
-        {this.shouldDisplayLoadButton() &&
-          <RaisedButton
-            primary
-            fullWidth
-            disabled={this.props.projects.isConnecting}
-            style={{ marginTop: 20 }}
-            label="Load More"
-            onClick={this.readMore}
-          />
-        }
         <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
     );
@@ -56,12 +36,12 @@ class ProjectListScreenContainer extends Component {
 }
 
 ProjectListScreenContainer.propTypes = {
-  getNextPageQuery: PropTypes.func.isRequired,
-
   actions: PropTypes.shape({
     createEntity: PropTypes.func.isRequired,
     readEntities: PropTypes.func.isRequired,
   }).isRequired,
+
+  getQuery: PropTypes.func.isRequired,
 
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
@@ -86,17 +66,12 @@ ProjectListScreenContainer.defaultProps = {
   user: null,
 };
 
-const mapStateToProps = (state, { queries }) => {
-  const queriesArray = Object.keys(queries)
-    .map(key => queries[key]);
-
-  const pagination = queriesArray.length ?
-    getEntitiesPaginationByQuery(state, queriesArray[queriesArray.length - 1]) : null;
+const mapStateToProps = (state, { getQuery }) => {
+  const queries = getQuery ? [getQuery()] : undefined;
 
   return ({
     projects: {
-      list: getEntities(state, queriesArray),
-      pagination,
+      list: getEntities(state, queries),
       error: state.projects.error,
       isConnecting: state.projects.isConnecting,
     },
