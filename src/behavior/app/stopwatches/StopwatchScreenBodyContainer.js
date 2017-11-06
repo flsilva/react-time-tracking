@@ -6,7 +6,7 @@ import SheetIcon from 'material-ui/svg-icons/action/description';
 import ScreenBody from '../../../ui/app/common/ScreenBody';
 import WithIcon from '../../../ui/app/common/WithIcon';
 import withDialog from '../../../ui/common/withDialog';
-import { getRelationshipQuery } from '../utils/QueryUtils';
+import { generateQueryForRelationship } from '../utils/QueryUtils';
 import DatePickerContainer from './DatePickerContainer';
 import StopwatchProjectDropDownContainer from './StopwatchProjectDropDownContainer';
 import DescriptionButtonContainer from './DescriptionButtonContainer';
@@ -44,7 +44,7 @@ const StopwatchScreenBodyContainer = ({ entity }) => {
       <WithIcon icon={<WorkIcon color={'#3f2da5'} />}>
         <StopwatchProjectDropDownContainer
           entity={entity}
-          getQuery={getRelationshipQuery('author')}
+          getQuery={generateQueryForRelationship('author')}
         />
       </WithIcon>
       <WithIcon icon={<SheetIcon color={'#3f2da5'} />}>

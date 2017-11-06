@@ -19,7 +19,7 @@ import ProjectListScreenContainer from './behavior/app/projects/ProjectListScree
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import TimeLogListScreenContainerWithPagination from './behavior/app/time-logs/TimeLogListScreenContainerWithPagination';
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
-import { getRelationshipQuery } from './behavior/app/utils/QueryUtils';
+import { generateQueryForRelationship } from './behavior/app/utils/QueryUtils';
 
 const AuthenticatedAppContainer = withRouter(
   UserIsAuthenticatedRedir(props => React.cloneElement(props.children, props)),
@@ -30,17 +30,17 @@ const NotAuthenticatedAppContainer = withRouter(
 );
 
 const ProjectListScreenContainerWithQuery = props => (
-  <ProjectListScreenContainer getQuery={getRelationshipQuery('author')} {...props} />
+  <ProjectListScreenContainer getQuery={generateQueryForRelationship('author')} {...props} />
 );
 
 const TimeLogListScreenContainer = TimeLogListScreenContainerWithPagination(3);
 
 const ProjectFormScreenContainerWithQuery = props => (
-  <ProjectFormScreenContainer getQuery={getRelationshipQuery('author')} {...props} />
+  <ProjectFormScreenContainer getQuery={generateQueryForRelationship('author')} {...props} />
 );
 
 const StopwatchScreenContainerWithQuery = props => (
-  <StopwatchScreenContainer getQuery={getRelationshipQuery('project')} {...props} />
+  <StopwatchScreenContainer getQuery={generateQueryForRelationship('project')} {...props} />
 );
 
 export default () => (

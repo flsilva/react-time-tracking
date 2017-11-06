@@ -1,12 +1,12 @@
 import flow from 'lodash/flow';
 import withPagination from '../utils/withPagination';
-import { getPaginationQuery, getRelationshipQuery } from '../utils/QueryUtils';
+import { generateQueryForPagination, generateQueryForRelationship } from '../utils/QueryUtils';
 import TimeLogListScreenContainer from './TimeLogListScreenContainer';
 
 const getNextPageQuery = itemsPerPage => page => (
   flow([
-    getRelationshipQuery('author,project'),
-    getPaginationQuery({ page, itemsPerPage, sort: '-created-at' }),
+    generateQueryForRelationship('author,project'),
+    generateQueryForPagination({ page, itemsPerPage, sort: '-created-at' }),
   ])()
 );
 
