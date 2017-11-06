@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ProjectActions from './ProjectActions';
-import { readEntityById } from './ProjectState';
+import { getEntityById } from './ProjectState';
 import ProjectFormScreen from '../../../ui/app/projects/ProjectFormScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -101,7 +101,7 @@ ProjectFormScreenContainer.defaultProps = {
 
 const mapStateToProps = (state, { match }) => ({
   projects: {
-    data: readEntityById(state, match.params.projectId),
+    data: getEntityById(state, match.params.projectId),
     error: state.projects.error,
     isConnecting: state.projects.isConnecting,
   },

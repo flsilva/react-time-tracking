@@ -10,7 +10,7 @@ import TimeLogForm from '../../../ui/app/time-logs/TimeLogForm';
 import { getNotifications } from '../utils';
 import { getTimeObjectFromSeconds } from '../utils/TimeUtils';
 import * as TimeLogActions from './TimeLogActions';
-import { readEntityById } from './TimeLogState';
+import { getEntityById } from './TimeLogState';
 import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
 
 class TimeLogFormScreenContainer extends Component {
@@ -155,7 +155,7 @@ TimeLogFormScreenContainer.defaultProps = {
 
 const mapStateToProps = (state, { location, match }) => {
   const entity = match.params.timeLogId ?
-    readEntityById(state, match.params.timeLogId) : location.state;
+    getEntityById(state, match.params.timeLogId) : location.state;
 
   return {
     entity: entity || undefined,

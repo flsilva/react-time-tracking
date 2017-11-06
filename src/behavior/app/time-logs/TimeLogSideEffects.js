@@ -1,5 +1,5 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { readEntityById, getEntities } from './TimeLogState';
+import { getEntityById, getEntities } from './TimeLogState';
 import {
   CREATE_ENTITY_REQUESTED,
   READ_ENTITY_REQUESTED,
@@ -45,7 +45,7 @@ function* readEntitySaga({ meta }) {
   const { entity, makeRequest, killCache, request } = meta.http;
 
   if (!killCache) {
-    const cachedEntity = yield select(readEntityById, entity.id, request.params);
+    const cachedEntity = yield select(getEntityById, entity.id, request.params);
     if (cachedEntity) return;
   }
 

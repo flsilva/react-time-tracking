@@ -113,7 +113,7 @@ const isConnecting = (state = false, action) => {
   }
 };
 
-export const readEntityById = (state, id) => {
+export const getEntityById = (state, id) => {
   if (!id) throw new Error('Argument <id> must not be null.');
 
   const entity = build(state.database, 'projects', id, { eager: true, ignoreLinks: true });
@@ -139,7 +139,7 @@ export const getEntities = (state, _queries = []) => {
     .map(query => state.projects.fetchedQueries[query].ids
 
       // map an array of entity IDs to entity Objects
-      .map(id => readEntityById(state, id)),
+      .map(id => getEntityById(state, id)),
     ));
 };
 
