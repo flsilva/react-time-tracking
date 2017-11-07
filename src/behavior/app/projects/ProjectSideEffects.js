@@ -63,11 +63,10 @@ function* readEntitySaga({ meta }) {
 
 function* readEntitiesSaga({ meta }) {
   const { makeRequest, killCache, request } = meta.http;
-  const params = request.params ? [request.params] : undefined;
 
   if (!killCache) {
-    const cachedProjects = yield select(getEntities, params);
-    if (cachedProjects && cachedProjects.length) return;
+    const cachedResult = yield select(getEntities, request.params);
+    if (cachedResult) return;
   }
 
   try {

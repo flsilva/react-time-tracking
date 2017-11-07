@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import flatten from 'lodash/flatten';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as TimeLogActions from './TimeLogActions';
-import { getEntities, getEntitiesPaginationByQuery } from './TimeLogState';
+import { getEntities } from './TimeLogState';
 import TimeLogListScreen from '../../../ui/app/time-logs/TimeLogListScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
@@ -14,8 +15,6 @@ class TimeLogListScreenContainer extends Component {
   componentDidMount() {
     this.readMore();
   }
-
-  itemsPerPage = 3;
 
   readMore = () => {
     const query = this.props.getNextPageQuery();
@@ -81,14 +80,25 @@ TimeLogListScreenContainer.defaultProps = {
 };
 
 const mapStateToProps = (state, { queries }) => {
-  const queriesArray = Object.keys(queries)
-    .map(key => queries[key]);
+  const results = queries && queries.length ?
+    queries.map(query => getEntities(state, query))
+      .filter(result => result)
+    : undefined;
 
-  const pagination = queriesArray.length ?
-    getEntitiesPaginationByQuery(state, queriesArray[queriesArray.length - 1]) : null;
+  const entities = results && results.length ?
+    flatten(
+      results.map(result => (
+        result ? result.entities : undefined
+      )),
+    ) : undefined;
+
+  const lastPageResult = queries && queries.length ?
+    getEntities(state, queries[queries.length - 1]) : undefined;
+
+  const pagination = lastPageResult ? lastPageResult.pagination : undefined;
 
   return {
-    entities: getEntities(state, queriesArray),
+    entities,
     pagination,
     error: state.timeLogs.error,
     isConnecting: state.timeLogs.isConnecting,

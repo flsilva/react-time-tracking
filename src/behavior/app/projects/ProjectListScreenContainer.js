@@ -23,7 +23,7 @@ class ProjectListScreenContainer extends Component {
           createEntity={this.props.actions.createEntity}
           error={error}
           isConnecting={this.props.projects.isConnecting}
-          data={this.props.projects.list}
+          data={this.props.projects.entities}
           user={this.props.user}
           onClickNewProject={() => this.props.history.push('/app/projects/new')}
           onClickProjectItem={id => this.props.history.push(`/app/projects/${id}`)}
@@ -48,7 +48,7 @@ ProjectListScreenContainer.propTypes = {
   }).isRequired,
 
   projects: PropTypes.shape({
-    list: PropTypes.arrayOf(PropTypes.object),
+    entities: PropTypes.arrayOf(PropTypes.object),
     pagination: PropTypes.shape({
       next: PropTypes.string,
     }),
@@ -67,11 +67,13 @@ ProjectListScreenContainer.defaultProps = {
 };
 
 const mapStateToProps = (state, { getQuery }) => {
-  const queries = getQuery ? [getQuery()] : undefined;
+  const query = getQuery ? getQuery() : undefined;
+  const result = getEntities(state, query);
+  const entities = result ? result.entities : undefined;
 
   return ({
     projects: {
-      list: getEntities(state, queries),
+      entities,
       error: state.projects.error,
       isConnecting: state.projects.isConnecting,
     },

@@ -1,4 +1,3 @@
-import flatten from 'lodash/flatten';
 import isString from 'lodash/isString';
 import merge from 'lodash/merge';
 import { combineReducers } from 'redux';
@@ -82,27 +81,18 @@ export const getEntityById = (state, id) => {
   return entity;
 };
 
-export const getEntities = (state, _queries = []) => {
+export const getEntities = (state, _query = QUERY_ALL) => {
   if (!state.stopwatches) return undefined;
 
-  const queries = _queries.concat([]);
-  if (!queries.length) queries.push(QUERY_ALL);
+  const query = isString(_query) ? _query : JSON.stringify(_query);
+  const fetchedQuery = state.stopwatches.fetchedQueries[query];
 
-  return flatten(
-    // transform query objects into strings
-    // so we can use them to index fetchedQueries
-    queries.map(query => (isString(query) ? query : JSON.stringify(query)))
+  if (!fetchedQuery) return undefined;
 
-    // filter out requested queries not stored
-    .filter(query => state.stopwatches.fetchedQueries[query])
-
-    // map an array of queries (String objects)
-    // to an array of arrays of entity IDs
-    .map(query => state.stopwatches.fetchedQueries[query].ids
-
-      // map an array of entity IDs to entity Objects
-      .map(id => getEntityById(state, id)),
-    ));
+  return {
+    entities: fetchedQuery.ids.map(id => getEntityById(state, id)),
+    pagination: fetchedQuery.links,
+  };
 };
 
 const isConnecting = (state = false, action) => {

@@ -51,8 +51,9 @@ StopwatchScreenContainer.defaultProps = {
 };
 
 const mapStateToProps = (state, { getQuery }) => {
-  const queries = getQuery ? [getQuery()] : undefined;
-  const entities = getEntities(state, queries);
+  const query = getQuery ? getQuery() : undefined;
+  const result = getEntities(state, query);
+  const entities = result ? result.entities : undefined;
   const entity = entities && entities.length ? entities[0] : undefined;
 
   return {

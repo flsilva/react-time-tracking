@@ -55,10 +55,12 @@ ProjectDropDownContainer.defaultProps = {
 };
 
 const mapStateToProps = (state, { getQuery }) => {
-  const queries = getQuery ? [getQuery()] : undefined;
+  const query = getQuery ? getQuery() : undefined;
+  const result = getEntities(state, query);
+  const entities = result ? result.entities : undefined;
 
   return {
-    entities: getEntities(state, queries),
+    entities,
     isConnecting: state.projects.isConnecting,
   };
 };

@@ -4,7 +4,7 @@ const withPagination = getNextPageQuery => WrappedComponent => (
   class extends Component {
     state = { currentPage: 0, queries: {} };
 
-    getAllPageQueries = () => (
+    getQueriesAsArray = () => (
       Object.keys(this.state.queries).map(key => this.state.queries[key])
     )
 
@@ -25,19 +25,11 @@ const withPagination = getNextPageQuery => WrappedComponent => (
       return query;
     }
 
-    getQueryByPage = (page) => {
-      if (isNaN(page) || page < 1) {
-        throw new Error(`Argument <page> must be a positive integer. Got: ${page}`);
-      }
-
-      return this.state.queries[page.toString()];
-    }
-
     render() {
       return (
         <WrappedComponent
           getNextPageQuery={this.getNextPageQuery}
-          queries={this.state.queries}
+          queries={this.getQueriesAsArray()}
           {...this.props}
         />
       );
