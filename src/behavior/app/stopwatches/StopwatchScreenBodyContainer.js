@@ -15,11 +15,18 @@ import DescriptionFormDialogContainer from './DescriptionFormDialogContainer';
 
 /*
  * Although we don't need the "author" relationship object
- * into projects entities for the stopwatch screen, we include it
- * here as a cache strategy regarding overall app performance.
+ * into projects entities for the dropdown feature in the stopwatch screen,
+ * we include it here as a cache strategy regarding overall app performance.
  * That way when we navigate between stopwatch and project listing
  * screens only one http request is needed.
  */
+const StopwatchProjectDropDownContainerWithQuery = props => (
+  <StopwatchProjectDropDownContainer
+    {...props}
+    getQuery={generateQueryForRelationship('author')}
+  />
+);
+
 const StopwatchScreenBodyContainer = ({ entity }) => {
   const description = entity ? entity.description : undefined;
 
@@ -42,10 +49,7 @@ const StopwatchScreenBodyContainer = ({ entity }) => {
         <DatePickerContainer entity={entity} />
       </WithIcon>
       <WithIcon icon={<WorkIcon color={'#3f2da5'} />}>
-        <StopwatchProjectDropDownContainer
-          entity={entity}
-          getQuery={generateQueryForRelationship('author')}
-        />
+        <StopwatchProjectDropDownContainerWithQuery entity={entity} />
       </WithIcon>
       <WithIcon icon={<SheetIcon color={'#3f2da5'} />}>
         <DescriptionButtonContainerWithDialog entity={entity} />
