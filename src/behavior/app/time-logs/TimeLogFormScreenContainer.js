@@ -7,11 +7,23 @@ import CircularProgress from 'material-ui/CircularProgress';
 import Notifications from '../../../ui/app/utils/Notifications';
 import TimeLogAppBar from '../../../ui/app/time-logs/TimeLogAppBar';
 import TimeLogForm from '../../../ui/app/time-logs/TimeLogForm';
+import { generateQueryForRelationship } from '../utils/QueryUtils';
 import { getNotifications } from '../utils';
 import { getTimeObjectFromSeconds } from '../utils/TimeUtils';
 import * as TimeLogActions from './TimeLogActions';
 import { getEntityById } from './TimeLogState';
 import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
+
+/*
+ * Although we don't need the "author" relationship object
+ * into projects entities for the dropdown feature in this screen,
+ * we include it here as a cache strategy regarding overall app performance.
+ * That way when we navigate between stopwatch and project listing
+ * screens only one http request is needed.
+ */
+const ProjectDropDownContainerWithQuery = props => (
+  <ProjectDropDownContainer getQuery={generateQueryForRelationship('author')} {...props} />
+);
 
 class TimeLogFormScreenContainer extends Component {
 
@@ -110,7 +122,7 @@ class TimeLogFormScreenContainer extends Component {
               <TimeLogForm
                 onCustomInputChange={setFieldValue}
                 onInputChange={handleChange}
-                projectDropDownClass={ProjectDropDownContainer}
+                projectDropDownClass={ProjectDropDownContainerWithQuery}
                 values={values}
               />
             </div>
