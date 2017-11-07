@@ -8,26 +8,26 @@ import WithIcon from '../common/WithIcon';
 import DatePicker from '../common/DatePicker';
 import NumberDropDown from '../common/NumberDropDown';
 
-const styles = {
-  body: {
-    margin: '20px',
-  },
-  timeContainer: {
-    alignItems: 'baseline',
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '10px 0px 35px',
-  },
-};
-
-const TimeLogForm = (props, context) => {
+const TimeLogForm = (props, { muiTheme: { palette } }) => {
   const { onCustomInputChange, onInputChange, values } = props;
-  const timeBgColor = context.muiTheme.palette.primary1Color;
   const ProjectDropDown = props.projectDropDownClass;
+
+  const styles = {
+    body: {
+      margin: '20px',
+    },
+    timeContainer: {
+      alignItems: 'baseline',
+      backgroundColor: palette.primary1Color,
+      display: 'flex',
+      justifyContent: 'center',
+      padding: '10px 0px 35px',
+    },
+  };
 
   return (
     <div>
-      <div style={{ ...styles.timeContainer, ...{ backgroundColor: timeBgColor } }}>
+      <div style={styles.timeContainer}>
         <NumberDropDown
           name="hours"
           prependZero
@@ -48,14 +48,14 @@ const TimeLogForm = (props, context) => {
         />
       </div>
       <div style={styles.body}>
-        <WithIcon icon={<CalendarIcon color={'#3f2da5'} />}>
+        <WithIcon icon={<CalendarIcon color={palette.accent1Color} />}>
           <DatePicker
             name="date"
             date={values.date}
             onDatePick={onCustomInputChange}
           />
         </WithIcon>
-        <WithIcon icon={<WorkIcon color={'#3f2da5'} />}>
+        <WithIcon icon={<WorkIcon color={palette.accent1Color} />}>
           <ProjectDropDown
             name="projectId"
             onItemPick={onCustomInputChange}
@@ -63,7 +63,7 @@ const TimeLogForm = (props, context) => {
           />
         </WithIcon>
         <WithIcon
-          icon={<SheetIcon color={'#3f2da5'} />}
+          icon={<SheetIcon color={palette.accent1Color} />}
           iconStyle={{ marginTop: '12px' }}
           style={{ alignItems: 'flex-start' }}
         >

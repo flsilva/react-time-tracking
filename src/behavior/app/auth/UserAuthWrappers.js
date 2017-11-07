@@ -2,26 +2,15 @@ import React from 'react';
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect';
 import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper';
-import CircularProgress from 'material-ui/CircularProgress';
+import FullHeightCentralizedChildren from '../../../ui/common/FullHeightCentralizedChildren';
+import CircularLoading from '../../../ui/common/CircularLoading';
 
 const locationHelper = locationHelperBuilder({});
 
-const loadingContainerStyles = {
-  alignItems: 'center',
-  display: 'flex',
-  height: window.innerHeight,
-  justifyContent: 'center',
-};
-
 const AuthenticatingLoading = () => (
-  <div style={loadingContainerStyles}>
-    <CircularProgress
-      color={'rgb(0, 188, 212)'}
-      size={50}
-      thickness={4}
-      style={{ transform: 'translate(0, -50%)' }}
-    />
-  </div>
+  <FullHeightCentralizedChildren>
+    <CircularLoading style={{ transform: 'translate(0, -50%)' }} />
+  </FullHeightCentralizedChildren>
 );
 
 const userIsAuthenticatedDefaults = {

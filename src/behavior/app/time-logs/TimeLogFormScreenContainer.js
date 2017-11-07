@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
-import CircularProgress from 'material-ui/CircularProgress';
+import FullHeightCentralizedChildren from '../../../ui/common/FullHeightCentralizedChildren';
+import CircularLoading from '../../../ui/common/CircularLoading';
 import Notifications from '../../../ui/app/utils/Notifications';
 import TimeLogAppBar from '../../../ui/app/time-logs/TimeLogAppBar';
 import TimeLogForm from '../../../ui/app/time-logs/TimeLogForm';
@@ -85,22 +86,10 @@ class TimeLogFormScreenContainer extends Component {
     if (!initialValues.date) initialValues.date = new Date();
 
     if (isConnecting) {
-      const loadingContainerStyles = {
-        alignItems: 'center',
-        display: 'flex',
-        height: window.innerHeight,
-        justifyContent: 'center',
-      };
-
       return (
-        <div style={loadingContainerStyles}>
-          <CircularProgress
-            color={'rgb(0, 188, 212)'}
-            size={50}
-            thickness={4}
-            style={{ transform: 'translate(0, -50%)' }}
-          />
-        </div>
+        <FullHeightCentralizedChildren>
+          <CircularLoading style={{ transform: 'translate(0, -50%)' }} />
+        </FullHeightCentralizedChildren>
       );
     }
 

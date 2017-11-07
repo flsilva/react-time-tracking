@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FlatButton from 'material-ui/FlatButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import CircularProgress from 'material-ui/CircularProgress';
+import CircularLoading from '../../common/CircularLoading';
 
 const createMenuItem = item => (
   <MenuItem value={item.id} key={item.id} primaryText={item.name} />
@@ -22,7 +22,7 @@ const ProjectListDropDown = (props) => {
   } = props;
 
   if (isConnecting) {
-    return <CircularProgress color={'rgb(0, 188, 212)'} size={20} thickness={2} />;
+    return <CircularLoading size={20} thickness={2} />;
   }
 
   if (projects && projects.length) {

@@ -27,7 +27,7 @@ const StopwatchProjectDropDownContainerWithQuery = props => (
   />
 );
 
-const StopwatchScreenBodyContainer = ({ entity }) => {
+const StopwatchScreenBodyContainer = ({ entity }, { muiTheme: { palette } }) => {
   const description = entity ? entity.description : undefined;
 
   const DescriptionButtonContainerWithData = props => (
@@ -45,18 +45,24 @@ const StopwatchScreenBodyContainer = ({ entity }) => {
 
   return (
     <ScreenBody>
-      <WithIcon icon={<CalendarIcon color={'#3f2da5'} />}>
+      <WithIcon icon={<CalendarIcon color={palette.accent1Color} />}>
         <DatePickerContainer entity={entity} />
       </WithIcon>
-      <WithIcon icon={<WorkIcon color={'#3f2da5'} />}>
+      <WithIcon icon={<WorkIcon color={palette.accent1Color} />}>
         <StopwatchProjectDropDownContainerWithQuery entity={entity} />
       </WithIcon>
-      <WithIcon icon={<SheetIcon color={'#3f2da5'} />}>
+      <WithIcon icon={<SheetIcon color={palette.accent1Color} />}>
         <DescriptionButtonContainerWithDialog entity={entity} />
       </WithIcon>
       <StopwatchFormButtonsContainer entity={entity} />
     </ScreenBody>
   );
+};
+
+StopwatchScreenBodyContainer.contextTypes = {
+  muiTheme: PropTypes.shape({
+    palette: PropTypes.object,
+  }),
 };
 
 StopwatchScreenBodyContainer.propTypes = {

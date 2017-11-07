@@ -1,31 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CircularProgress from 'material-ui/CircularProgress';
+import CircularLoading from '../../common/CircularLoading';
 import PlayPauseControls from './PlayPauseControls';
 import TimeElapsed from './TimeElapsed';
 
-const styles = {
-  container: {
-    backgroundColor: '#3f2da5',
-    paddingBottom: 20,
-  },
-  playPauseControls: {
-    alignItems: 'center',
-    backgroundColor: '#3f2da5',
-    display: 'flex',
-    justifyContent: 'center',
-    height: 125,
-    paddingTop: 10,
-  },
-};
-
-const StopwatchTimeAndControls = (props) => {
+const StopwatchTimeAndControls = (props, { muiTheme: { palette } }) => {
   const { elapsedTime, isRunning, startedAt } = props;
+
+  const styles = {
+    container: {
+      backgroundColor: palette.accent1Color,
+      paddingBottom: 20,
+    },
+    playPauseControls: {
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      height: 125,
+      paddingTop: 10,
+    },
+  };
 
   let controls;
 
   if (props.isConnecting) {
-    controls = <CircularProgress color={'rgb(0, 188, 212)'} size={50} thickness={4} />;
+    controls = <CircularLoading />;
   } else {
     controls = (
       <PlayPauseControls
