@@ -141,6 +141,12 @@ TimeLogFormScreenContainer.propTypes = {
 
   isConnecting: PropTypes.bool,
 
+  // location is used from within mapStateToProps()
+  // eslint-disable-next-line
+  location: PropTypes.shape({
+    state: PropTypes.object,
+  }).isRequired,
+
   match: PropTypes.shape({
     params: PropTypes.shape({
       timeLogId: PropTypes.string,

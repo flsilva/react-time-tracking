@@ -1,14 +1,15 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import UserProvider from './behavior/UserProvider';
 import {
   UserIsAuthenticatedRedir,
   UserIsNotAuthenticatedRedir,
 } from './behavior/app/auth/UserAuthWrappers';
 import Layout from './ui/Layout';
-import WebsiteLayout from './behavior/website/WebsiteLayout';
+import WebsiteLayout from './ui/website/WebsiteLayout';
 import FaqScreen from './ui/website/faq/FaqScreen';
 import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
-import AppLayoutContainer from './behavior/app/AppLayoutContainer';
+import AppLayout from './ui/app/AppLayout';
 import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
 import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
 import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirmationScreenContainer';
@@ -44,54 +45,55 @@ const StopwatchScreenContainerWithQuery = props => (
 );
 
 export default () => (
-  <Layout>
-    <Switch>
-      <Route exact path="/sign-out" component={SignOutScreenContainer} />
-      <Route
-        path="/"
-        exact
-        render={() => (
-          <WebsiteLayout>
-            <Switch>
-              <Route exact path="/" component={LandingScreenContainer} />
-              <Route path="/faq" component={FaqScreen} />
-            </Switch>
-          </WebsiteLayout>
-        )}
-      />
-      <Route
-        path="/account"
-        render={() => (
-          <AppLayoutContainer>
-            <NotAuthenticatedAppContainer>
+  <UserProvider>
+    <Layout>
+      <Switch>
+        <Route exact path="/sign-out" component={SignOutScreenContainer} />
+        <Route
+          path="/account"
+          render={() => (
+            <AppLayout>
+              <NotAuthenticatedAppContainer>
+                <Switch>
+                  <Route exact path="/account/sign-in" component={SignInScreenContainer} />
+                  <Route exact path="/account/sign-up" component={SignUpScreenContainer} />
+                  <Route exact path="/account/sign-up/success" component={SignUpSuccessScreen} />
+                  <Route exact path="/account/sign-up/confirmation" component={SignUpConfirmationScreenContainer} />
+                </Switch>
+              </NotAuthenticatedAppContainer>
+            </AppLayout>
+          )}
+        />
+        <Route
+          path="/app"
+          render={() => (
+            <AppLayout>
+              <AuthenticatedAppContainer>
+                <Switch>
+                  <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
+                  <Route exact path="/app/projects" component={ProjectListScreenContainerWithQuery} />
+                  <Route exact path="/app/projects/new" component={ProjectFormScreenContainer} />
+                  <Route exact path="/app/projects/:projectId" component={ProjectFormScreenContainerWithQuery} />
+                  <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />
+                  <Route exact path="/app/time-logs/new" component={TimeLogFormScreenContainer} />
+                  <Route exact path="/app/time-logs/:timeLogId" component={TimeLogFormScreenContainer} />
+                </Switch>
+              </AuthenticatedAppContainer>
+            </AppLayout>
+          )}
+        />
+        <Route
+          path="/"
+          render={() => (
+            <WebsiteLayout>
               <Switch>
-                <Route exact path="/account/sign-in" component={SignInScreenContainer} />
-                <Route exact path="/account/sign-up" component={SignUpScreenContainer} />
-                <Route exact path="/account/sign-up/success" component={SignUpSuccessScreen} />
-                <Route exact path="/account/sign-up/confirmation" component={SignUpConfirmationScreenContainer} />
+                <Route exact path="/" component={LandingScreenContainer} />
+                <Route exact path="/faq" component={FaqScreen} />
               </Switch>
-            </NotAuthenticatedAppContainer>
-          </AppLayoutContainer>
-        )}
-      />
-      <Route
-        path="/app"
-        render={() => (
-          <AppLayoutContainer>
-            <AuthenticatedAppContainer>
-              <Switch>
-                <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
-                <Route exact path="/app/projects" component={ProjectListScreenContainerWithQuery} />
-                <Route exact path="/app/projects/new" component={ProjectFormScreenContainer} />
-                <Route exact path="/app/projects/:projectId" component={ProjectFormScreenContainerWithQuery} />
-                <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />
-                <Route exact path="/app/time-logs/new" component={TimeLogFormScreenContainer} />
-                <Route exact path="/app/time-logs/:timeLogId" component={TimeLogFormScreenContainer} />
-              </Switch>
-            </AuthenticatedAppContainer>
-          </AppLayoutContainer>
-        )}
-      />
-    </Switch>
-  </Layout>
+            </WebsiteLayout>
+          )}
+        />
+      </Switch>
+    </Layout>
+  </UserProvider>
 );

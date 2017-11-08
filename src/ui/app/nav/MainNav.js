@@ -55,7 +55,7 @@ MainNav.contextTypes = {
     }).isRequired,
   }).isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string,
+    email: PropTypes.string,
   }),
 };
 

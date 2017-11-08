@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import WebsiteHeader from './header/WebsiteHeader';
 
 const WebsiteLayout = props => (
-  <div className="WebsiteLayout">
+  <div>
     <WebsiteHeader title="OpenTracker" />
-    <div className="SectionContainer">
+    <div>
       {props.children}
     </div>
-    <p>
-      website footer
-    </p>
+    <div>
+      <p>
+        website footer
+      </p>
+    </div>
   </div>
 );
 

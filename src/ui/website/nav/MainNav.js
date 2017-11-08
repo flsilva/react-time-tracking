@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem } from 'material-ui/List';
-import './MainNav.css';
+import ArrowBackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 
 const MainNav = (props, { router, user }) => {
   const navigateToStopwatch = () => {
@@ -20,7 +20,7 @@ const MainNav = (props, { router, user }) => {
     <List>
       <ListItem
         primaryText="Back to App"
-        leftIcon="keyboard_arrow_left"
+        leftIcon={<ArrowBackIcon />}
         onClick={navigateToStopwatch}
       />
     </List>
@@ -45,7 +45,7 @@ MainNav.contextTypes = {
     }).isRequired,
   }).isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string,
+    email: PropTypes.string,
   }),
 };
 

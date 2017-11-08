@@ -24,7 +24,6 @@ class ProjectListScreenContainer extends Component {
           error={error}
           isConnecting={this.props.projects.isConnecting}
           data={this.props.projects.entities}
-          user={this.props.user}
           onClickNewProject={() => this.props.history.push('/app/projects/new')}
           onClickProjectItem={id => this.props.history.push(`/app/projects/${id}`)}
         />
@@ -32,7 +31,6 @@ class ProjectListScreenContainer extends Component {
       </div>
     );
   }
-
 }
 
 ProjectListScreenContainer.propTypes = {
@@ -55,15 +53,10 @@ ProjectListScreenContainer.propTypes = {
     error: PropTypes.arrayOf(PropTypes.object),
     isConnecting: PropTypes.bool,
   }),
-
-  user: PropTypes.shape({
-    email: PropTypes.string,
-  }),
 };
 
 ProjectListScreenContainer.defaultProps = {
   projects: null,
-  user: null,
 };
 
 const mapStateToProps = (state, { getQuery }) => {

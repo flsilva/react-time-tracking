@@ -4,19 +4,18 @@ import { parse } from 'query-string';
 import SignUpConfirmationScreen from '../../../ui/app/auth/SignUpConfirmationScreen';
 
 class SignUpConfirmationScreenContainer extends Component {
-  constructor(props) {
-    super(props);
+  state = { email: undefined, success: false, seconds: 15 };
 
+  componentWillMount() {
     const query = parse(this.props.location.search);
     const email = query.uid;
-    let success = query.account_confirmation_success;
-    success = success === 'true';
+    const success = query.account_confirmation_success === 'true';
 
-    this.state = { email, success, seconds: 15 };
+    this.setState({ email, success });
   }
 
-  componentDidMount = () => {
-    this.interval = setInterval(this.doCountdown, 1000);
+  componentDidMount() {
+    if (this.state.success) this.interval = setInterval(this.doCountdown, 1000);
   }
 
   componentWillUnmount = () => {
@@ -27,14 +26,12 @@ class SignUpConfirmationScreenContainer extends Component {
     this.setState({ seconds: this.state.seconds - 1 });
 
     if (this.state.seconds === 0) {
-      const path = {
+      this.context.router.history.push({
         pathname: '/account/sign-in',
-        query: {
+        state: {
           email: this.state.email,
         },
-      };
-
-      this.props.history.push(path);
+      });
     }
   }
 
@@ -48,10 +45,15 @@ class SignUpConfirmationScreenContainer extends Component {
   }
 }
 
-SignUpConfirmationScreenContainer.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
+SignUpConfirmationScreenContainer.contextTypes = {
+  router: PropTypes.shape({
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
   }).isRequired,
+};
+
+SignUpConfirmationScreenContainer.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,

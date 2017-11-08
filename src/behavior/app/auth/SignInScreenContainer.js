@@ -2,24 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { parse } from 'query-string';
 import * as EmailSignInActions from './email/EmailSignInActions';
 import SignInScreen from '../../../ui/app/auth/SignInScreen';
 import Notifications from '../../../ui/app/utils/Notifications';
 import { getNotifications } from '../utils';
 
-const SignInScreenContainer = (props) => {
-  const { isConnecting, error } = props.auth.emailSignIn;
-  const email = parse(props.location.search).email;
+const SignInScreenContainer = ({ actions, isConnecting, error, location }) => {
+  const email = location.state ? location.state.email : undefined;
 
   return (
     <div>
       <SignInScreen
         email={email}
-        error={props.auth.emailSignIn.error}
-        isConnecting={props.auth.emailSignIn.isConnecting}
-        submitHandler={props.actions.emailSignIn}
-        user={props.auth.user}
+        error={error}
+        isConnecting={isConnecting}
+        submitHandler={actions.emailSignIn}
       />
       <Notifications notifications={getNotifications(error, isConnecting)} />
     </div>
@@ -31,21 +28,23 @@ SignInScreenContainer.propTypes = {
     emailSignIn: PropTypes.func.isRequired,
   }).isRequired,
 
-  auth: PropTypes.shape({
-    emailSignIn: PropTypes.shape({
-      error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
-      isConnecting: PropTypes.bool,
-    }),
-    user: PropTypes.object,
-  }).isRequired,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
+  isConnecting: PropTypes.bool,
 
   location: PropTypes.shape({
     search: PropTypes.string,
+    state: PropTypes.object,
   }).isRequired,
 };
 
+SignInScreenContainer.defaultProps = {
+  error: undefined,
+  isConnecting: false,
+};
+
 const mapStateToProps = state => ({
-  auth: state.auth,
+  error: state.auth.emailSignIn.error,
+  isConnecting: state.auth.emailSignIn.isConnecting,
 });
 
 const mapDispatchToProps = dispatch => ({

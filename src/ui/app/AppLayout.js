@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const AppLayout = props => (
-  <div className="AppLayout">
-    <div className="SectionContainer">
-      {props.children}
-    </div>
+  <div>
+    {props.children}
   </div>
 );
 

@@ -7,13 +7,13 @@ const bodyStyles = {
   margin: '20px',
 };
 
-const SignUpScreen = props => (
-  <div className="SignUpScreen">
+const SignUpScreen = ({ isConnecting, submitHandler }) => (
+  <div>
     <SimpleAppBar title="Sign Up" />
     <div style={bodyStyles}>
       <EmailSignUpForm
-        submitHandler={props.submitHandler}
-        isConnecting={props.isConnecting}
+        isConnecting={isConnecting}
+        submitHandler={submitHandler}
       />
     </div>
   </div>
