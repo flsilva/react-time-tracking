@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ProjectActions from './ProjectActions';
-import { getEntities } from './ProjectState';
-import ProjectListScreen from '../../../ui/app/projects/ProjectListScreen';
+import AddFAB from '../../../ui/common/button/AddFAB';
+import ProjectList from '../../../ui/app/projects/ProjectList';
 import Notifications from '../../../ui/app/utils/Notifications';
+import SimpleAppBar from '../../../ui/app/header/SimpleAppBar';
 import { getNotifications } from '../utils';
+import { readEntities } from './ProjectActions';
+import { getEntities } from './ProjectState';
 
 class ProjectListScreenContainer extends Component {
   componentDidMount() {
@@ -14,49 +16,56 @@ class ProjectListScreenContainer extends Component {
     this.props.actions.readEntities(query);
   }
 
+  onClickNewProject = () => {
+    this.context.router.history.push('/app/projects/new');
+  }
+
+  onClickProjectItem = (id) => {
+    this.context.router.history.push(`/app/projects/${id}`);
+  }
+
   render() {
-    const { isConnecting, error } = this.props.projects;
+    const { entities, error, isConnecting } = this.props;
 
     return (
       <div>
-        <ProjectListScreen
-          createEntity={this.props.actions.createEntity}
-          error={error}
-          isConnecting={this.props.projects.isConnecting}
-          data={this.props.projects.entities}
-          onClickNewProject={() => this.props.history.push('/app/projects/new')}
-          onClickProjectItem={id => this.props.history.push(`/app/projects/${id}`)}
-        />
+        <SimpleAppBar title="Projects" />
+        <ProjectList entities={entities} onClickProjectItem={this.onClickProjectItem} />
+        {!isConnecting &&
+          <AddFAB onClick={this.onClickNewProject} />
+        }
         <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
     );
   }
 }
 
+ProjectListScreenContainer.contextTypes = {
+  router: PropTypes.shape({
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
+
 ProjectListScreenContainer.propTypes = {
   actions: PropTypes.shape({
-    createEntity: PropTypes.func.isRequired,
     readEntities: PropTypes.func.isRequired,
   }).isRequired,
 
-  getQuery: PropTypes.func.isRequired,
+  entities: PropTypes.arrayOf(PropTypes.object),
+  error: PropTypes.arrayOf(PropTypes.object),
 
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  getQuery: PropTypes.func,
 
-  projects: PropTypes.shape({
-    entities: PropTypes.arrayOf(PropTypes.object),
-    pagination: PropTypes.shape({
-      next: PropTypes.string,
-    }),
-    error: PropTypes.arrayOf(PropTypes.object),
-    isConnecting: PropTypes.bool,
-  }),
+  isConnecting: PropTypes.bool,
 };
 
 ProjectListScreenContainer.defaultProps = {
-  projects: undefined,
+  entities: undefined,
+  error: undefined,
+  getQuery: undefined,
+  isConnecting: undefined,
 };
 
 const mapStateToProps = (state, { getQuery }) => {
@@ -64,17 +73,15 @@ const mapStateToProps = (state, { getQuery }) => {
   const result = getEntities(state, query);
   const entities = result ? result.entities : undefined;
 
-  return ({
-    projects: {
-      entities,
-      error: state.projects.error,
-      isConnecting: state.projects.isConnecting,
-    },
-  });
+  return {
+    entities,
+    error: state.projects.error,
+    isConnecting: state.projects.isConnecting,
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(ProjectActions, dispatch),
+  actions: bindActionCreators({ readEntities }, dispatch),
 });
 
 export default connect(

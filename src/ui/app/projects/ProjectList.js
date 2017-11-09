@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 
-const ProjectList = ({ data, onClickProjectItem }) => {
+const ProjectList = ({ entities, onClickProjectItem }) => {
   const renderItem = (item, onClick) => {
     const { id, name } = item;
 
@@ -19,13 +19,13 @@ const ProjectList = ({ data, onClickProjectItem }) => {
 
   return (
     <List>
-      {data ? data.map(item => renderItem(item, onClickProjectItem)) : undefined}
+      {entities ? entities.map(item => renderItem(item, onClickProjectItem)) : undefined}
     </List>
   );
 };
 
 ProjectList.propTypes = {
-  data: PropTypes.arrayOf(
+  entities: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
@@ -35,7 +35,7 @@ ProjectList.propTypes = {
 };
 
 ProjectList.defaultProps = {
-  data: undefined,
+  entities: undefined,
 };
 
 export default ProjectList;
