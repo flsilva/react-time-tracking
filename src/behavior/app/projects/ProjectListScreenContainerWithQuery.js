@@ -10,26 +10,8 @@ const composeQuery = itemsPerPage => page => (
   ])()
 );
 
-/*
- * For project listing screen we want all entities, no real pagination.
- * Although, to keep API simpler, we leverage same pagination logic.
- */
 export default itemsPerPage => (
   withPagination(
     composeQuery(itemsPerPage),
   )(ProjectListScreenContainer)
 );
-
-
-/*
-const composeQuery = itemsPerPage => () => (
-  flow([
-    generateQueryForRelationship('author'),
-    generateQueryForPagination({ page: 1, itemsPerPage, sort: '-created-at' }),
-  ])()
-);
-
-export default () => (
-  <ProjectListScreenContainer getQuery={composeQuery(999)} />
-);
-*/
