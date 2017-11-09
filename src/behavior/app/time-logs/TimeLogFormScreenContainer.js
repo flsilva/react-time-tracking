@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 import FullHeightCentralizedChildren from '../../../ui/common/FullHeightCentralizedChildren';
 import CircularLoading from '../../../ui/common/CircularLoading';
 import Notifications from '../../../ui/app/utils/Notifications';
-import TimeLogAppBar from '../../../ui/app/time-logs/TimeLogAppBar';
+import TimeLogFormAppBar from '../../../ui/app/time-logs/TimeLogFormAppBar';
 import TimeLogForm from '../../../ui/app/time-logs/TimeLogForm';
 import { generateQueryForRelationship } from '../utils/QueryUtils';
 import { getNotifications } from '../utils';
@@ -102,7 +102,7 @@ class TimeLogFormScreenContainer extends Component {
           }}
           render={({ values, handleChange, handleSubmit, setFieldValue }) => (
             <div>
-              <TimeLogAppBar
+              <TimeLogFormAppBar
                 deleteHandler={this.deleteEntity}
                 entityId={entity && entity.id ? entity.id : undefined}
                 goBackHandler={this.props.history.goBack}
