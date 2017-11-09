@@ -51,7 +51,6 @@ class ProjectFormScreenContainer extends Component {
     const { entity, error, isConnecting } = this.props;
     const isEditing = entity && isString(entity.id);
     const initialValues = this.toFormValues(entity);
-    const title = isEditing ? 'Edit Project' : 'New Project';
 
     if (isConnecting) {
       return (
@@ -73,8 +72,8 @@ class ProjectFormScreenContainer extends Component {
               <ProjectFormAppBar
                 deleteHandler={() => this.deleteEntity(entity.id)}
                 goBackHandler={this.props.history.goBack}
+                isEditing={isEditing}
                 submitHandler={handleSubmit}
-                title={title}
               />
               <ScreenBody>
                 <ProjectForm onInputChange={handleChange} values={values} />
