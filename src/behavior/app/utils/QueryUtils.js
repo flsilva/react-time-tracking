@@ -1,4 +1,4 @@
-export const generateQueryForPagination = ({ page, itemsPerPage, sort }) => (query = {}) => ({
+export const generateQueryForPagination = ({ page, itemsPerPage, sort }) => query => ({
   ...query,
   'page[number]': page,
   'page[size]': itemsPerPage,
