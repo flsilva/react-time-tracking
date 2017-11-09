@@ -70,7 +70,7 @@ class TimeElapsed extends Component {
 
   killInterval = () => {
     clearInterval(this.interval);
-    this.interval = null;
+    this.interval = undefined;
   }
 
   updateTime = (props) => {
@@ -123,7 +123,7 @@ TimeElapsed.propTypes = {
 
 TimeElapsed.defaultProps = {
   isRunning: false,
-  startedAt: null,
+  startedAt: undefined,
   elapsedTime: 0,
 };
 

@@ -21,7 +21,7 @@ AppBarTitle.propTypes = {
 };
 
 AppBarTitle.defaultProps = {
-  color: null,
+  color: undefined,
   title: '',
 };
 

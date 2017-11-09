@@ -26,7 +26,7 @@ MenuIconButton.propTypes = {
 };
 
 MenuIconButton.defaultProps = {
-  color: null,
+  color: undefined,
 };
 
 export default MenuIconButton;

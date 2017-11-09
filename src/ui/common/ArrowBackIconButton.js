@@ -26,7 +26,7 @@ ArrowBackIconButton.propTypes = {
 };
 
 ArrowBackIconButton.defaultProps = {
-  color: null,
+  color: undefined,
 };
 
 export default ArrowBackIconButton;

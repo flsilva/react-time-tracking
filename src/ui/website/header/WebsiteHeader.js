@@ -24,7 +24,7 @@ WebsiteHeader.propTypes = {
 };
 
 WebsiteHeader.defaultProps = {
-  children: null,
+  children: undefined,
 };
 
 export default withDrawer(WebsiteHeader, WebsiteBarDrawer);

@@ -25,7 +25,7 @@ AppBar.propTypes = {
 };
 
 AppBar.defaultProps = {
-  backgroundColor: null,
+  backgroundColor: undefined,
 };
 
 export default AppBar;

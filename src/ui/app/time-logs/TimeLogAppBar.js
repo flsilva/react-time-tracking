@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isString from 'lodash/isString';
 import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
 import ArrowBackAppBar from '../header/ArrowBackAppBar';
@@ -17,7 +18,7 @@ const TimeLogAppBar = (props) => {
     }
   };
 
-  const isEditing = entityId !== undefined && entityId !== null;
+  const isEditing = isString(entityId);
   const title = isEditing ? 'Edit Log' : 'New Log';
 
   return (

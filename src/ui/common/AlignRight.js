@@ -14,8 +14,8 @@ AlignRight.propTypes = {
 };
 
 AlignRight.defaultProps = {
-  children: null,
-  style: null,
+  children: undefined,
+  style: undefined,
 };
 
 export default AlignRight;

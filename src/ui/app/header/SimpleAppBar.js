@@ -24,7 +24,7 @@ SimpleAppBar.propTypes = {
 };
 
 SimpleAppBar.defaultProps = {
-  children: null,
+  children: undefined,
 };
 
 export default withDrawer(SimpleAppBar, AppBarDrawer);

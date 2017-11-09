@@ -14,7 +14,7 @@ ScreenBody.propTypes = {
 };
 
 ScreenBody.defaultProps = {
-  style: null,
+  style: undefined,
 };
 
 export default ScreenBody;

@@ -29,8 +29,8 @@ MoreVertIconMenu.propTypes = {
 };
 
 MoreVertIconMenu.defaultProps = {
-  children: null,
-  color: null,
+  children: undefined,
+  color: undefined,
 };
 
 export default MoreVertIconMenu;

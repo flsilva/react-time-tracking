@@ -9,8 +9,6 @@ class ProjectForm extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    // console.log('ProjectForm().componentWillReceiveProps() - nextProps: ', nextProps);
-
     if (!nextProps.project) return;
 
     this.setState({
@@ -58,7 +56,7 @@ ProjectForm.propTypes = {
 };
 
 ProjectForm.defaultProps = {
-  project: null,
+  project: undefined,
 };
 
 export default ProjectForm;

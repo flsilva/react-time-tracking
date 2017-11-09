@@ -5,7 +5,8 @@ const getNotifications = (messages, isConnecting) => {
     return messages;
   }
 
-  return null;
+  return undefined;
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export { getNotifications };

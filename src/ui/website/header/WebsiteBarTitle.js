@@ -21,7 +21,7 @@ WebsiteBarTitle.propTypes = {
 };
 
 WebsiteBarTitle.defaultProps = {
-  color: null,
+  color: undefined,
   title: '',
 };
 

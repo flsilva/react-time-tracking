@@ -14,7 +14,7 @@ const AuthenticatingLoading = () => (
 );
 
 const userIsAuthenticatedDefaults = {
-  authenticatedSelector: state => state.auth.user !== null,
+  authenticatedSelector: state => state.auth.user !== null && state.auth.user !== undefined,
   authenticatingSelector: state => state.auth.restoreSession.isConnecting,
   wrapperDisplayName: 'UserIsAuthenticated',
 };
@@ -29,7 +29,7 @@ export const UserIsAuthenticatedRedir = connectedRouterRedirect({
 
 const userIsNotAuthenticatedDefaults = {
   authenticatedSelector: state => (
-    state.auth.user === null && state.auth.restoreSession.isConnecting === false
+    !state.auth.user && !state.auth.restoreSession.isConnecting
   ),
   wrapperDisplayName: 'UserIsNotAuthenticated',
 };

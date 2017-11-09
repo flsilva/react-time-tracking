@@ -37,7 +37,7 @@ const addInterceptors = (dispatch, action, fetcher) => {
 
   if (unauthorizedHandler) {
     fetcher.interceptors.response.use(
-      null,
+      undefined,
       unauthorizedHttpHandler(dispatch, unauthorizedHandler),
     );
   }
@@ -48,8 +48,8 @@ const addInterceptors = (dispatch, action, fetcher) => {
     );
   }
 
-  fetcher.interceptors.response.use(extractData, null);
-  fetcher.interceptors.response.use(null, formatApiErrorHandler);
+  fetcher.interceptors.response.use(extractData, undefined);
+  fetcher.interceptors.response.use(undefined, formatApiErrorHandler);
 };
 
 const makeRequest = fetcher => request => fetcher.request(request);
@@ -65,7 +65,7 @@ export const middleware = store => next => (action) => {
   const { entity, request } = newAction.meta.http;
 
   const { auth } = newAction.meta;
-  const token = (auth && auth.token) ? auth.token : null;
+  const token = (auth && auth.token) ? auth.token : undefined;
   request.headers = {
     ...getHeaders(),
     ...token,

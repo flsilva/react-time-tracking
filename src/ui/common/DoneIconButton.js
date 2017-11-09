@@ -26,7 +26,7 @@ DoneIconButton.propTypes = {
 };
 
 DoneIconButton.defaultProps = {
-  color: null,
+  color: undefined,
 };
 
 export default DoneIconButton;

@@ -65,7 +65,7 @@ ProjectFormScreen.propTypes = {
 ProjectFormScreen.defaultProps = {
   isEditing: false,
   isConnecting: false,
-  project: null,
+  project: undefined,
 };
 
 export default ProjectFormScreen;

@@ -31,7 +31,7 @@ Notifications.propTypes = {
 };
 
 Notifications.defaultProps = {
-  notifications: null,
+  notifications: undefined,
 };
 
 export default Notifications;

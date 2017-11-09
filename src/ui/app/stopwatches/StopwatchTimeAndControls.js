@@ -75,7 +75,7 @@ StopwatchTimeAndControls.defaultProps = {
   data: {},
   isConnecting: false,
   isRunning: false,
-  startedAt: null,
+  startedAt: undefined,
 };
 
 export default StopwatchTimeAndControls;

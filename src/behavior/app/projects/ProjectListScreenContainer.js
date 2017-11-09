@@ -56,7 +56,7 @@ ProjectListScreenContainer.propTypes = {
 };
 
 ProjectListScreenContainer.defaultProps = {
-  projects: null,
+  projects: undefined,
 };
 
 const mapStateToProps = (state, { getQuery }) => {

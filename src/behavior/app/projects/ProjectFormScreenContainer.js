@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import isString from 'lodash/isString';
 import * as ProjectActions from './ProjectActions';
 import { getEntityById } from './ProjectState';
 import ProjectFormScreen from '../../../ui/app/projects/ProjectFormScreen';
@@ -46,7 +47,7 @@ class ProjectFormScreenContainer extends Component {
   }
 
   render() {
-    const { error, isConnecting, data } = this.props.projects;
+    const { data, error, isConnecting } = this.props.projects;
 
     return (
       <div>
@@ -55,7 +56,7 @@ class ProjectFormScreenContainer extends Component {
           goBackHandler={this.props.history.goBack}
           submitHandler={this.getSubmitHandler()}
           error={this.props.projects.error}
-          isEditing={this.props.match.params.projectId != null}
+          isEditing={isString(this.props.match.params.projectId)}
           isConnecting={isConnecting}
           project={data}
         />
@@ -94,6 +95,7 @@ ProjectFormScreenContainer.propTypes = {
 };
 
 ProjectFormScreenContainer.defaultProps = {
+  getQuery: undefined,
   projects: {
     data: {},
   },
@@ -101,7 +103,7 @@ ProjectFormScreenContainer.defaultProps = {
 
 const mapStateToProps = (state, { match }) => ({
   projects: {
-    data: getEntityById(state, match.params.projectId),
+    data: match.params.projectId ? getEntityById(state, match.params.projectId) : undefined,
     error: state.projects.error,
     isConnecting: state.projects.isConnecting,
   },

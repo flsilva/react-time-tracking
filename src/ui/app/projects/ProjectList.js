@@ -35,7 +35,7 @@ ProjectList.propTypes = {
 };
 
 ProjectList.defaultProps = {
-  data: null,
+  data: undefined,
 };
 
 export default ProjectList;

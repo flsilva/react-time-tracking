@@ -22,7 +22,7 @@ ArrowBackAppBar.propTypes = {
 };
 
 ArrowBackAppBar.defaultProps = {
-  children: null,
+  children: undefined,
 };
 
 export default ArrowBackAppBar;

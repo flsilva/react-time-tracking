@@ -25,7 +25,7 @@ WebsiteBar.propTypes = {
 };
 
 WebsiteBar.defaultProps = {
-  backgroundColor: null,
+  backgroundColor: undefined,
 };
 
 export default WebsiteBar;

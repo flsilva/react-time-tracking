@@ -31,7 +31,7 @@ ProjectListScreen.propTypes = {
 };
 
 ProjectListScreen.defaultProps = {
-  data: null,
+  data: undefined,
   isConnecting: false,
 };
 
