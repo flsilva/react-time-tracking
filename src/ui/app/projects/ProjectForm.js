@@ -17,12 +17,8 @@ const ProjectForm = ({ onInputChange, values }) => (
 ProjectForm.propTypes = {
   onInputChange: PropTypes.func.isRequired,
   values: PropTypes.shape({
-    name: PropTypes.string,
-  }),
-};
-
-ProjectForm.defaultProps = {
-  values: undefined,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ProjectForm;

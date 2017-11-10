@@ -9,6 +9,8 @@ import Layout from './ui/Layout';
 import WebsiteLayout from './ui/website/WebsiteLayout';
 import FaqScreen from './ui/website/faq/FaqScreen';
 import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
+import withRouterParams from './behavior/app/utils/withRouterParams';
+import FormikContainer from './behavior/app/utils/FormikContainer';
 import AppLayout from './ui/app/AppLayout';
 import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
 import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
@@ -17,6 +19,8 @@ import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import StopwatchScreenContainer from './behavior/app/stopwatches/StopwatchScreenContainer';
 import ProjectListScreenContainerWithQuery from './behavior/app/projects/ProjectListScreenContainerWithQuery';
+import withProjectEntity from './behavior/app/projects/withEntity';
+import ProjectFormikContainer from './behavior/app/projects/ProjectFormikContainer';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import TimeLogListScreenContainerWithQuery from './behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
@@ -30,8 +34,12 @@ const NotAuthenticatedAppContainer = withRouter(
   UserIsNotAuthenticatedRedir(props => React.cloneElement(props.children, props)),
 );
 
-const ProjectFormScreenContainerWithQuery = props => (
-  <ProjectFormScreenContainer getQuery={generateQueryForRelationship('author')} {...props} />
+const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
+  withProjectEntity(
+    ProjectFormikContainer(
+      FormikContainer(ProjectFormScreenContainer),
+    ),
+  ),
 );
 
 const StopwatchScreenContainerWithQuery = props => (
@@ -68,8 +76,8 @@ export default () => (
                 <Switch>
                   <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
                   <Route exact path="/app/projects" component={ProjectListScreenContainerWithQuery(999)} />
-                  <Route exact path="/app/projects/new" component={ProjectFormScreenContainer} />
-                  <Route exact path="/app/projects/:projectId" component={ProjectFormScreenContainerWithQuery} />
+                  <Route exact path="/app/projects/new" component={ProjectFormRoute} />
+                  <Route exact path="/app/projects/:projectId" component={ProjectFormRoute} />
                   <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />
                   <Route exact path="/app/time-logs/new" component={TimeLogFormScreenContainer} />
                   <Route exact path="/app/time-logs/:timeLogId" component={TimeLogFormScreenContainer} />

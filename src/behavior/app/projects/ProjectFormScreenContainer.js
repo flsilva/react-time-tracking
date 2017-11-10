@@ -2,88 +2,47 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Formik } from 'formik';
 import isString from 'lodash/isString';
-import * as ProjectActions from './ProjectActions';
-import { getEntityById } from './ProjectState';
-import FullHeightCentralizedChildren from '../../../ui/common/FullHeightCentralizedChildren';
-import CircularLoading from '../../../ui/common/CircularLoading';
+import { getNotifications } from '../utils';
 import ScreenBody from '../../../ui/app/common/ScreenBody';
 import Notifications from '../../../ui/app/utils/Notifications';
 import ProjectFormAppBar from '../../../ui/app/projects/ProjectFormAppBar';
 import ProjectForm from '../../../ui/app/projects/ProjectForm';
-import { getNotifications } from '../utils';
+import { deleteEntity } from './ProjectActions';
 
 class ProjectFormScreenContainer extends Component {
-
-  componentDidMount() {
-    const id = this.props.match.params.projectId;
-    const query = (this.props.getQuery) ? this.props.getQuery() : undefined;
-    if (id) this.props.actions.readEntity(id, query);
-  }
-
-  getSubmitHandler = () => (
-    this.props.entity ? this.updateEntity : this.createEntity
-  )
-
-  createEntity = (data) => {
-    this.props.actions.createEntity(data, this.redirectToList);
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.entity && nextProps.entity) {
+      this.props.setValues(this.props.toFormValues(nextProps.entity));
+    }
   }
 
   deleteEntity = (id) => {
-    this.props.actions.deleteEntity(id, this.redirectToList);
-  }
-
-  updateEntity = (data) => {
-    const id = this.props.entity.id;
-    this.props.actions.updateEntity(id, data, this.redirectToList);
+    this.props.deleteEntity(id, this.redirectToList);
   }
 
   redirectToList = () => {
     this.props.history.push('/app/projects');
-  }
-
-  toFormValues = (entity = {}) => ({
-    name: entity.name || '',
-  })
+  };
 
   render() {
-    const { entity, error, isConnecting } = this.props;
+    const { entity, error, handleChange, handleSubmit, isConnecting, values } = this.props;
     const isEditing = entity && isString(entity.id);
-    const initialValues = this.toFormValues(entity);
-
-    if (isConnecting) {
-      return (
-        <FullHeightCentralizedChildren>
-          <CircularLoading style={{ transform: 'translate(0, -50%)' }} />
-        </FullHeightCentralizedChildren>
-      );
-    }
 
     return (
       <div>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => {
-            this.getSubmitHandler()(values);
-          }}
-          render={({ values, handleChange, handleSubmit }) => (
-            <div>
-              <ProjectFormAppBar
-                deleteHandler={() => this.deleteEntity(entity.id)}
-                goBackHandler={this.props.history.goBack}
-                isEditing={isEditing}
-                submitHandler={handleSubmit}
-              />
-              <ScreenBody>
-                <ProjectForm onInputChange={handleChange} values={values} />
-                {entity && entity.author &&
-                  <p>Author: {entity.author.email}</p>
-                }
-              </ScreenBody>
-            </div>
-          )}
+        <ProjectFormAppBar
+          deleteHandler={() => this.deleteEntity(entity.id)}
+          goBackHandler={this.props.history.goBack}
+          isEditing={isEditing}
+          submitHandler={handleSubmit}
         />
+        <ScreenBody>
+          <ProjectForm onInputChange={handleChange} values={values} />
+          {entity && entity.author &&
+            <p>Author: {entity.author.email}</p>
+          }
+        </ScreenBody>
         <Notifications notifications={getNotifications(error, isConnecting)} />
       </div>
     );
@@ -91,49 +50,32 @@ class ProjectFormScreenContainer extends Component {
 }
 
 ProjectFormScreenContainer.propTypes = {
-  actions: PropTypes.shape({
-    createEntity: PropTypes.func.isRequired,
-    readEntity: PropTypes.func.isRequired,
-    updateEntity: PropTypes.func.isRequired,
-    deleteEntity: PropTypes.func.isRequired,
-  }).isRequired,
-
-  getQuery: PropTypes.func,
-
+  deleteEntity: PropTypes.func.isRequired,
+  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
+  error: PropTypes.arrayOf(PropTypes.object),
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   history: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
     push: PropTypes.func.isRequired,
   }).isRequired,
-
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      projectId: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
-
-  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
-  error: PropTypes.arrayOf(PropTypes.object),
   isConnecting: PropTypes.bool,
+  setValues: PropTypes.func.isRequired,
+  toFormValues: PropTypes.func.isRequired,
+  values: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
 };
 
 ProjectFormScreenContainer.defaultProps = {
-  getQuery: undefined,
   entity: undefined,
   error: undefined,
   isConnecting: false,
 };
 
-const mapStateToProps = (state, { match }) => ({
-  entity: match.params.projectId ? getEntityById(state, match.params.projectId) : undefined,
-  error: state.projects.error,
-  isConnecting: state.projects.isConnecting,
-});
-
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(ProjectActions, dispatch),
+  ...bindActionCreators({ deleteEntity }, dispatch),
 });
 
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps,
 )(ProjectFormScreenContainer);
