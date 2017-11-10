@@ -10,6 +10,7 @@ import WebsiteLayout from './ui/website/WebsiteLayout';
 import FaqScreen from './ui/website/faq/FaqScreen';
 import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
 import withRouterParams from './behavior/app/utils/withRouterParams';
+import withQuery from './behavior/app/utils/withQuery';
 import FormikContainer from './behavior/app/utils/FormikContainer';
 import AppLayout from './ui/app/AppLayout';
 import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
@@ -35,9 +36,11 @@ const NotAuthenticatedAppContainer = withRouter(
 );
 
 const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
-  withProjectEntity(
-    ProjectFormikContainer(
-      FormikContainer(ProjectFormScreenContainer),
+  withQuery(generateQueryForRelationship('author'))(
+    withProjectEntity(
+      ProjectFormikContainer(
+        FormikContainer(ProjectFormScreenContainer),
+      ),
     ),
   ),
 );
