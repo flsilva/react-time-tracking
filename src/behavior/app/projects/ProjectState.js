@@ -133,6 +133,9 @@ export const getEntities = (state, _query = QUERY_ALL) => {
   };
 };
 
+export const getError = state => state.projects.error;
+export const getIsConnecting = state => state.projects.isConnecting;
+
 export default combineReducers({
   error,
   fetchedQueries,
