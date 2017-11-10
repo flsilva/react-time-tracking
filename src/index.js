@@ -38,7 +38,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(sagas);
-initApp(store);
+initApp(store, browserHistory);
 
 ReactDOM.render(
   <Provider store={store}>

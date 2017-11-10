@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import UserProvider from './behavior/UserProvider';
+import { getNavigator } from './behavior/app/navigation';
 import {
   UserIsAuthenticatedRedir,
   UserIsNotAuthenticatedRedir,
@@ -38,7 +39,7 @@ const NotAuthenticatedAppContainer = withRouter(
 const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
   withQuery(generateQueryForRelationship('author'))(
     withProjectEntity(
-      withProjectFormik(
+      withProjectFormik(getNavigator)(
         withFormik(ProjectFormScreenContainer),
       ),
     ),
