@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 
 export default (FormComponent) => {
-  function FormikContainer({ initialValues, onSubmit, ...childProps }) {
+  function withFormik(props) {
     return (
       <Formik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
+        initialValues={props.initialValues}
+        onSubmit={props.onSubmit}
         render={formikProps => (
           <FormComponent
-            {...childProps}
+            {...props}
             {...formikProps}
           />
         )}
@@ -18,11 +18,11 @@ export default (FormComponent) => {
     );
   }
 
-  FormikContainer.propTypes = {
+  withFormik.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     initialValues: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
-  return FormikContainer;
+  return withFormik;
 };
