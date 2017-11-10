@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-export default ({ createEntity, successCb, toFormValues, updateEntity }) => (
+export default ({ createEntity, deleteEntity, successCb, toFormValues, updateEntity }) => (
   (WrappedComponent) => {
     function withCrudForm(props) {
       const onSubmit = (values, entity) => {
@@ -17,9 +17,9 @@ export default ({ createEntity, successCb, toFormValues, updateEntity }) => (
       return (
         <WrappedComponent
           {...props}
+          deleteEntity={() => props.deleteEntity(props.entity.id, successCb)}
           initialValues={toFormValues(props.entity)}
           onSubmit={values => onSubmit(values, props.entity)}
-          successCb={successCb}
           toFormValues={toFormValues}
         />
       );
@@ -27,16 +27,18 @@ export default ({ createEntity, successCb, toFormValues, updateEntity }) => (
 
     withCrudForm.propTypes = {
       createEntity: PropTypes.func.isRequired,
+      deleteEntity: PropTypes.func,
       entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
       updateEntity: PropTypes.func.isRequired,
     };
 
     withCrudForm.defaultProps = {
+      deleteEntity: undefined,
       entity: undefined,
     };
 
     const mapDispatchToProps = dispatch => ({
-      ...bindActionCreators({ createEntity, updateEntity }, dispatch),
+      ...bindActionCreators({ createEntity, deleteEntity, updateEntity }, dispatch),
     });
 
     return connect(

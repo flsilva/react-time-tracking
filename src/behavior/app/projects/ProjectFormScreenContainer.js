@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import isString from 'lodash/isString';
 import { getNotifications } from '../utils';
 import ScreenBody from '../../../ui/app/common/ScreenBody';
 import Notifications from '../../../ui/app/utils/Notifications';
 import ProjectFormAppBar from '../../../ui/app/projects/ProjectFormAppBar';
 import ProjectForm from '../../../ui/app/projects/ProjectForm';
-import { deleteEntity } from './ProjectActions';
 
 class ProjectFormScreenContainer extends Component {
   componentWillReceiveProps(nextProps) {
@@ -17,14 +14,6 @@ class ProjectFormScreenContainer extends Component {
     }
   }
 
-  deleteEntity = (id) => {
-    this.props.deleteEntity(id, this.redirectToList);
-  }
-
-  redirectToList = () => {
-    this.props.history.push('/app/projects');
-  };
-
   render() {
     const { entity, error, handleChange, handleSubmit, isConnecting, values } = this.props;
     const isEditing = entity && isString(entity.id);
@@ -32,7 +21,7 @@ class ProjectFormScreenContainer extends Component {
     return (
       <div>
         <ProjectFormAppBar
-          deleteHandler={() => this.deleteEntity(entity.id)}
+          deleteHandler={this.props.deleteEntity}
           goBackHandler={this.props.history.goBack}
           isEditing={isEditing}
           submitHandler={handleSubmit}
@@ -71,11 +60,4 @@ ProjectFormScreenContainer.defaultProps = {
   isConnecting: false,
 };
 
-const mapDispatchToProps = dispatch => ({
-  ...bindActionCreators({ deleteEntity }, dispatch),
-});
-
-export default connect(
-  undefined,
-  mapDispatchToProps,
-)(ProjectFormScreenContainer);
+export default ProjectFormScreenContainer;

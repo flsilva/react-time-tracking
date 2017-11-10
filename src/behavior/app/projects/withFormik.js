@@ -1,5 +1,5 @@
 import withCrudForm from '../utils/withCrudForm';
-import { createEntity, updateEntity } from './ProjectActions';
+import { createEntity, deleteEntity, updateEntity } from './ProjectActions';
 
 export default (getNavigator) => {
   const successCb = () => {
@@ -12,6 +12,7 @@ export default (getNavigator) => {
 
   return withCrudForm({
     createEntity,
+    deleteEntity,
     successCb,
     toFormValues,
     updateEntity,
