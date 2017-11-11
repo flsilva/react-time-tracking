@@ -12,7 +12,7 @@ import FaqScreen from './ui/website/faq/FaqScreen';
 import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
 import withRouterParams from './behavior/app/utils/withRouterParams';
 import withQuery from './behavior/app/utils/withQuery';
-import withFormik from './behavior/app/utils/withFormik';
+import withForm from './behavior/app/utils/withForm';
 import AppLayout from './ui/app/AppLayout';
 import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
 import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
@@ -22,7 +22,7 @@ import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
 import StopwatchScreenContainer from './behavior/app/stopwatches/StopwatchScreenContainer';
 import ProjectListScreenContainerWithQuery from './behavior/app/projects/ProjectListScreenContainerWithQuery';
 import withProjectEntity from './behavior/app/projects/withEntity';
-import withProjectFormik from './behavior/app/projects/withFormik';
+import withProjectEntityForm from './behavior/app/projects/withEntityForm';
 import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
 import TimeLogListScreenContainerWithQuery from './behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
 import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
@@ -39,8 +39,8 @@ const NotAuthenticatedAppContainer = withRouter(
 const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
   withQuery(generateQueryForRelationship('author'))(
     withProjectEntity(
-      withProjectFormik(getNavigator)(
-        withFormik(ProjectFormScreenContainer),
+      withProjectEntityForm(getNavigator)(
+        withForm(ProjectFormScreenContainer),
       ),
     ),
   ),
