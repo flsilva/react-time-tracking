@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import UserProvider from './behavior/UserProvider';
 import { getNavigator } from './behavior/app/navigation';
+import withNavBack from './behavior/app/navigation/withNavBack';
 import {
   UserIsAuthenticatedRedir,
   UserIsNotAuthenticatedRedir,
@@ -40,7 +41,9 @@ const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
   withQuery(generateQueryForRelationship('author'))(
     withProjectEntity(
       withProjectEntityForm(getNavigator)(
-        withForm(ProjectFormScreenContainer),
+        withForm(
+          withNavBack(ProjectFormScreenContainer),
+        ),
       ),
     ),
   ),

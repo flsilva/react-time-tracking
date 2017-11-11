@@ -22,7 +22,7 @@ class ProjectFormScreenContainer extends Component {
       <div>
         <ProjectFormAppBar
           deleteHandler={this.props.deleteEntity}
-          goBackHandler={this.props.history.goBack}
+          goBackHandler={this.props.navBack}
           isEditing={isEditing}
           submitHandler={handleSubmit}
         />
@@ -44,11 +44,8 @@ ProjectFormScreenContainer.propTypes = {
   error: PropTypes.arrayOf(PropTypes.object),
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  history: PropTypes.shape({
-    goBack: PropTypes.func.isRequired,
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   isConnecting: PropTypes.bool,
+  navBack: PropTypes.func.isRequired,
   setValues: PropTypes.func.isRequired,
   toFormValues: PropTypes.func.isRequired,
   values: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
