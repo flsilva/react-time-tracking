@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 
 export default (FormComponent) => {
-  function withFormik(props) {
+  function withForm(props) {
     return (
       <Formik
         initialValues={props.initialValues}
@@ -18,11 +18,11 @@ export default (FormComponent) => {
     );
   }
 
-  withFormik.propTypes = {
+  withForm.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     initialValues: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
-  return withFormik;
+  return withForm;
 };
