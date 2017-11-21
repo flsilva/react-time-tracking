@@ -4,4 +4,6 @@ export default (_navigator) => {
   navigator = _navigator;
 };
 
-export const getNavigator = () => navigator;
+export const getNavBack = () => navigator.goBack;
+
+export const getNavTo = () => navigator.push;

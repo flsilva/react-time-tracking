@@ -4,11 +4,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createEntity, deleteEntity, updateEntity } from './ProjectActions';
 
-export default getNavigator => (
+export default navTo => (
   (WrappedComponent) => {
     function withEntityForm(props) {
       const successCb = () => {
-        getNavigator().push('/app/projects');
+        navTo('/app/projects');
       };
 
       const onDeleteEntity = () => {

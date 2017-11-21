@@ -1,6 +1,6 @@
 import React from 'react';
-import { getNavigator } from './';
+import { getNavBack } from './';
 
 export default WrappedComponent => props => (
-  <WrappedComponent navBack={getNavigator().goBack} {...props} />
+  <WrappedComponent navBack={getNavBack()} {...props} />
 );
