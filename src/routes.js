@@ -14,6 +14,7 @@ import LandingScreenContainer from './behavior/website/landing/LandingScreenCont
 import withRouterParams from './behavior/app/utils/withRouterParams';
 import withQuery from './behavior/app/utils/withQuery';
 import withForm from './behavior/app/utils/withForm';
+import withAsyncEntityForm from './behavior/app/utils/withAsyncEntityForm';
 import AppLayout from './ui/app/AppLayout';
 import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
 import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
@@ -42,7 +43,9 @@ const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
     withProjectEntity(
       withProjectEntityForm(getNavigator)(
         withForm(
-          withNavBack(ProjectFormScreenContainer),
+          withNavBack(
+            withAsyncEntityForm(ProjectFormScreenContainer),
+          ),
         ),
       ),
     ),
