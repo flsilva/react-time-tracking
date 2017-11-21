@@ -11,6 +11,10 @@ export default getNavigator => (
         getNavigator().push('/app/projects');
       };
 
+      const onDeleteEntity = () => {
+        props.deleteEntity(props.entity.id, successCb);
+      };
+
       const onSubmit = (values) => {
         const { entity } = props;
 
@@ -28,7 +32,7 @@ export default getNavigator => (
       return (
         <WrappedComponent
           {...props}
-          deleteEntity={() => props.deleteEntity(props.entity.id, successCb)}
+          deleteEntity={onDeleteEntity}
           initialValues={toFormValues(props.entity)}
           onSubmit={onSubmit}
           toFormValues={toFormValues}
