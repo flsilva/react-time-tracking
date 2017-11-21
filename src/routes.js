@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import UserProvider from './behavior/UserProvider';
-import { getNavTo } from './behavior/app/navigation';
 import withNavBack from './behavior/app/navigation/withNavBack';
+import withNavTo from './behavior/app/navigation/withNavTo';
 import {
   UserIsAuthenticatedRedir,
   UserIsNotAuthenticatedRedir,
@@ -51,10 +51,12 @@ export default () => {
   const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
     withQuery(generateQueryForRelationship('author'))(
       withProjectEntity(
-        withProjectEntityForm(getNavTo())(
-          withForm(
-            withNavBack(
-              withAsyncEntityForm(ProjectFormScreenContainer),
+        withNavTo(
+          withProjectEntityForm(
+            withForm(
+              withNavBack(
+                withAsyncEntityForm(ProjectFormScreenContainer),
+              ),
             ),
           ),
         ),
