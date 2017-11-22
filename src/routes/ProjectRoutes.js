@@ -14,7 +14,7 @@ const navToProjectList = () => {
   getNavTo()('/app/projects');
 };
 
-export const ProjectFormRoute = pipe([
+export const EditProjectRoute = pipe([
   withAsyncEntityForm,
   withNavBack,
   withForm,
@@ -22,4 +22,10 @@ export const ProjectFormRoute = pipe([
   withProjectEntity,
   withQuery(generateQueryForRelationship('author')),
   withRouterParams({ projectId: 'id' }),
+])(ProjectFormScreenContainer);
+
+export const NewProjectRoute = pipe([
+  withNavBack,
+  withForm,
+  withProjectEntityForm(navToProjectList),
 ])(ProjectFormScreenContainer);

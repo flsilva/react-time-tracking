@@ -21,7 +21,7 @@ import ProjectListScreenContainerWithQuery from '../behavior/app/projects/Projec
 import TimeLogListScreenContainerWithQuery from '../behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
 import TimeLogFormScreenContainer from '../behavior/app/time-logs/TimeLogFormScreenContainer';
 import { generateQueryForRelationship } from '../behavior/app/utils/QueryUtils';
-import { ProjectFormRoute } from './ProjectRoutes';
+import { EditProjectRoute, NewProjectRoute } from './ProjectRoutes';
 
 export default () => {
   const AuthenticatedAppContainer = withRouter(
@@ -74,8 +74,8 @@ export default () => {
                   <Switch>
                     <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
                     <Route exact path="/app/projects" component={ProjectListScreenContainerWithQuery(999)} />
-                    <Route exact path="/app/projects/new" component={ProjectFormRoute} />
-                    <Route exact path="/app/projects/:projectId" component={ProjectFormRoute} />
+                    <Route exact path="/app/projects/new" component={NewProjectRoute} />
+                    <Route exact path="/app/projects/:projectId" component={EditProjectRoute} />
                     <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />
                     <Route exact path="/app/time-logs/new" component={TimeLogFormScreenContainer} />
                     <Route exact path="/app/time-logs/:timeLogId" component={TimeLogFormScreenContainer} />

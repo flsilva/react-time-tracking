@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createEntity, deleteEntity, updateEntity } from './ProjectActions';
+import { getIsConnecting } from './ProjectState';
 
 export default successCb => (
   (WrappedComponent) => {
@@ -40,20 +41,26 @@ export default successCb => (
       createEntity: PropTypes.func.isRequired,
       deleteEntity: PropTypes.func,
       entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
+      isConnecting: PropTypes.bool,
       updateEntity: PropTypes.func.isRequired,
     };
 
     withEntityForm.defaultProps = {
       deleteEntity: undefined,
       entity: undefined,
+      isConnecting: false,
     };
+
+    const mapStateToProps = state => ({
+      isConnecting: getIsConnecting(state),
+    });
 
     const mapDispatchToProps = dispatch => ({
       ...bindActionCreators({ createEntity, deleteEntity, updateEntity }, dispatch),
     });
 
     return connect(
-      undefined,
+      mapStateToProps,
       mapDispatchToProps,
     )(withEntityForm);
   }
