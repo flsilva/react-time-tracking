@@ -1,36 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import pipe from 'lodash/fp/pipe';
-import UserProvider from './behavior/UserProvider';
-import withNavBack from './behavior/app/navigation/withNavBack';
-import withNavTo from './behavior/app/navigation/withNavTo';
+import UserProvider from '../behavior/UserProvider';
 import {
   UserIsAuthenticatedRedir,
   UserIsNotAuthenticatedRedir,
-} from './behavior/app/auth/UserAuthWrappers';
-import Layout from './ui/Layout';
-import WebsiteLayout from './ui/website/WebsiteLayout';
-import FaqScreen from './ui/website/faq/FaqScreen';
-import LandingScreenContainer from './behavior/website/landing/LandingScreenContainer';
-import withRouterParams from './behavior/app/utils/withRouterParams';
-import withQuery from './behavior/app/utils/withQuery';
-import withForm from './behavior/app/utils/withForm';
-import withAsyncEntityForm from './behavior/app/utils/withAsyncEntityForm';
-import AppLayout from './ui/app/AppLayout';
-import SignUpScreenContainer from './behavior/app/auth/SignUpScreenContainer';
-import SignUpSuccessScreen from './ui/app/auth/SignUpSuccessScreen';
-import SignUpConfirmationScreenContainer from './behavior/app/auth/SignUpConfirmationScreenContainer';
-import SignInScreenContainer from './behavior/app/auth/SignInScreenContainer';
-import SignOutScreenContainer from './behavior/app/auth/SignOutScreenContainer';
-import StopwatchScreenContainer from './behavior/app/stopwatches/StopwatchScreenContainer';
-import ProjectListScreenContainerWithQuery from './behavior/app/projects/ProjectListScreenContainerWithQuery';
-import withProjectEntity from './behavior/app/projects/withEntity';
-import withProjectEntityForm from './behavior/app/projects/withEntityForm';
-import ProjectFormScreenContainer from './behavior/app/projects/ProjectFormScreenContainer';
-import TimeLogListScreenContainerWithQuery from './behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
-import TimeLogFormScreenContainer from './behavior/app/time-logs/TimeLogFormScreenContainer';
-import { generateQueryForRelationship } from './behavior/app/utils/QueryUtils';
+} from '../behavior/app/auth/UserAuthWrappers';
+import Layout from '../ui/Layout';
+import WebsiteLayout from '../ui/website/WebsiteLayout';
+import FaqScreen from '../ui/website/faq/FaqScreen';
+import LandingScreenContainer from '../behavior/website/landing/LandingScreenContainer';
+import AppLayout from '../ui/app/AppLayout';
+import SignUpScreenContainer from '../behavior/app/auth/SignUpScreenContainer';
+import SignUpSuccessScreen from '../ui/app/auth/SignUpSuccessScreen';
+import SignUpConfirmationScreenContainer from '../behavior/app/auth/SignUpConfirmationScreenContainer';
+import SignInScreenContainer from '../behavior/app/auth/SignInScreenContainer';
+import SignOutScreenContainer from '../behavior/app/auth/SignOutScreenContainer';
+import StopwatchScreenContainer from '../behavior/app/stopwatches/StopwatchScreenContainer';
+import ProjectListScreenContainerWithQuery from '../behavior/app/projects/ProjectListScreenContainerWithQuery';
+import TimeLogListScreenContainerWithQuery from '../behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
+import TimeLogFormScreenContainer from '../behavior/app/time-logs/TimeLogFormScreenContainer';
+import { generateQueryForRelationship } from '../behavior/app/utils/QueryUtils';
+import { ProjectFormRoute } from './ProjectRoutes';
 
 export default () => {
   const AuthenticatedAppContainer = withRouter(
@@ -48,17 +39,6 @@ export default () => {
   NotAuthenticatedAppContainer.propTypes = {
     children: PropTypes.element.isRequired,
   };
-
-  const ProjectFormRoute = pipe([
-    withAsyncEntityForm,
-    withNavBack,
-    withForm,
-    withProjectEntityForm,
-    withNavTo,
-    withProjectEntity,
-    withQuery(generateQueryForRelationship('author')),
-    withRouterParams({ projectId: 'id' }),
-  ])(ProjectFormScreenContainer);
 
   const StopwatchScreenContainerWithQuery = props => (
     <StopwatchScreenContainer getQuery={generateQueryForRelationship('project')} {...props} />
