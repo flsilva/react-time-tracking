@@ -17,11 +17,10 @@ import SignUpConfirmationScreenContainer from '../behavior/app/auth/SignUpConfir
 import SignInScreenContainer from '../behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from '../behavior/app/auth/SignOutScreenContainer';
 import StopwatchScreenContainer from '../behavior/app/stopwatches/StopwatchScreenContainer';
-import ProjectListScreenContainerWithQuery from '../behavior/app/projects/ProjectListScreenContainerWithQuery';
 import TimeLogListScreenContainerWithQuery from '../behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
 import TimeLogFormScreenContainer from '../behavior/app/time-logs/TimeLogFormScreenContainer';
 import { generateQueryForRelationship } from '../behavior/app/utils/QueryUtils';
-import { EditProjectRoute, NewProjectRoute } from './ProjectRoutes';
+import { EditProjectRoute, NewProjectRoute, ProjectListRoute } from './ProjectRoutes';
 
 export default () => {
   const AuthenticatedAppContainer = withRouter(
@@ -73,7 +72,7 @@ export default () => {
                 <AuthenticatedAppContainer>
                   <Switch>
                     <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
-                    <Route exact path="/app/projects" component={ProjectListScreenContainerWithQuery(999)} />
+                    <Route exact path="/app/projects" component={ProjectListRoute(999)} />
                     <Route exact path="/app/projects/new" component={NewProjectRoute} />
                     <Route exact path="/app/projects/:projectId" component={EditProjectRoute} />
                     <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />

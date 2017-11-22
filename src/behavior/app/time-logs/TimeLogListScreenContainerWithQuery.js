@@ -1,17 +1,22 @@
-import flow from 'lodash/flow';
+import pipe from 'lodash/fp/pipe';
 import withPagination from '../utils/withPagination';
-import { generateQueryForPagination, generateQueryForRelationship } from '../utils/QueryUtils';
+import withQuery from '../utils/withQuery';
+import {
+  generateQueryForPagination,
+  generateQueryForRelationship,
+} from '../utils/QueryUtils';
 import TimeLogListScreenContainer from './TimeLogListScreenContainer';
 
-const getNextPageQuery = itemsPerPage => page => (
-  flow([
+const composeQueryFunction = itemsPerPage => page => (
+  pipe([
     generateQueryForRelationship('author,project'),
     generateQueryForPagination({ page, itemsPerPage, sort: '-created-at' }),
   ])()
 );
 
 export default itemsPerPage => (
-  withPagination(
-    getNextPageQuery(itemsPerPage),
-  )(TimeLogListScreenContainer)
+  pipe([
+    withPagination,
+    withQuery(composeQueryFunction(itemsPerPage)),
+  ])(TimeLogListScreenContainer)
 );

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-const withPagination = getNextPageQuery => WrappedComponent => (
-  class extends Component {
+export default (WrappedComponent) => {
+  class WithPagination extends Component {
     state = { currentPage: 0, queries: {} };
 
     getQueriesAsArray = () => (
@@ -10,7 +11,7 @@ const withPagination = getNextPageQuery => WrappedComponent => (
 
     getNextPageQuery = () => {
       const nextPage = this.state.currentPage + 1;
-      const query = getNextPageQuery(nextPage);
+      const query = this.props.getQuery(nextPage);
 
       this.setState(prevState => ({
         currentPage: nextPage,
@@ -28,13 +29,17 @@ const withPagination = getNextPageQuery => WrappedComponent => (
     render() {
       return (
         <WrappedComponent
+          {...this.props}
           getNextPageQuery={this.getNextPageQuery}
           queries={this.getQueriesAsArray()}
-          {...this.props}
         />
       );
     }
   }
-);
 
-export default withPagination;
+  WithPagination.propTypes = {
+    getQuery: PropTypes.func.isRequired,
+  };
+
+  return WithPagination;
+};
