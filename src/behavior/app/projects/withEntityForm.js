@@ -4,60 +4,57 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createEntity, deleteEntity, updateEntity } from './ProjectActions';
 
-export default (WrappedComponent) => {
-  function withEntityForm(props) {
-    const successCb = () => {
-      props.navTo('/app/projects');
+export default successCb => (
+  (WrappedComponent) => {
+    function withEntityForm(props) {
+      const onDeleteEntity = () => {
+        props.deleteEntity(props.entity.id, successCb);
+      };
+
+      const onSubmit = (values) => {
+        const { entity } = props;
+
+        if (entity) {
+          props.updateEntity(entity.id, values, successCb);
+        } else {
+          props.createEntity(values, successCb);
+        }
+      };
+
+      const toFormValues = (entity = {}) => ({
+        name: entity.name || '',
+      });
+
+      return (
+        <WrappedComponent
+          {...props}
+          deleteEntity={onDeleteEntity}
+          initialValues={toFormValues(props.entity)}
+          onSubmit={onSubmit}
+          toFormValues={toFormValues}
+        />
+      );
+    }
+
+    withEntityForm.propTypes = {
+      createEntity: PropTypes.func.isRequired,
+      deleteEntity: PropTypes.func,
+      entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
+      updateEntity: PropTypes.func.isRequired,
     };
 
-    const onDeleteEntity = () => {
-      props.deleteEntity(props.entity.id, successCb);
+    withEntityForm.defaultProps = {
+      deleteEntity: undefined,
+      entity: undefined,
     };
 
-    const onSubmit = (values) => {
-      const { entity } = props;
-
-      if (entity) {
-        props.updateEntity(entity.id, values, successCb);
-      } else {
-        props.createEntity(values, successCb);
-      }
-    };
-
-    const toFormValues = (entity = {}) => ({
-      name: entity.name || '',
+    const mapDispatchToProps = dispatch => ({
+      ...bindActionCreators({ createEntity, deleteEntity, updateEntity }, dispatch),
     });
 
-    return (
-      <WrappedComponent
-        {...props}
-        deleteEntity={onDeleteEntity}
-        initialValues={toFormValues(props.entity)}
-        onSubmit={onSubmit}
-        toFormValues={toFormValues}
-      />
-    );
+    return connect(
+      undefined,
+      mapDispatchToProps,
+    )(withEntityForm);
   }
-
-  withEntityForm.propTypes = {
-    createEntity: PropTypes.func.isRequired,
-    deleteEntity: PropTypes.func,
-    entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
-    navTo: PropTypes.func.isRequired,
-    updateEntity: PropTypes.func.isRequired,
-  };
-
-  withEntityForm.defaultProps = {
-    deleteEntity: undefined,
-    entity: undefined,
-  };
-
-  const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators({ createEntity, deleteEntity, updateEntity }, dispatch),
-  });
-
-  return connect(
-    undefined,
-    mapDispatchToProps,
-  )(withEntityForm);
-};
+);
