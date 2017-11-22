@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import pipe from 'lodash/fp/pipe';
 import UserProvider from './behavior/UserProvider';
 import withNavBack from './behavior/app/navigation/withNavBack';
 import withNavTo from './behavior/app/navigation/withNavTo';
@@ -48,21 +49,16 @@ export default () => {
     children: PropTypes.element.isRequired,
   };
 
-  const ProjectFormRoute = withRouterParams({ projectId: 'id' })(
-    withQuery(generateQueryForRelationship('author'))(
-      withProjectEntity(
-        withNavTo(
-          withProjectEntityForm(
-            withForm(
-              withNavBack(
-                withAsyncEntityForm(ProjectFormScreenContainer),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
+  const ProjectFormRoute = pipe([
+    withAsyncEntityForm,
+    withNavBack,
+    withForm,
+    withProjectEntityForm,
+    withNavTo,
+    withProjectEntity,
+    withQuery(generateQueryForRelationship('author')),
+    withRouterParams({ projectId: 'id' }),
+  ])(ProjectFormScreenContainer);
 
   const StopwatchScreenContainerWithQuery = props => (
     <StopwatchScreenContainer getQuery={generateQueryForRelationship('project')} {...props} />
