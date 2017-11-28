@@ -12,6 +12,7 @@ import { getNavTo } from '../behavior/app/navigation';
 import withAsyncEntityForm from '../behavior/app/utils/withAsyncEntityForm';
 import withProjectEntity from '../behavior/app/projects/withEntity';
 import withProjectEntityForm from '../behavior/app/projects/withEntityForm';
+import withPaginatedEntities from '../behavior/app/projects/withPaginatedEntities';
 import ProjectFormScreenContainer from '../behavior/app/projects/ProjectFormScreenContainer';
 import ProjectListScreenContainer from '../behavior/app/projects/ProjectListScreenContainer';
 
@@ -21,6 +22,14 @@ const composeQueryFunction = itemsPerPage => page => (
     generateQueryForPagination({ page, itemsPerPage, sort: '-created-at' }),
   ])()
 );
+
+const navToEntity = (id) => {
+  getNavTo()(`/app/projects/${id}`);
+};
+
+const navToNewEntity = () => {
+  getNavTo()('/app/projects/new');
+};
 
 const navToProjectList = () => {
   getNavTo()('/app/projects');
@@ -42,9 +51,10 @@ export const NewProjectRoute = pipe([
   withProjectEntityForm(navToProjectList),
 ])(ProjectFormScreenContainer);
 
-export const ProjectListRoute = itemsPerPage => (
+export const ProjectListRoute = pageSize => (
   pipe([
+    withPaginatedEntities,
     withPagination,
-    withQuery(composeQueryFunction(itemsPerPage)),
-  ])(ProjectListScreenContainer)
+    withQuery(composeQueryFunction(pageSize)),
+  ])(ProjectListScreenContainer({ navToEntity, navToNewEntity }))
 );

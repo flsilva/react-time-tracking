@@ -47,6 +47,7 @@ const fetchedQueries = (state = {}, { payload, type }) => {
         ...state,
         [query]: {
           ids: payload.data.data.map(entity => entity.id),
+          meta: payload.data.meta,
           links: payload.data.links,
         },
       };
@@ -129,7 +130,8 @@ export const getEntities = (state, _query = QUERY_ALL) => {
 
   return {
     entities: fetchedQuery.ids.map(id => getEntityById(state, id)),
-    pagination: fetchedQuery.links,
+    meta: fetchedQuery.meta,
+    query: _query,
   };
 };
 

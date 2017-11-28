@@ -72,7 +72,7 @@ export default () => {
                 <AuthenticatedAppContainer>
                   <Switch>
                     <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
-                    <Route exact path="/app/projects" component={ProjectListRoute(999)} />
+                    <Route exact path="/app/projects" component={ProjectListRoute(3)} />
                     <Route exact path="/app/projects/new" component={NewProjectRoute} />
                     <Route exact path="/app/projects/:projectId" component={EditProjectRoute} />
                     <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />
