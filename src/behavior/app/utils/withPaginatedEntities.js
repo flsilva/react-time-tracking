@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import flatten from 'lodash/flatten';
+import last from 'lodash/last';
+import pipe from 'lodash/fp/pipe';
 
 export default ({ getEntities, getError, getIsConnecting, readEntities }) => (
   (WrappedComponent) => {
@@ -49,13 +51,6 @@ export default ({ getEntities, getError, getIsConnecting, readEntities }) => (
       queries: undefined,
     };
 
-    const getResults = (state, queries) => (
-      queries && queries.length ?
-        queries.map(paginatedQuery => getEntities(state, paginatedQuery.query))
-          .filter(result => result)
-        : undefined
-    );
-
     const getEntitiesFromResults = results => (
       results && results.length ?
         flatten(
@@ -65,28 +60,33 @@ export default ({ getEntities, getError, getIsConnecting, readEntities }) => (
         ) : undefined
     );
 
-    const mapStateToProps = (state, ownProps) => {
-      const results = getResults(state, ownProps.queries);
-      const entities = getEntitiesFromResults(results);
+    const getResults = (state, queries) => (
+      queries && queries.length ?
+        queries.map(paginatedQuery => getEntities(state, paginatedQuery.query))
+          .filter(result => result)
+        : undefined
+    );
 
-      const lastResult = results && results.length ?
-        results[results.length - 1] : undefined;
+    const getTotalEntities = result => (result ? result.meta['total-records'] : undefined);
 
-      const lastResultMeta = lastResult ? lastResult.meta : undefined;
-      const totalEntities = lastResultMeta ? lastResultMeta['total-records'] : 1;
-      const totalPages = lastResultMeta ? lastResultMeta['total-pages'] : 1;
-      const hasNextPage = totalPages && totalPages > ownProps.currentPage;
+    const getTotalPages = result => (result ? result.meta['total-pages'] : undefined);
 
-      return {
+    const hasNextPage = (currentPage, totalPages) => (
+      totalPages && totalPages > currentPage
+    );
+
+    const mapStateToProps = (state, { currentPage, queries }) => (
+      pipe(
+        props => ({ ...props, results: getResults(state, queries) }),
+        props => ({ ...props, entities: getEntitiesFromResults(props.results) }),
+        props => ({ ...props, totalEntities: getTotalEntities(last(props.results)) }),
+        props => ({ ...props, totalPages: getTotalPages(last(props.results)) }),
+        props => ({ ...props, hasNextPage: hasNextPage(currentPage, props.totalPages) }),
+      )({
         error: getError(state),
-        entities,
-        hasNextPage,
         isConnecting: getIsConnecting(state),
-        results,
-        totalEntities,
-        totalPages,
-      };
-    };
+      })
+    );
 
     const mapDispatchToProps = dispatch => ({
       ...bindActionCreators({ readEntities }, dispatch),
