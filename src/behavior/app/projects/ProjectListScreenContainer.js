@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import AddFAB from '../../../ui/common/button/AddFAB';
@@ -8,49 +8,32 @@ import SimpleAppBar from '../../../ui/app/header/SimpleAppBar';
 import { getNotifications } from '../utils';
 
 export default ({ navToEntity, navToNewEntity }) => {
-  class ProjectListScreenContainer extends Component {
-    componentDidMount() {
-      this.props.readNextPage();
-    }
+  function ProjectListScreenContainer(props) {
+    const { entities, error, hasNextPage, isConnecting, readNextPage } = props;
 
-    shouldDisplayLoadButton = () => {
-      const { hasNextPage, isConnecting } = this.props;
-      return hasNextPage && !isConnecting;
-    };
+    const shouldDisplayLoadButton = () => hasNextPage && !isConnecting;
 
-    render() {
-      const { entities, error, isConnecting } = this.props;
-
-      return (
-        <div>
-          <SimpleAppBar title="Projects" />
-          <ProjectList entities={entities} onClickProjectItem={navToEntity} />
-          {!isConnecting &&
-            <AddFAB onClick={navToNewEntity} />
-          }
-          {this.shouldDisplayLoadButton() &&
-            <RaisedButton
-              primary
-              fullWidth
-              disabled={isConnecting}
-              style={{ marginTop: 20 }}
-              label="Load More"
-              onClick={this.props.readNextPage}
-            />
-          }
-          <Notifications notifications={getNotifications(error, isConnecting)} />
-        </div>
-      );
-    }
+    return (
+      <div>
+        <SimpleAppBar title="Projects" />
+        <ProjectList entities={entities} onClickProjectItem={navToEntity} />
+        {!isConnecting &&
+          <AddFAB onClick={navToNewEntity} />
+        }
+        {shouldDisplayLoadButton() &&
+          <RaisedButton
+            primary
+            fullWidth
+            disabled={isConnecting}
+            style={{ marginTop: 20 }}
+            label="Load More"
+            onClick={readNextPage}
+          />
+        }
+        <Notifications notifications={getNotifications(error, isConnecting)} />
+      </div>
+    );
   }
-
-  ProjectListScreenContainer.contextTypes = {
-    router: PropTypes.shape({
-      history: PropTypes.shape({
-        push: PropTypes.func.isRequired,
-      }).isRequired,
-    }).isRequired,
-  };
 
   ProjectListScreenContainer.propTypes = {
     entities: PropTypes.arrayOf(PropTypes.object),

@@ -6,9 +6,7 @@ import SheetIcon from 'material-ui/svg-icons/action/description';
 import ScreenBody from '../../../ui/app/common/ScreenBody';
 import WithIcon from '../../../ui/app/common/WithIcon';
 import withDialog from '../../../ui/common/withDialog';
-import { generateQueryForRelationship } from '../utils/QueryUtils';
 import DatePickerContainer from './DatePickerContainer';
-import StopwatchProjectDropDownContainer from './StopwatchProjectDropDownContainer';
 import DescriptionButtonContainer from './DescriptionButtonContainer';
 import StopwatchFormButtonsContainer from './StopwatchFormButtonsContainer';
 import DescriptionFormDialogContainer from './DescriptionFormDialogContainer';
@@ -20,57 +18,61 @@ import DescriptionFormDialogContainer from './DescriptionFormDialogContainer';
  * That way when we navigate between stopwatch and project listing
  * screens only one http request is needed.
  */
+/*
 const StopwatchProjectDropDownContainerWithQuery = props => (
   <StopwatchProjectDropDownContainer
     {...props}
     getQuery={generateQueryForRelationship('author')}
   />
 );
+*/
 
-const StopwatchScreenBodyContainer = ({ entity }, { muiTheme: { palette } }) => {
-  const description = entity ? entity.description : undefined;
+export default (ProjectDropDown) => {
+  const StopwatchScreenBodyContainer = ({ entity }, { muiTheme: { palette } }) => {
+    const description = entity ? entity.description : undefined;
 
-  const DescriptionButtonContainerWithData = props => (
-    <DescriptionButtonContainer description={description} {...props} />
-  );
+    const DescriptionButtonContainerWithData = props => (
+      <DescriptionButtonContainer description={description} {...props} />
+    );
 
-  const DescriptionFormDialogContainerWithEntity = props => (
-    <DescriptionFormDialogContainer entity={entity} {...props} />
-  );
+    const DescriptionFormDialogContainerWithEntity = props => (
+      <DescriptionFormDialogContainer entity={entity} {...props} />
+    );
 
-  const DescriptionButtonContainerWithDialog = withDialog(
-    DescriptionButtonContainerWithData,
-    DescriptionFormDialogContainerWithEntity,
-  );
+    const DescriptionButtonContainerWithDialog = withDialog(
+      DescriptionButtonContainerWithData,
+      DescriptionFormDialogContainerWithEntity,
+    );
 
-  return (
-    <ScreenBody>
-      <WithIcon icon={<CalendarIcon color={palette.accent1Color} />}>
-        <DatePickerContainer entity={entity} />
-      </WithIcon>
-      <WithIcon icon={<WorkIcon color={palette.accent1Color} />}>
-        <StopwatchProjectDropDownContainerWithQuery entity={entity} />
-      </WithIcon>
-      <WithIcon icon={<SheetIcon color={palette.accent1Color} />}>
-        <DescriptionButtonContainerWithDialog entity={entity} />
-      </WithIcon>
-      <StopwatchFormButtonsContainer entity={entity} />
-    </ScreenBody>
-  );
+    return (
+      <ScreenBody>
+        <WithIcon icon={<CalendarIcon color={palette.accent1Color} />}>
+          <DatePickerContainer entity={entity} />
+        </WithIcon>
+        <WithIcon icon={<WorkIcon color={palette.accent1Color} />}>
+          <ProjectDropDown entity={entity} />
+        </WithIcon>
+        <WithIcon icon={<SheetIcon color={palette.accent1Color} />}>
+          <DescriptionButtonContainerWithDialog entity={entity} />
+        </WithIcon>
+        <StopwatchFormButtonsContainer entity={entity} />
+      </ScreenBody>
+    );
+  };
+
+  StopwatchScreenBodyContainer.contextTypes = {
+    muiTheme: PropTypes.shape({
+      palette: PropTypes.object,
+    }),
+  };
+
+  StopwatchScreenBodyContainer.propTypes = {
+    entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
+  };
+
+  StopwatchScreenBodyContainer.defaultProps = {
+    entity: undefined,
+  };
+
+  return StopwatchScreenBodyContainer;
 };
-
-StopwatchScreenBodyContainer.contextTypes = {
-  muiTheme: PropTypes.shape({
-    palette: PropTypes.object,
-  }),
-};
-
-StopwatchScreenBodyContainer.propTypes = {
-  entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
-};
-
-StopwatchScreenBodyContainer.defaultProps = {
-  entity: undefined,
-};
-
-export default StopwatchScreenBodyContainer;

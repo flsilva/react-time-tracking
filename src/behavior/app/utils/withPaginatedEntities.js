@@ -6,10 +6,12 @@ import flatten from 'lodash/flatten';
 import last from 'lodash/last';
 import pipe from 'lodash/fp/pipe';
 
-export default ({ getEntities, getError, getIsConnecting, readEntities }) => (
+export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities }) => (
   (WrappedComponent) => {
     class WithPaginatedEntities extends Component {
-      state = { paginatedEntities: [] };
+      componentDidMount() {
+        if (autoLoad) this.readNextPage();
+      }
 
       readNextPage = () => this.readEntities(this.props.getNextPageQuery());
 

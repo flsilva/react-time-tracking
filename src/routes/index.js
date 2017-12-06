@@ -16,11 +16,10 @@ import SignUpSuccessScreen from '../ui/app/auth/SignUpSuccessScreen';
 import SignUpConfirmationScreenContainer from '../behavior/app/auth/SignUpConfirmationScreenContainer';
 import SignInScreenContainer from '../behavior/app/auth/SignInScreenContainer';
 import SignOutScreenContainer from '../behavior/app/auth/SignOutScreenContainer';
-import StopwatchScreenContainer from '../behavior/app/stopwatches/StopwatchScreenContainer';
 import TimeLogListScreenContainerWithQuery from '../behavior/app/time-logs/TimeLogListScreenContainerWithQuery';
 import TimeLogFormScreenContainer from '../behavior/app/time-logs/TimeLogFormScreenContainer';
-import { generateQueryForRelationship } from '../behavior/app/utils/QueryUtils';
 import { EditProjectRoute, NewProjectRoute, ProjectListRoute } from './ProjectRoutes';
+import { StopwatchRoute } from './StopwatchesRoutes';
 
 export default () => {
   const AuthenticatedAppContainer = withRouter(
@@ -38,10 +37,6 @@ export default () => {
   NotAuthenticatedAppContainer.propTypes = {
     children: PropTypes.element.isRequired,
   };
-
-  const StopwatchScreenContainerWithQuery = props => (
-    <StopwatchScreenContainer getQuery={generateQueryForRelationship('project')} {...props} />
-  );
 
   const TimeLogListScreenContainer = TimeLogListScreenContainerWithQuery(3);
 
@@ -71,8 +66,8 @@ export default () => {
               <AppLayout>
                 <AuthenticatedAppContainer>
                   <Switch>
-                    <Route exact path="/app" component={StopwatchScreenContainerWithQuery} />
-                    <Route exact path="/app/projects" component={ProjectListRoute(3)} />
+                    <Route exact path="/app" component={StopwatchRoute} />
+                    <Route exact path="/app/projects" component={ProjectListRoute(999)} />
                     <Route exact path="/app/projects/new" component={NewProjectRoute} />
                     <Route exact path="/app/projects/:projectId" component={EditProjectRoute} />
                     <Route exact path="/app/time-logs" component={TimeLogListScreenContainer} />

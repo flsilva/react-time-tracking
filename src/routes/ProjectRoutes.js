@@ -23,23 +23,23 @@ const composeQueryFunction = itemsPerPage => page => (
   ])()
 );
 
-const navToEntity = (id) => {
+export const navToEntities = () => {
+  getNavTo()('/app/projects');
+};
+
+export const navToEntity = (id) => {
   getNavTo()(`/app/projects/${id}`);
 };
 
-const navToNewEntity = () => {
+export const navToNewEntity = () => {
   getNavTo()('/app/projects/new');
-};
-
-const navToProjectList = () => {
-  getNavTo()('/app/projects');
 };
 
 export const EditProjectRoute = pipe([
   withAsyncEntityForm,
   withNavBack,
   withForm,
-  withProjectEntityForm(navToProjectList),
+  withProjectEntityForm(navToEntities),
   withProjectEntity,
   withQuery(generateQueryForRelationship('author')),
   withRouterParams({ projectId: 'id' }),
@@ -48,12 +48,12 @@ export const EditProjectRoute = pipe([
 export const NewProjectRoute = pipe([
   withNavBack,
   withForm,
-  withProjectEntityForm(navToProjectList),
+  withProjectEntityForm(navToEntities),
 ])(ProjectFormScreenContainer);
 
 export const ProjectListRoute = pageSize => (
   pipe([
-    withPaginatedEntities,
+    withPaginatedEntities({ autoLoad: true }),
     withPagination,
     withQuery(composeQueryFunction(pageSize)),
   ])(ProjectListScreenContainer({ navToEntity, navToNewEntity }))
