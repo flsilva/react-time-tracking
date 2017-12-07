@@ -13,7 +13,7 @@ import { getNotifications } from '../utils';
 import { getTimeObjectFromSeconds } from '../utils/TimeUtils';
 import * as TimeLogActions from './TimeLogActions';
 import { getEntityById } from './TimeLogState';
-import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
+import ProjectDropdownContainer from '../projects/ProjectDropdownContainer';
 
 /*
  * Although we don't need the "author" relationship object
@@ -22,8 +22,8 @@ import ProjectDropDownContainer from '../projects/ProjectDropDownContainer';
  * That way when we navigate between stopwatch and project listing
  * screens only one http request is needed.
  */
-const ProjectDropDownContainerWithQuery = props => (
-  <ProjectDropDownContainer getQuery={generateQueryForRelationship('author')} {...props} />
+const ProjectDropdownContainerWithQuery = props => (
+  <ProjectDropdownContainer getQuery={generateQueryForRelationship('author')} {...props} />
 );
 
 class TimeLogFormScreenContainer extends Component {
@@ -111,7 +111,7 @@ class TimeLogFormScreenContainer extends Component {
               <TimeLogForm
                 onCustomInputChange={setFieldValue}
                 onInputChange={handleChange}
-                projectDropDownClass={ProjectDropDownContainerWithQuery}
+                projectDropdownClass={ProjectDropdownContainerWithQuery}
                 values={values}
               />
             </div>

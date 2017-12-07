@@ -11,7 +11,7 @@ const createMenuItem = item => (
 
 const getItems = items => items.map(item => createMenuItem(item));
 
-const ProjectListDropDown = (props) => {
+const ProjectListDropdown = (props) => {
   const {
     isConnecting,
     name,
@@ -48,7 +48,7 @@ const ProjectListDropDown = (props) => {
   );
 };
 
-ProjectListDropDown.propTypes = {
+ProjectListDropdown.propTypes = {
   name: PropTypes.string,
   isConnecting: PropTypes.bool,
   onCreateProjectClick: PropTypes.func.isRequired,
@@ -57,11 +57,11 @@ ProjectListDropDown.propTypes = {
   selectedItemId: PropTypes.string,
 };
 
-ProjectListDropDown.defaultProps = {
+ProjectListDropdown.defaultProps = {
   name: undefined,
   isConnecting: false,
   projects: undefined,
   selectedItemId: undefined,
 };
 
-export default ProjectListDropDown;
+export default ProjectListDropdown;

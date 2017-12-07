@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateProject } from './StopwatchActions';
 
-export default (ProjectDropDown) => {
-  function StopwatchProjectDropDownContainer(props) {
+export default (ProjectDropdown) => {
+  function StopwatchProjectDropdownContainer(props) {
     const entity = props.entity || {};
     const id = entity.id;
     const currentProjectId = entity.project ? entity.project.id : undefined;
@@ -15,19 +15,19 @@ export default (ProjectDropDown) => {
     };
 
     return (
-      <ProjectDropDown
+      <ProjectDropdown
         onItemPick={(attrName, value) => onItemPick(value)}
         selectedItemId={currentProjectId}
       />
     );
   }
 
-  StopwatchProjectDropDownContainer.propTypes = {
+  StopwatchProjectDropdownContainer.propTypes = {
     updateProject: PropTypes.func.isRequired,
     entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
   };
 
-  StopwatchProjectDropDownContainer.defaultProps = {
+  StopwatchProjectDropdownContainer.defaultProps = {
     entity: undefined,
   };
 
@@ -38,5 +38,5 @@ export default (ProjectDropDown) => {
   return connect(
     undefined,
     mapDispatchToProps,
-  )(StopwatchProjectDropDownContainer);
+  )(StopwatchProjectDropdownContainer);
 };

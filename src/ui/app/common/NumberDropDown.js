@@ -32,7 +32,7 @@ const createItems = (start, end, prependZero) => {
   return items;
 };
 
-const NumberDropDown = (props) => {
+const NumberDropdown = (props) => {
   const { endNum, maxHeight, name, onChange, prependZero, startNum, value } = props;
 
   return (
@@ -50,7 +50,7 @@ const NumberDropDown = (props) => {
   );
 };
 
-NumberDropDown.propTypes = {
+NumberDropdown.propTypes = {
   endNum: PropTypes.number.isRequired,
   maxHeight: PropTypes.number,
   name: PropTypes.string,
@@ -60,11 +60,11 @@ NumberDropDown.propTypes = {
   value: PropTypes.number,
 };
 
-NumberDropDown.defaultProps = {
+NumberDropdown.defaultProps = {
   maxHeight: 100,
   name: undefined,
   prependZero: false,
   value: undefined,
 };
 
-export default NumberDropDown;
+export default NumberDropdown;

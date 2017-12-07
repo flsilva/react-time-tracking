@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import NumberDropDown from '../common/NumberDropDown';
+import NumberDropdown from '../common/NumberDropdown';
 
 const styles = {
   container: {
@@ -83,7 +83,7 @@ class TimeElapsed extends Component {
     return (
       <div style={styles.container}>
         <div style={styles.container}>
-          <NumberDropDown
+          <NumberDropdown
             prependZero
             maxHeight={300}
             onChange={this.props.onHourPick}
@@ -93,7 +93,7 @@ class TimeElapsed extends Component {
           />
         </div>
         <div style={styles.container}>
-          <NumberDropDown
+          <NumberDropdown
             prependZero
             maxHeight={300}
             onChange={this.props.onMinutePick}

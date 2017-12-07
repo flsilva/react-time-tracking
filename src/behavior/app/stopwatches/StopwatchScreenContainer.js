@@ -10,8 +10,8 @@ import StopwatchAppBarContainer from './StopwatchAppBarContainer';
 import StopwatchTimeAndControlsContainer from './StopwatchTimeAndControlsContainer';
 import StopwatchScreenBodyContainerFactory from './StopwatchScreenBodyContainer';
 
-export default (ProjectDropDown) => {
-  const StopwatchScreenBodyContainer = StopwatchScreenBodyContainerFactory(ProjectDropDown);
+export default (ProjectDropdown) => {
+  const StopwatchScreenBodyContainer = StopwatchScreenBodyContainerFactory(ProjectDropdown);
 
   class StopwatchScreenContainer extends Component {
     state = { entity: undefined };

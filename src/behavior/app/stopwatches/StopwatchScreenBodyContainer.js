@@ -19,15 +19,15 @@ import DescriptionFormDialogContainer from './DescriptionFormDialogContainer';
  * screens only one http request is needed.
  */
 /*
-const StopwatchProjectDropDownContainerWithQuery = props => (
-  <StopwatchProjectDropDownContainer
+const StopwatchProjectDropdownContainerWithQuery = props => (
+  <StopwatchProjectDropdownContainer
     {...props}
     getQuery={generateQueryForRelationship('author')}
   />
 );
 */
 
-export default (ProjectDropDown) => {
+export default (ProjectDropdown) => {
   const StopwatchScreenBodyContainer = ({ entity }, { muiTheme: { palette } }) => {
     const description = entity ? entity.description : undefined;
 
@@ -50,7 +50,7 @@ export default (ProjectDropDown) => {
           <DatePickerContainer entity={entity} />
         </WithIcon>
         <WithIcon icon={<WorkIcon color={palette.accent1Color} />}>
-          <ProjectDropDown entity={entity} />
+          <ProjectDropdown entity={entity} />
         </WithIcon>
         <WithIcon icon={<SheetIcon color={palette.accent1Color} />}>
           <DescriptionButtonContainerWithDialog entity={entity} />

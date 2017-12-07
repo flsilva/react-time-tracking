@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ProjectDropDown from '../../../ui/app/projects/ProjectDropDown';
+import ProjectDropdown from '../../../ui/app/projects/ProjectDropdown';
 
 export default (navToNewEntity) => {
-  function ProjectDropDownContainer(props) {
+  function ProjectDropdownContainer(props) {
     const { entities, isConnecting, name, onItemPick, selectedItemId } = props;
 
     return (
-      <ProjectDropDown
+      <ProjectDropdown
         isConnecting={isConnecting}
         name={name}
         onCreateProjectClick={navToNewEntity}
@@ -18,7 +18,7 @@ export default (navToNewEntity) => {
     );
   }
 
-  ProjectDropDownContainer.propTypes = {
+  ProjectDropdownContainer.propTypes = {
     entities: PropTypes.arrayOf(PropTypes.object),
     isConnecting: PropTypes.bool,
     name: PropTypes.string,
@@ -26,7 +26,7 @@ export default (navToNewEntity) => {
     selectedItemId: PropTypes.string,
   };
 
-  ProjectDropDownContainer.defaultProps = {
+  ProjectDropdownContainer.defaultProps = {
     entities: undefined,
     getQuery: undefined,
     isConnecting: false,
@@ -34,5 +34,5 @@ export default (navToNewEntity) => {
     selectedItemId: undefined,
   };
 
-  return ProjectDropDownContainer;
+  return ProjectDropdownContainer;
 };

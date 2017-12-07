@@ -2,15 +2,15 @@ import pipe from 'lodash/fp/pipe';
 import withQuery from '../utils/withQuery';
 import { generateQueryForRelationship } from '../utils/QueryUtils';
 import CreateStopwatchScreenContainer from './StopwatchScreenContainer';
-import CreateProjectDropDownContainer from './StopwatchProjectDropDownContainer';
+import CreateProjectDropdownContainer from './StopwatchProjectDropdownContainer';
 
 // eslint-disable-next-line import/prefer-default-export
-export const CreateEnhancedStopwatchScreen = (ProjectDropDown) => {
-  const ScreenWithDropDown = CreateStopwatchScreenContainer(
-    CreateProjectDropDownContainer(ProjectDropDown),
+export const CreateEnhancedStopwatchScreen = (ProjectDropdown) => {
+  const ScreenWithDropdown = CreateStopwatchScreenContainer(
+    CreateProjectDropdownContainer(ProjectDropdown),
   );
 
   return pipe([
     withQuery(generateQueryForRelationship('project')),
-  ])(ScreenWithDropDown);
+  ])(ScreenWithDropdown);
 };

@@ -6,11 +6,11 @@ import WorkIcon from 'material-ui/svg-icons/action/work';
 import SheetIcon from 'material-ui/svg-icons/action/description';
 import WithIcon from '../common/WithIcon';
 import DatePicker from '../common/DatePicker';
-import NumberDropDown from '../common/NumberDropDown';
+import NumberDropdown from '../common/NumberDropdown';
 
 const TimeLogForm = (props, { muiTheme: { palette } }) => {
   const { onCustomInputChange, onInputChange, values } = props;
-  const ProjectDropDown = props.projectDropDownClass;
+  const ProjectDropdown = props.projectDropdownClass;
 
   const styles = {
     body: {
@@ -28,7 +28,7 @@ const TimeLogForm = (props, { muiTheme: { palette } }) => {
   return (
     <div>
       <div style={styles.timeContainer}>
-        <NumberDropDown
+        <NumberDropdown
           name="hours"
           prependZero
           maxHeight={300}
@@ -37,7 +37,7 @@ const TimeLogForm = (props, { muiTheme: { palette } }) => {
           endNum={24}
           value={values.hours}
         />
-        <NumberDropDown
+        <NumberDropdown
           name="minutes"
           prependZero
           maxHeight={300}
@@ -56,7 +56,7 @@ const TimeLogForm = (props, { muiTheme: { palette } }) => {
           />
         </WithIcon>
         <WithIcon icon={<WorkIcon color={palette.accent1Color} />}>
-          <ProjectDropDown
+          <ProjectDropdown
             name="projectId"
             onItemPick={onCustomInputChange}
             selectedItemId={values.projectId}
@@ -101,7 +101,7 @@ TimeLogForm.propTypes = {
   }),
   onCustomInputChange: PropTypes.func.isRequired,
   onInputChange: PropTypes.func.isRequired,
-  projectDropDownClass: PropTypes.func.isRequired,
+  projectDropdownClass: PropTypes.func.isRequired,
   values: PropTypes.shape({
     description: PropTypes.string,
     hours: PropTypes.number,

@@ -6,7 +6,7 @@ import {
   generateQueryForRelationship,
 } from '../utils/QueryUtils';
 import withPaginatedProjectEntities from './withPaginatedEntities';
-import CreateProjectDropDownContainer from './ProjectDropDownContainer';
+import CreateProjectDropdownContainer from './ProjectDropdownContainer';
 
 const composeEntitiesQueryFunction = itemsPerPage => page => (
   pipe([
@@ -16,7 +16,7 @@ const composeEntitiesQueryFunction = itemsPerPage => page => (
 );
 
 // eslint-disable-next-line import/prefer-default-export
-export const CreateProjectDropDown = (params) => {
+export const CreateProjectDropdown = (params) => {
   const defaultParams = { autoLoad: true, pageSize: 999 };
   const { autoLoad, navToNewEntity, pageSize } = { ...defaultParams, ...params };
 
@@ -24,5 +24,5 @@ export const CreateProjectDropDown = (params) => {
     withPaginatedProjectEntities({ autoLoad }),
     withPagination,
     withQuery(composeEntitiesQueryFunction(pageSize)),
-  ])(CreateProjectDropDownContainer(navToNewEntity));
+  ])(CreateProjectDropdownContainer(navToNewEntity));
 };
