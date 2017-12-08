@@ -28,7 +28,6 @@ export default (navToNewEntity) => {
 
   ProjectDropdownContainer.defaultProps = {
     entities: undefined,
-    getQuery: undefined,
     isConnecting: false,
     name: undefined,
     selectedItemId: undefined,
