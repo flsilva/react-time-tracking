@@ -1,27 +1,11 @@
 import pipe from 'lodash/fp/pipe';
 import withRouterParams from '../behavior/app/utils/withRouterParams';
-import withQuery from '../behavior/app/utils/withQuery';
-import withPagination from '../behavior/app/utils/withPagination';
-import withForm from '../behavior/app/utils/withForm';
-import {
-  generateQueryForPagination,
-  generateQueryForRelationship,
-} from '../behavior/app/utils/QueryUtils';
-import withNavBack from '../behavior/app/navigation/withNavBack';
 import { getNavTo } from '../behavior/app/navigation';
-import withAsyncEntityForm from '../behavior/app/utils/withAsyncEntityForm';
-import withProjectEntity from '../behavior/app/projects/withEntity';
-import withProjectEntityForm from '../behavior/app/projects/withEntityForm';
-import withPaginatedEntities from '../behavior/app/projects/withPaginatedEntities';
-import ProjectFormScreenContainer from '../behavior/app/projects/ProjectFormScreenContainer';
-import ProjectListScreenContainer from '../behavior/app/projects/ProjectListScreenContainer';
-
-const composeQueryFunction = itemsPerPage => page => (
-  pipe([
-    generateQueryForRelationship('author'),
-    generateQueryForPagination({ page, itemsPerPage, sort: '-created-at' }),
-  ])()
-);
+import {
+  CreateEditProjectScreen,
+  CreateNewProjectScreen,
+  CreateProjectListScreen,
+} from '../behavior/app/projects';
 
 export const navToEntities = () => {
   getNavTo()('/app/projects');
@@ -36,25 +20,15 @@ export const navToNewEntity = () => {
 };
 
 export const EditProjectRoute = pipe([
-  withAsyncEntityForm,
-  withNavBack,
-  withForm,
-  withProjectEntityForm(navToEntities),
-  withProjectEntity,
-  withQuery(generateQueryForRelationship('author')),
   withRouterParams({ projectId: 'id' }),
-])(ProjectFormScreenContainer);
+])(CreateEditProjectScreen({ navToEntities }));
 
-export const NewProjectRoute = pipe([
-  withNavBack,
-  withForm,
-  withProjectEntityForm(navToEntities),
-])(ProjectFormScreenContainer);
+export const NewProjectRoute = CreateNewProjectScreen({ navToEntities });
 
-export const ProjectListRoute = pageSize => (
-  pipe([
-    withPaginatedEntities({ autoLoad: true }),
-    withPagination,
-    withQuery(composeQueryFunction(pageSize)),
-  ])(ProjectListScreenContainer({ navToEntity, navToNewEntity }))
+export const ProjectListRoute = itemsPerPage => (
+  CreateProjectListScreen({
+    itemsPerPage,
+    navToEntity,
+    navToNewEntity,
+  })
 );
