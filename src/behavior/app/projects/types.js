@@ -319,7 +319,7 @@ export type IsConnectingReducer = (state: boolean, action: Action) => boolean;
 
 export type ProjectState = {
   +error: ApiErrors,
-  +fetchedQueries: CachedQueries,
+  +cachedQueries: CachedQueries,
   +isConnecting: boolean
 };
 

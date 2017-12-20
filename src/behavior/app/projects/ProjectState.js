@@ -67,7 +67,7 @@ export const database: DatabaseReducer = (
   }
 };
 
-const fetchedQueries: CachedQueriesReducer = (
+const cachedQueries: CachedQueriesReducer = (
   state: CachedQueries = {},
   action: Action,
 ): CachedQueries => {
@@ -188,7 +188,7 @@ export const getEntitiesByQuery: GetEntitiesByQuerySelector = (
 ): CachedQueryWithEntities | void => {
   if (!state.projects) return undefined;
 
-  const cachedQuery: CachedQuery = state.projects.fetchedQueries[JSON.stringify(query)];
+  const cachedQuery: CachedQuery = state.projects.cachedQueries[JSON.stringify(query)];
   if (!cachedQuery) return undefined;
 
   return {
@@ -207,6 +207,6 @@ export const getIsConnecting: GetIsConnectingSelector = (state: AppState): boole
 
 export default combineReducers({
   error,
-  fetchedQueries,
+  cachedQueries,
   isConnecting,
 });
