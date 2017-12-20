@@ -126,13 +126,13 @@ export const getEntities = (state, _query = QUERY_ALL) => {
   if (!state.timeLogs) return undefined;
 
   const query = isString(_query) ? _query : JSON.stringify(_query);
-  const fetchedQuery = state.timeLogs.fetchedQueries[query];
+  const cachedQuery = state.timeLogs.fetchedQueries[query];
 
-  if (!fetchedQuery) return undefined;
+  if (!cachedQuery) return undefined;
 
   return {
-    entities: fetchedQuery.ids.map(id => getEntityById(state, id)),
-    pagination: fetchedQuery.links,
+    entities: cachedQuery.ids.map(id => getEntityById(state, id)),
+    pagination: cachedQuery.links,
   };
 };
 

@@ -6,7 +6,13 @@ import flatten from 'lodash/flatten';
 import last from 'lodash/last';
 import pipe from 'lodash/fp/pipe';
 
-export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities }) => (
+export default ({
+  autoLoad,
+  getEntitiesByQuery,
+  getError,
+  getIsConnecting,
+  readEntities,
+}) => (
   (WrappedComponent) => {
     class WithPaginatedEntities extends Component {
       componentDidMount() {
@@ -64,14 +70,18 @@ export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities
 
     const getResults = (state, queries) => (
       queries && queries.length ?
-        queries.map(paginatedQuery => getEntities(state, paginatedQuery.query))
+        queries.map(paginatedQuery => getEntitiesByQuery(state, paginatedQuery.query))
           .filter(result => result)
         : undefined
     );
 
-    const getTotalEntities = result => (result ? result.meta['total-records'] : undefined);
+    const getTotalEntities = result => (
+      result ? result.cachedQuery.response.meta['total-records'] : undefined
+    );
 
-    const getTotalPages = result => (result ? result.meta['total-pages'] : undefined);
+    const getTotalPages = result => (
+      result ? result.cachedQuery.response.meta['total-pages'] : undefined
+    );
 
     const hasNextPage = (currentPage, totalPages) => (
       totalPages && totalPages > currentPage

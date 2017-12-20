@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-export default ({ getEntityById, getError, getIsConnecting, readEntity }) => (
+export default ({ getEntityById, getError, getIsConnecting, hasEntity, readEntity }) => (
   (WrappedComponent) => {
     class WithEntity extends Component {
       componentDidMount() {
@@ -42,8 +42,8 @@ export default ({ getEntityById, getError, getIsConnecting, readEntity }) => (
       isConnecting: false,
     };
 
-    const mapStateToProps = (state, props) => ({
-      entity: props.id ? getEntityById(state, props.id) : undefined,
+    const mapStateToProps = (state, { id }) => ({
+      entity: id && hasEntity(state, id) ? getEntityById(state, id) : undefined,
       error: getError(state),
       isConnecting: getIsConnecting(state),
     });

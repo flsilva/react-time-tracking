@@ -1,11 +1,11 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { getEntityById, getEntities } from './ProjectState';
+import { getEntitiesByQuery, hasEntity } from './ProjectState';
 import {
-  CREATE_ENTITY_REQUESTED,
-  READ_ENTITY_REQUESTED,
-  READ_ENTITIES_REQUESTED,
-  UPDATE_ENTITY_REQUESTED,
-  DELETE_ENTITY_REQUESTED,
+  // CREATE_ENTITY_REQUESTED,
+  // READ_ENTITY_REQUESTED,
+  // READ_ENTITIES_REQUESTED,
+  // UPDATE_ENTITY_REQUESTED,
+  // DELETE_ENTITY_REQUESTED,
   createEntityFailed,
   createEntityStarted,
   createEntitySucceeded,
@@ -24,6 +24,13 @@ import {
   clearDatabase,
   updateDatabase,
 } from './ProjectActions';
+import {
+  CREATE_ENTITY_REQUESTED,
+  READ_ENTITY_REQUESTED,
+  READ_ENTITIES_REQUESTED,
+  UPDATE_ENTITY_REQUESTED,
+  DELETE_ENTITY_REQUESTED,
+} from './types';
 
 function* createEntitySaga({ meta }) {
   try {
@@ -45,8 +52,8 @@ function* readEntitySaga({ meta }) {
   const { entity, makeRequest, killCache, request } = meta.http;
 
   if (!killCache) {
-    const cachedProject = yield select(getEntityById, entity.id, request.params);
-    if (cachedProject) return;
+    const entityExists = yield select(hasEntity, entity.id);
+    if (entityExists) return;
   }
 
   try {
@@ -65,17 +72,17 @@ function* readEntitiesSaga({ meta }) {
   const { makeRequest, killCache, request } = meta.http;
 
   if (!killCache) {
-    const cachedResult = yield select(getEntities, request.params);
+    const cachedResult = yield select(getEntitiesByQuery, request.params);
     if (cachedResult) return;
   }
 
   try {
     yield put(readEntitiesStarted());
 
-    const data = yield makeRequest(request);
+    const response = yield makeRequest(request);
 
-    yield put(updateDatabase(data));
-    yield put(readEntitiesSucceeded({ data, query: request.params }));
+    yield put(updateDatabase(response));
+    yield put(readEntitiesSucceeded({ response, query: request.params }));
   } catch (error) {
     yield put(readEntitiesFailed(error));
   }

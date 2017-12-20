@@ -1,6 +1,7 @@
 import normalize from 'json-api-normalizer';
-import { entities as projectEntitiesReducer } from './projects/ProjectState';
-import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectActions';
+import { database as projectDatabaseReducer } from './projects/ProjectState';
+// import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/ProjectActions';
+import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/types';
 import { entities as timeLogEntitiesReducer } from './time-logs/TimeLogState';
 import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLogActions';
 import { entities as userEntitiesReducer } from './users/UserState';
@@ -22,7 +23,7 @@ const UPDATE_STOPWATCHES_DATABASE = 'app/stopwatches/update/database';
 
 const entityReducers = {
   projects: {
-    reducer: projectEntitiesReducer,
+    reducer: projectDatabaseReducer,
     updateDbAction: UPDATE_PROJECTS_DATABASE,
   },
   stopwatches: {
@@ -45,7 +46,9 @@ export default (state = {}, action) => {
     case UPDATE_STOPWATCHES_DATABASE:
     case UPDATE_TIME_LOGS_DATABASE:
     case UPDATE_USERS_DATABASE: {
+      console.log('DatabaseState() - action.payload: ', action.payload);
       const normalizedData = normalize(action.payload);
+      console.log('DatabaseState() - normalizedData: ', normalizedData);
 
       // reconsider if it wouldn't be better to have this static:
       // return {
