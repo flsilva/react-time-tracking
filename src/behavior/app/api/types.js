@@ -2,75 +2,123 @@
  * @flow
  */
 
+//-----------------
+// BEGIN API ERRORS
+//-----------------
+
 export type ApiError = { +detail: string };
 
 export type ApiErrors = Array<ApiError> | null;
 
-export type EntityRelationshipPayload = { +attrName: string, +id: string, +type: string };
+//---------------
+// END API ERRORS
+//---------------
 
-export type EntityRelationshipsPayload = Array<EntityRelationshipPayload>;
+//-------------
+// BEGIN ENTITY
+//-------------
 
-export type CreateEntityPayload = {
-  +type: string,
-  +relationships?: EntityRelationshipsPayload
-};
+export type ResourceRelationship = { +id: string, +type: string };
 
-export type ReadEntityPayload = { +id: string };
+export type ResourceRelationshipWrapper = { +data: ResourceRelationship };
 
-export type UpdateEntityPayload = CreateEntityPayload & ReadEntityPayload;
+export type ResourceRelationships = { +[relName: string]: ResourceRelationshipWrapper };
 
-export type EntityPayload =
-  | CreateEntityPayload
-  | ReadEntityPayload
-  | UpdateEntityPayload;
-
-export type Entity = {
-  +id: string,
+export type CreateResourcePayload = {
+  +relationships?: ResourceRelationships,
   +type: string
 };
 
-export type Request = {
+export type UpdateResourcePayload = CreateResourcePayload & { +id: string };
+
+export type ResourcePayload =
+  | CreateResourcePayload
+  | UpdateResourcePayload;
+
+export type ResourcePayloadWrapper = { +data: ResourcePayload };
+
+export type ResourceObject = {
+  +id: string,
+  +relationships?: ResourceRelationships,
+  +type: string
+};
+
+export type ResourceObjectCollection = Array<ResourceObject>;
+
+//-----------
+// END ENTITY
+//-----------
+
+//-------------------
+// BEGIN HTTP REQUEST
+//-------------------
+
+export type HttpHeaders = { +[headerName: string]: string };
+
+export type HttpQueryUnit = { +id?: string, +include?: string };
+
+export type HttpQueryCollection = {
+  +'page[number]': number,
+  +'page[size]': number,
+  +sort: string
+};
+
+export type HttpQuery = {
+  +collection?: HttpQueryCollection,
+  +unit?: HttpQueryUnit
+};
+
+export type HttpResource = {
+  +headers?: HttpHeaders,
   +method: string,
+  +payload?: ResourcePayloadWrapper,
+  +query?: HttpQuery,
   +url: string
 };
 
-export type PostPutRequest = Request & {
-  +data?: mixed
-};
-
-export type GetEntityRequestParams = {
-  +include?: string
-};
-
-export type GetEntitiesRequestParams = GetEntityRequestParams & {
-  +all?: boolean,
-  +'page[number]'?: number,
-  +'page[size]'?: number
-};
-
-export type GetRequest = Request & {
-  +params: GetEntityRequestParams | GetEntitiesRequestParams
-};
-
-export type IncludedEntities = Array<Entity>;
-export type ResponseMeta = { +'total-pages': number, +'total-records': number };
-export type ResponseLinks = { +first?: string, +last?: string };
-
 export type HttpRequest = {
-  +entity?: EntityPayload,
+  +errorCb?: () => mixed,
   +killCache?: boolean,
-  +request: GetRequest | PostPutRequest,
+  +resource: HttpResource,
   +successCb?: () => mixed
 };
 
-export type HttpResponse<Data> = {
-  +data?: Data,
-  +included?: IncludedEntities,
-  +links?: ResponseLinks,
-  +meta?: ResponseMeta
+//-----------------
+// END HTTP REQUEST
+//-----------------
+
+//--------------------
+// BEGIN HTTP RESPONSE
+//--------------------
+
+export type HttpResponseLinks = { +first?: string, +last?: string };
+
+export type HttpResponseMeta = { +'total-pages': number, +'total-records': number };
+
+export type HttpResponse<ResponsePayload> = {
+  +data?: ResponsePayload,
+  +included?: ResourceObjectCollection,
+  +links?: HttpResponseLinks,
+  +meta?: HttpResponseMeta
 };
 
-export type HttpResponseWithQuery<Data> = {
-  +query: GetEntityRequestParams | GetEntitiesRequestParams,
-  +response: HttpResponse<Data>
+export type HttpResponseWithQuery<Payload> = {
+  +query: HttpQuery,
+  +response: HttpResponse<Payload>
 };
+
+//------------------
+// END HTTP RESPONSE
+//------------------
+
+//-------------------
+// BEGIN HTTP FETCHER
+//-------------------
+
+export type HttpFetcher<ResponsePayload> = (
+  resource: HttpResource
+) => Promise<HttpResponse<ResponsePayload>>;
+
+//-----------------
+// END HTTP FETCHER
+//-----------------

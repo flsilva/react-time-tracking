@@ -11,9 +11,9 @@ export const emailSignIn = (email, password) => {
     type: EMAIL_SIGN_IN_REQUESTED,
     meta: {
       http: {
-        request: {
-          data: { email, password },
+        resource: {
           method: 'POST',
+          payload: { email, password },
           url: 'auth/sign_in/',
         },
       },

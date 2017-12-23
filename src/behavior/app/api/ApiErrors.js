@@ -12,6 +12,8 @@ export const formatApiError = (error) => {
 
   if (isString(error)) {
     errors = [{ detail: error }];
+  } else if (error instanceof Error) {
+    errors = [{ detail: error.message }];
   } else if (error.errors && error.errors.full_messages) {
     errors = error.errors.full_messages.map(detail => ({ detail }));
   } else if (error.errors) {

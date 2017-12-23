@@ -6,11 +6,7 @@ import merge from 'lodash/merge';
 import { combineReducers } from 'redux';
 import build from 'redux-object';
 import type { AppState } from '../types';
-import type {
-  ApiErrors,
-  GetEntitiesRequestParams,
-  GetEntityRequestParams,
-} from '../api/types';
+import type { ApiErrors, HttpQuery } from '../api/types';
 import {
   CREATE_ENTITY_STARTED,
   CREATE_ENTITY_SUCCEEDED,
@@ -49,8 +45,6 @@ import type {
   IsConnectingReducer,
 } from './types';
 
-const QUERY_ALL: GetEntitiesRequestParams = { all: true };
-
 export const database: DatabaseReducer = (
   state: Database = {},
   action: Action,
@@ -73,8 +67,7 @@ const cachedQueries: CachedQueriesReducer = (
 ): CachedQueries => {
   switch (action.type) {
     case READ_ENTITIES_SUCCEEDED: {
-      const query: GetEntityRequestParams | GetEntitiesRequestParams =
-        action.payload.query || QUERY_ALL;
+      const query: HttpQuery = action.payload.query;
 
       const data: Array<Entity> = action.payload.response.data || [];
 
@@ -184,7 +177,7 @@ export const hasEntity: HasEntitySelector = (state: AppState, id: string): boole
 
 export const getEntitiesByQuery: GetEntitiesByQuerySelector = (
   state: AppState,
-  query: GetEntitiesRequestParams = QUERY_ALL,
+  query: HttpQuery,
 ): CachedQueryWithEntities | void => {
   if (!state.projects) return undefined;
 

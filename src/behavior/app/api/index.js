@@ -1,6 +1,7 @@
 import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
-import { addRelationshipToPayload, formatPayloadToApi } from './JsonApiUtils';
+import omit from 'lodash/omit';
+import { formatPayloadToApi } from './JsonApiUtils';
 import { formatApiError } from './ApiErrors';
 
 const getHeaders = () => ({ 'Content-Type': 'application/vnd.api+json' });
@@ -52,21 +53,48 @@ const addInterceptors = (dispatch, action, fetcher) => {
   fetcher.interceptors.response.use(undefined, formatApiErrorHandler);
 };
 
-const makeRequest = fetcher => request => fetcher.request(request);
+const resourceToAxios = (resource) => {
+  if (!resource) {
+    throw new Error(`Argument <resource> must not be null. Received: ${resource}`);
+  }
+
+  const query = resource.query || {};
+  const unitQuery = omit(query.unit, 'id') || {};
+  const collectionQuery = query.collection || {};
+
+  return {
+    data: resource.payload,
+    headers: resource.headers,
+    method: resource.method,
+    params: { ...unitQuery, ...collectionQuery },
+    url: resource.url,
+  };
+};
+
+// const makeRequest = fetcher => request => fetcher.request(request);
+
+const makeRequest = fetcher => (resource) => {
+  if (!resource) {
+    throw new Error(`Argument <resource> must not be null. Received: ${resource}`);
+  }
+
+  const axiosResource = resourceToAxios(resource);
+  return fetcher.request(axiosResource);
+};
 
 // eslint-disable-next-line import/prefer-default-export
 export const middleware = store => next => (action) => {
   // console.log('ApiModule().middleware() - action', action);
 
   if (!action.meta || !action.meta.http) return next(action);
-  if (!action.meta.http.request) return next(action);
+  if (!action.meta.http.resource) return next(action);
 
   const newAction = cloneDeep(action);
-  const { entity, request } = newAction.meta.http;
+  const { resource } = newAction.meta.http;
 
   const { auth } = newAction.meta;
   const token = (auth && auth.token) ? auth.token : undefined;
-  request.headers = {
+  resource.headers = {
     ...getHeaders(),
     ...token,
   };
@@ -75,18 +103,19 @@ export const middleware = store => next => (action) => {
   addInterceptors(store.dispatch, action, fetcher);
   newAction.meta.http.makeRequest = makeRequest(fetcher);
 
-  if (!entity || !request.data) return next(newAction);
+  if (!resource.payload || !resource.payload.data) return next(newAction);
 
-  request.data = formatPayloadToApi(entity.type, request.data);
-
-  const { relationships } = entity;
+  const { relationships } = resource.payload.data;
   if (relationships) {
-    request.data = relationships.reduce((data, rel) => {
-      const { user } = newAction.meta.auth;
-      const id = rel.id === 'AUTH_USER_ID' ? user.id : rel.id;
-      return addRelationshipToPayload(data, rel.attrName, rel.type, id);
-    }, request.data);
+    resource.payload.data.relationships = Object.keys(relationships).reduce((acc, value) => {
+      const rel = cloneDeep(relationships[value]);
+      if (rel.data.id === 'AUTH_USER_ID') rel.data.id = newAction.meta.auth.user.id;
+      acc[value] = rel;
+      return acc;
+    }, {});
   }
+
+  resource.payload = formatPayloadToApi(resource.payload);
 
   return next(newAction);
 };

@@ -8,8 +8,10 @@ export default ({ getEntityById, getError, getIsConnecting, hasEntity, readEntit
     class WithEntity extends Component {
       componentDidMount() {
         const { getQuery, id } = this.props;
-        const query = getQuery ? getQuery() : undefined;
-        if (id) this.props.readEntity(id, query);
+        if (id) {
+          const query = getQuery ? getQuery(id) : undefined;
+          this.props.readEntity(query);
+        }
       }
 
       render() {

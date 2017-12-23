@@ -7,7 +7,7 @@ export const restoreSession = () => ({
   type: RESTORE_SESSION_REQUESTED,
   meta: {
     http: {
-      request: {
+      resource: {
         method: 'GET',
         url: 'auth/validate_token',
       },

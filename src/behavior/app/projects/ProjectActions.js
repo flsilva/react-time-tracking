@@ -2,10 +2,11 @@
  * @flow
  */
 
+import omit from 'lodash/omit';
+
 import type {
   ApiErrors,
-  GetEntitiesRequestParams,
-  GetEntityRequestParams,
+  HttpQuery,
   HttpResponseWithQuery,
 } from '../api/types';
 
@@ -93,24 +94,28 @@ export const updateDatabase: UpdateDatabaseActionCreator = (
 ): UpdateDatabaseAction => ({ type: UPDATE_DATABASE, payload });
 
 export const createEntity: CreateEntityRequestedActionCreator = (
-  data: CreateEntityPayload,
+  payload: CreateEntityPayload,
   successCb?: () => mixed,
 ): CreateEntityRequestedAction => {
-  if (!data) throw new Error('Argument <data> must not be null.');
+  if (!payload) throw new Error('Argument <payload> must not be null.');
 
   return {
     type: CREATE_ENTITY_REQUESTED,
     meta: {
       http: {
-        entity: {
-          type: 'projects',
-          relationships: [
-            { attrName: 'author', type: 'users', id: 'AUTH_USER_ID' },
-          ],
-        },
-        request: {
-          data,
+        resource: {
           method: 'POST',
+          payload: {
+            data: {
+              attributes: payload,
+              relationships: {
+                author: {
+                  data: { id: 'AUTH_USER_ID', type: 'users' },
+                },
+              },
+              type: 'projects',
+            },
+          },
           url: 'projects/',
         },
         successCb,
@@ -133,24 +138,22 @@ export const createEntityFailed: CreateEntityFailedActionCreator = (
 ): CreateEntityFailedAction => ({ type: CREATE_ENTITY_FAILED, payload });
 
 export const readEntity: ReadEntityRequestedActionCreator = (
-  id: string,
-  params: GetEntityRequestParams,
+  query: HttpQuery,
   killCache?: boolean,
 ): ReadEntityRequestedAction => {
-  if (!id) throw new Error('Argument <id> must not be null.');
+  if (!query) throw new Error('Argument <query> must not be null.');
+  if (!query.unit) throw new Error('Argument <query.unit> must not be null.');
+  if (!query.unit.id) throw new Error('Argument <query.unit.id> must not be null.');
 
   return {
     type: READ_ENTITY_REQUESTED,
     meta: {
       http: {
-        entity: {
-          id,
-        },
         killCache,
-        request: {
+        resource: {
           method: 'GET',
-          params,
-          url: `projects/${id}`,
+          query,
+          url: `projects/${query.unit.id}`,
         },
       },
     },
@@ -171,16 +174,16 @@ export const readEntityFailed: ReadEntityFailedActionCreator = (
 ): ReadEntityFailedAction => ({ type: READ_ENTITY_FAILED, payload });
 
 export const readEntities: ReadEntitiesRequestedActionCreator = (
-  params?: GetEntitiesRequestParams,
+  query?: HttpQuery,
   killCache?: boolean,
 ): ReadEntitiesRequestedAction => ({
   type: READ_ENTITIES_REQUESTED,
   meta: {
     http: {
       killCache,
-      request: {
+      resource: {
         method: 'GET',
-        params,
+        query,
         url: 'projects/',
       },
     },
@@ -217,12 +220,15 @@ export const updateEntity: UpdateEntityRequestedActionCreator = (
     type: UPDATE_ENTITY_REQUESTED,
     meta: {
       http: {
-        entity: {
-          type: 'projects',
-        },
-        request: {
-          data: payload,
+        resource: {
           method: 'PATCH',
+          payload: {
+            data: {
+              attributes: omit(payload, 'id'),
+              id: payload.id,
+              type: 'projects',
+            },
+          },
           url: `projects/${payload.id}`,
         },
         successCb,
@@ -260,7 +266,7 @@ export const deleteEntity: DeleteEntityRequestedActionCreator = (
     type: DELETE_ENTITY_REQUESTED,
     meta: {
       http: {
-        request: {
+        resource: {
           method: 'DELETE',
           url: `projects/${id}`,
         },

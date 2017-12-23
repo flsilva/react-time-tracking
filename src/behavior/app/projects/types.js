@@ -5,8 +5,7 @@
 import type { AppState } from '../types';
 import type {
   ApiErrors,
-  GetEntitiesRequestParams,
-  GetEntityRequestParams,
+  HttpQuery,
   HttpRequest,
   HttpResponseWithQuery,
 } from '../api/types';
@@ -42,7 +41,7 @@ export type ClearDatabaseActionCreator = () => ClearDatabaseAction;
 export type UpdateDatabaseAction = { +type: typeof UPDATE_DATABASE, +payload: Database };
 export type UpdateDatabaseActionCreator = (payload: Database) => UpdateDatabaseAction;
 
-export type DatabaseAction = 
+export type DatabaseAction =
   | ClearDatabaseAction
   | UpdateDatabaseAction;
 
@@ -120,7 +119,7 @@ export type ReadEntitiesRequestedAction = {
   +meta: HttpRequestWrapper
 };
 export type ReadEntitiesRequestedActionCreator = (
-  params?: GetEntitiesRequestParams,
+  query?: HttpQuery,
   killCache?: boolean
 ) => ReadEntitiesRequestedAction;
 
@@ -171,8 +170,7 @@ export type ReadEntityRequestedAction = {
 };
 
 export type ReadEntityRequestedActionCreator = (
-  id: string,
-  params: GetEntityRequestParams,
+  query: HttpQuery,
   killCache?: boolean
 ) => ReadEntityRequestedAction;
 
@@ -195,7 +193,7 @@ export type ReadEntityAction =
   | ReadEntityRequestedAction
   | ReadEntityStartedAction
   | ReadEntitySucceededAction
-  | ReadEntityFailedAction
+  | ReadEntityFailedAction;
 
 //----------------
 // END READ ENTITY
@@ -244,7 +242,7 @@ export type UpdateEntityAction =
   | UpdateEntityRequestedAction
   | UpdateEntityStartedAction
   | UpdateEntitySucceededAction
-  | UpdateEntityFailedAction
+  | UpdateEntityFailedAction;
 
 //------------------
 // END UPDATE ENTITY
@@ -327,7 +325,7 @@ export type GetEntityByIdSelector = (state: AppState, id: string) => Entity;
 
 export type GetEntitiesByQuerySelector = (
   state: AppState,
-  query: GetEntitiesRequestParams
+  query: HttpQuery
 ) => CachedQueryWithEntities | void;
 
 export type GetErrorSelector = (state: AppState) => ApiErrors | null;
