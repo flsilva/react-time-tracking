@@ -2,11 +2,11 @@ import { put, select, takeLatest } from 'redux-saga/effects';
 import {
   CREATE_ENTITY_REQUESTED,
   READ_ENTITY_REQUESTED,
-  READ_ENTITIES_REQUESTED,
+  READ_COLLECTION_REQUESTED,
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
 } from './types';
-import { getEntitiesByQuery, hasEntity } from './ProjectState';
+import { getCollection, hasEntity } from './ProjectState';
 import {
   createEntityFailed,
   createEntityStarted,
@@ -14,9 +14,9 @@ import {
   readEntityFailed,
   readEntityStarted,
   readEntitySucceeded,
-  readEntitiesFailed,
-  readEntitiesStarted,
-  readEntitiesSucceeded,
+  readCollectionFailed,
+  readCollectionStarted,
+  readCollectionSucceeded,
   updateEntityFailed,
   updateEntityStarted,
   updateEntitySucceeded,
@@ -49,7 +49,7 @@ function* readEntitySaga({ meta }) {
   const { query } = resource;
 
   if (!killCache && query && query.unit && query.unit.id) {
-    const entityExists = yield select(hasEntity, query.unit.id);
+    const entityExists = yield select(hasEntity, query);
     if (entityExists) return;
   }
 
@@ -65,24 +65,24 @@ function* readEntitySaga({ meta }) {
   }
 }
 
-function* readEntitiesSaga({ meta }) {
+function* readCollectionSaga({ meta }) {
   const { makeRequest, killCache, resource } = meta.http;
   const { query } = resource;
 
   if (!killCache) {
-    const cachedResult = yield select(getEntitiesByQuery, query);
+    const cachedResult = yield select(getCollection, query);
     if (cachedResult) return;
   }
 
   try {
-    yield put(readEntitiesStarted());
+    yield put(readCollectionStarted());
 
     const response = yield makeRequest(resource);
 
     yield put(updateDatabase(response));
-    yield put(readEntitiesSucceeded({ response, query }));
+    yield put(readCollectionSucceeded({ response, query }));
   } catch (error) {
-    yield put(readEntitiesFailed(error));
+    yield put(readCollectionFailed(error));
   }
 }
 
@@ -118,7 +118,7 @@ function* deleteEntitySaga({ meta }) {
 export default function* () {
   yield takeLatest(CREATE_ENTITY_REQUESTED, createEntitySaga);
   yield takeLatest(READ_ENTITY_REQUESTED, readEntitySaga);
-  yield takeLatest(READ_ENTITIES_REQUESTED, readEntitiesSaga);
+  yield takeLatest(READ_COLLECTION_REQUESTED, readCollectionSaga);
   yield takeLatest(UPDATE_ENTITY_REQUESTED, updateEntitySaga);
   yield takeLatest(DELETE_ENTITY_REQUESTED, deleteEntitySaga);
 }

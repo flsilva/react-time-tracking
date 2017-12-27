@@ -7,13 +7,14 @@ import { combineReducers } from 'redux';
 import build from 'redux-object';
 import type { AppState } from '../types';
 import type { ApiErrors, HttpQuery } from '../api/types';
+import { generateQueryForResourceId } from '../utils/QueryUtils';
 import {
   CREATE_ENTITY_STARTED,
   CREATE_ENTITY_SUCCEEDED,
   CREATE_ENTITY_FAILED,
-  READ_ENTITIES_STARTED,
-  READ_ENTITIES_SUCCEEDED,
-  READ_ENTITIES_FAILED,
+  READ_COLLECTION_STARTED,
+  READ_COLLECTION_SUCCEEDED,
+  READ_COLLECTION_FAILED,
   READ_ENTITY_STARTED,
   READ_ENTITY_SUCCEEDED,
   READ_ENTITY_FAILED,
@@ -33,12 +34,12 @@ import type {
   DatabaseReducer,
   Entity,
   ErrorReducer,
-  CachedQueries,
-  CachedQueriesReducer,
-  CachedQuery,
-  CachedQueryWithEntities,
-  GetEntitiesByQuerySelector,
-  GetEntityByIdSelector,
+  CachedCollectionQueries,
+  CachedCollectionQueriesReducer,
+  CachedCollectionQuery,
+  CollectionWithQuery,
+  GetCollectionSelector,
+  GetEntitySelector,
   GetErrorSelector,
   GetIsConnectingSelector,
   HasEntitySelector,
@@ -61,12 +62,12 @@ export const database: DatabaseReducer = (
   }
 };
 
-const cachedQueries: CachedQueriesReducer = (
-  state: CachedQueries = {},
+const cachedQueries: CachedCollectionQueriesReducer = (
+  state: CachedCollectionQueries = {},
   action: Action,
-): CachedQueries => {
+): CachedCollectionQueries => {
   switch (action.type) {
-    case READ_ENTITIES_SUCCEEDED: {
+    case READ_COLLECTION_SUCCEEDED: {
       const query: HttpQuery = action.payload.query;
 
       const data: Array<Entity> = action.payload.response.data || [];
@@ -75,11 +76,8 @@ const cachedQueries: CachedQueriesReducer = (
         ...state,
         [JSON.stringify(query)]: {
           ids: data.map((entity: Entity): string => entity.id),
-          response: {
-            links: action.payload.response.links,
-            meta: action.payload.response.meta,
-            query,
-          },
+          meta: action.payload.response.meta,
+          query,
         },
       };
     }
@@ -96,7 +94,7 @@ const error: ErrorReducer = (state: ApiErrors = null, action: Action): ApiErrors
   switch (action.type) {
     case CREATE_ENTITY_FAILED:
     case DELETE_ENTITY_FAILED:
-    case READ_ENTITIES_FAILED:
+    case READ_COLLECTION_FAILED:
     case READ_ENTITY_FAILED:
     case UPDATE_ENTITY_FAILED:
       return action.payload || null;
@@ -105,8 +103,8 @@ const error: ErrorReducer = (state: ApiErrors = null, action: Action): ApiErrors
     case CREATE_ENTITY_SUCCEEDED:
     case DELETE_ENTITY_STARTED:
     case DELETE_ENTITY_SUCCEEDED:
-    case READ_ENTITIES_STARTED:
-    case READ_ENTITIES_SUCCEEDED:
+    case READ_COLLECTION_STARTED:
+    case READ_COLLECTION_SUCCEEDED:
     case READ_ENTITY_STARTED:
     case READ_ENTITY_SUCCEEDED:
     case UPDATE_ENTITY_STARTED:
@@ -127,8 +125,8 @@ const isConnecting: IsConnectingReducer = (
     case CREATE_ENTITY_FAILED:
     case DELETE_ENTITY_SUCCEEDED:
     case DELETE_ENTITY_FAILED:
-    case READ_ENTITIES_SUCCEEDED:
-    case READ_ENTITIES_FAILED:
+    case READ_COLLECTION_SUCCEEDED:
+    case READ_COLLECTION_FAILED:
     case READ_ENTITY_SUCCEEDED:
     case READ_ENTITY_FAILED:
     case UPDATE_ENTITY_SUCCEEDED:
@@ -137,7 +135,7 @@ const isConnecting: IsConnectingReducer = (
 
     case CREATE_ENTITY_STARTED:
     case DELETE_ENTITY_STARTED:
-    case READ_ENTITIES_STARTED:
+    case READ_COLLECTION_STARTED:
     case READ_ENTITY_STARTED:
     case UPDATE_ENTITY_STARTED:
       return true;
@@ -147,11 +145,15 @@ const isConnecting: IsConnectingReducer = (
   }
 };
 
-export const getEntityById: GetEntityByIdSelector = (
+export const getEntity: GetEntitySelector = (
   state: AppState,
-  id: string,
+  query: HttpQuery,
 ): Entity => {
-  if (!id) throw new Error('Argument <id> must not be null.');
+  if (!query) throw new Error('Argument <query> must not be null.');
+  if (!query.unit) throw new Error('Argument <query.unit> must not be null.');
+
+  const id: string | void = query.unit.id;
+  if (!id) throw new Error('Argument <query.unit.id> must not be null.');
 
   const opts: { eager: boolean, ignoreLinks: boolean } = { eager: true, ignoreLinks: true };
   const entity: Entity = build(state.database, 'projects', id, opts);
@@ -166,26 +168,31 @@ export const getEntityById: GetEntityByIdSelector = (
   return entity;
 };
 
-export const hasEntity: HasEntitySelector = (state: AppState, id: string): boolean => {
+export const hasEntity: HasEntitySelector = (state: AppState, query: HttpQuery): boolean => {
   try {
-    getEntityById(state, id);
+    getEntity(state, query);
     return true;
   } catch (e) {
     return false;
   }
 };
 
-export const getEntitiesByQuery: GetEntitiesByQuerySelector = (
+export const getCollection: GetCollectionSelector = (
   state: AppState,
   query: HttpQuery,
-): CachedQueryWithEntities | void => {
+): CollectionWithQuery | void => {
   if (!state.projects) return undefined;
 
-  const cachedQuery: CachedQuery = state.projects.cachedQueries[JSON.stringify(query)];
+  const cachedQuery: CachedCollectionQuery = state.projects.cachedQueries[
+    JSON.stringify(query)
+  ];
+
   if (!cachedQuery) return undefined;
 
   return {
-    entities: cachedQuery.ids.map((id: string): Entity => getEntityById(state, id)),
+    entities: cachedQuery.ids.map((id: string): Entity => (
+      getEntity(state, generateQueryForResourceId(id)(query))),
+    ),
     cachedQuery,
   };
 };

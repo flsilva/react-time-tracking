@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
 
 export const generateQueryForPagination = ({ page, itemsPerPage, sort }) => query => (
@@ -11,9 +12,9 @@ export const generateQueryForPagination = ({ page, itemsPerPage, sort }) => quer
 );
 
 export const generateQueryForRelationship = relationships => query => (
-  merge({ ...query }, { unit: { include: relationships } })
+  merge({ ...cloneDeep(query) }, { unit: { include: relationships } })
 );
 
 export const generateQueryForResourceId = id => query => (
-  merge({ ...query }, { unit: { id } })
+  merge({ ...cloneDeep(query) }, { unit: { id } })
 );

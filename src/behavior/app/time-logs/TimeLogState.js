@@ -112,7 +112,7 @@ const isConnecting = (state = false, action) => {
   }
 };
 
-export const getEntityById = (state, id) => {
+export const getEntity = (state, id) => {
   if (!id) return undefined;
 
   const entity = build(state.database, 'timeLogs', id, { eager: true, ignoreLinks: true });
@@ -131,7 +131,7 @@ export const getEntities = (state, _query = QUERY_ALL) => {
   if (!cachedQuery) return undefined;
 
   return {
-    entities: cachedQuery.ids.map(id => getEntityById(state, id)),
+    entities: cachedQuery.ids.map(id => getEntity(state, id)),
     pagination: cachedQuery.links,
   };
 };

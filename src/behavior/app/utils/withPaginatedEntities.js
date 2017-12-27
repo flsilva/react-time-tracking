@@ -8,10 +8,10 @@ import pipe from 'lodash/fp/pipe';
 
 export default ({
   autoLoad,
-  getEntitiesByQuery,
+  getCollection,
   getError,
   getIsConnecting,
-  readEntities,
+  readCollection,
 }) => (
   (WrappedComponent) => {
     class WithPaginatedEntities extends Component {
@@ -19,13 +19,13 @@ export default ({
         if (autoLoad) this.readNextPage();
       }
 
-      readNextPage = () => this.readEntities(this.props.getNextPageQuery());
+      readNextPage = () => this.readCollection(this.props.getNextPageQuery());
 
-      readPage = page => this.readEntities(this.props.getPageQuery(page));
+      readPage = page => this.readCollection(this.props.getPageQuery(page));
 
-      readPreviousPage = () => this.readEntities(this.props.getPreviousPageQuery());
+      readPreviousPage = () => this.readCollection(this.props.getPreviousPageQuery());
 
-      readEntities = query => this.props.readEntities(query);
+      readCollection = query => this.props.readCollection(query);
 
       render() {
         return (
@@ -48,7 +48,7 @@ export default ({
       hasNextPage: PropTypes.bool,
       isConnecting: PropTypes.bool,
       queries: PropTypes.arrayOf(PropTypes.object),
-      readEntities: PropTypes.func.isRequired,
+      readCollection: PropTypes.func.isRequired,
     };
 
     WithPaginatedEntities.defaultProps = {
@@ -70,17 +70,17 @@ export default ({
 
     const getResults = (state, queries) => (
       queries && queries.length ?
-        queries.map(paginatedQuery => getEntitiesByQuery(state, paginatedQuery.query))
+        queries.map(paginatedQuery => getCollection(state, paginatedQuery.query))
           .filter(result => result)
         : undefined
     );
 
     const getTotalEntities = result => (
-      result ? result.cachedQuery.response.meta['total-records'] : undefined
+      result ? result.cachedQuery.meta['total-records'] : undefined
     );
 
     const getTotalPages = result => (
-      result ? result.cachedQuery.response.meta['total-pages'] : undefined
+      result ? result.cachedQuery.meta['total-pages'] : undefined
     );
 
     const hasNextPage = (currentPage, totalPages) => (
@@ -101,7 +101,7 @@ export default ({
     );
 
     const mapDispatchToProps = dispatch => ({
-      ...bindActionCreators({ readEntities }, dispatch),
+      ...bindActionCreators({ readCollection }, dispatch),
     });
 
     return connect(

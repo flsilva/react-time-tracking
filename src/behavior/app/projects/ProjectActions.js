@@ -11,6 +11,7 @@ import type {
 } from '../api/types';
 
 import type {
+  Collection,
   Database,
   Entity,
   CreateEntityPayload,
@@ -35,14 +36,14 @@ import type {
   ReadEntitySucceededActionCreator,
   ReadEntityFailedAction,
   ReadEntityFailedActionCreator,
-  ReadEntitiesRequestedAction,
-  ReadEntitiesRequestedActionCreator,
-  ReadEntitiesStartedAction,
-  ReadEntitiesStartedActionCreator,
-  ReadEntitiesSucceededAction,
-  ReadEntitiesSucceededActionCreator,
-  ReadEntitiesFailedAction,
-  ReadEntitiesFailedActionCreator,
+  ReadCollectionRequestedAction,
+  ReadCollectionRequestedActionCreator,
+  ReadCollectionStartedAction,
+  ReadCollectionStartedActionCreator,
+  ReadCollectionSucceededAction,
+  ReadCollectionSucceededActionCreator,
+  ReadCollectionFailedAction,
+  ReadCollectionFailedActionCreator,
   UpdateEntityRequestedAction,
   UpdateEntityRequestedActionCreator,
   UpdateEntityStartedAction,
@@ -71,10 +72,10 @@ import {
   READ_ENTITY_STARTED,
   READ_ENTITY_SUCCEEDED,
   READ_ENTITY_FAILED,
-  READ_ENTITIES_REQUESTED,
-  READ_ENTITIES_STARTED,
-  READ_ENTITIES_SUCCEEDED,
-  READ_ENTITIES_FAILED,
+  READ_COLLECTION_REQUESTED,
+  READ_COLLECTION_STARTED,
+  READ_COLLECTION_SUCCEEDED,
+  READ_COLLECTION_FAILED,
   UPDATE_ENTITY_REQUESTED,
   UPDATE_ENTITY_STARTED,
   UPDATE_ENTITY_SUCCEEDED,
@@ -173,11 +174,11 @@ export const readEntityFailed: ReadEntityFailedActionCreator = (
   payload: ApiErrors,
 ): ReadEntityFailedAction => ({ type: READ_ENTITY_FAILED, payload });
 
-export const readEntities: ReadEntitiesRequestedActionCreator = (
+export const readCollection: ReadCollectionRequestedActionCreator = (
   query?: HttpQuery,
   killCache?: boolean,
-): ReadEntitiesRequestedAction => ({
-  type: READ_ENTITIES_REQUESTED,
+): ReadCollectionRequestedAction => ({
+  type: READ_COLLECTION_REQUESTED,
   meta: {
     http: {
       killCache,
@@ -190,22 +191,22 @@ export const readEntities: ReadEntitiesRequestedActionCreator = (
   },
 });
 
-export const readEntitiesStarted: ReadEntitiesStartedActionCreator = (
-): ReadEntitiesStartedAction => ({
-  type: READ_ENTITIES_STARTED,
+export const readCollectionStarted: ReadCollectionStartedActionCreator = (
+): ReadCollectionStartedAction => ({
+  type: READ_COLLECTION_STARTED,
 });
 
-export const readEntitiesSucceeded: ReadEntitiesSucceededActionCreator = (
-  payload: HttpResponseWithQuery<Array<Entity>>,
-): ReadEntitiesSucceededAction => ({
-  type: READ_ENTITIES_SUCCEEDED,
+export const readCollectionSucceeded: ReadCollectionSucceededActionCreator = (
+  payload: HttpResponseWithQuery<Collection>,
+): ReadCollectionSucceededAction => ({
+  type: READ_COLLECTION_SUCCEEDED,
   payload,
 });
 
-export const readEntitiesFailed: ReadEntitiesFailedActionCreator = (
+export const readCollectionFailed: ReadCollectionFailedActionCreator = (
   payload: ApiErrors,
-): ReadEntitiesFailedAction => ({
-  type: READ_ENTITIES_FAILED,
+): ReadCollectionFailedAction => ({
+  type: READ_COLLECTION_FAILED,
   payload,
 });
 

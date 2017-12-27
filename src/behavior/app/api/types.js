@@ -55,17 +55,17 @@ export type ResourceObjectCollection = Array<ResourceObject>;
 
 export type HttpHeaders = { +[headerName: string]: string };
 
-export type HttpQueryUnit = { +id?: string, +include?: string };
+export type HttpUnitQuery = { +id?: string, +include?: string };
 
-export type HttpQueryCollection = {
+export type HttpCollectionQuery = {
   +'page[number]': number,
   +'page[size]': number,
   +sort: string
 };
 
 export type HttpQuery = {
-  +collection?: HttpQueryCollection,
-  +unit?: HttpQueryUnit
+  +collection?: HttpCollectionQuery,
+  +unit?: HttpUnitQuery
 };
 
 export type HttpResource = {
@@ -102,9 +102,9 @@ export type HttpResponse<ResponsePayload> = {
   +meta?: HttpResponseMeta
 };
 
-export type HttpResponseWithQuery<Payload> = {
+export type HttpResponseWithQuery<ResponsePayload> = {
   +query: HttpQuery,
-  +response: HttpResponse<Payload>
+  +response: HttpResponse<ResponsePayload>
 };
 
 //------------------

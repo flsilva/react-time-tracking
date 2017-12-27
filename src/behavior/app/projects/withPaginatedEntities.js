@@ -1,11 +1,11 @@
 import withPaginatedEntities from '../utils/withPaginatedEntities';
-import { readEntities } from './ProjectActions';
-import { getEntitiesByQuery, getError, getIsConnecting } from './ProjectState';
+import { readCollection } from './ProjectActions';
+import { getCollection, getError, getIsConnecting } from './ProjectState';
 
 export default ({ autoLoad }) => withPaginatedEntities({
   autoLoad,
-  getEntitiesByQuery,
+  getCollection,
   getError,
   getIsConnecting,
-  readEntities,
+  readCollection,
 });

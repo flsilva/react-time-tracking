@@ -7,6 +7,7 @@ import type {
   ApiErrors,
   HttpQuery,
   HttpRequest,
+  HttpResponseMeta,
   HttpResponseWithQuery,
 } from '../api/types';
 
@@ -18,7 +19,7 @@ type HttpRequestWrapper = { +http: HttpRequest };
 
 export type EntityAttributes = { +name: string, +createdAt: string };
 export type Entity = { +id: string, +attributes: EntityAttributes };
-export type Entities = Array<Entity>;
+export type Collection = Array<Entity>;
 
 //-----------
 // END ENTITY
@@ -101,56 +102,6 @@ export type CreateEntityAction =
 // END CREATE ENTITY
 //------------------
 
-//--------------------
-// BEGIN READ ENTITIES
-//--------------------
-
-export const READ_ENTITIES_REQUESTED: 'app/projects/read/entities/requested' =
-  'app/projects/read/entities/requested';
-export const READ_ENTITIES_STARTED: 'app/projects/read/entities/started' =
-  'app/projects/read/entities/started';
-export const READ_ENTITIES_SUCCEEDED: 'app/projects/read/entities/succeeded' =
-  'app/projects/read/entities/succeeded';
-export const READ_ENTITIES_FAILED: 'app/projects/read/entities/failed' =
-  'app/projects/read/entities/failed';
-
-export type ReadEntitiesRequestedAction = {
-  +type: typeof READ_ENTITIES_REQUESTED,
-  +meta: HttpRequestWrapper
-};
-export type ReadEntitiesRequestedActionCreator = (
-  query?: HttpQuery,
-  killCache?: boolean
-) => ReadEntitiesRequestedAction;
-
-export type ReadEntitiesStartedAction = { +type: typeof READ_ENTITIES_STARTED };
-export type ReadEntitiesStartedActionCreator = () => ReadEntitiesStartedAction;
-
-export type ReadEntitiesSucceededAction = {
-  +type: typeof READ_ENTITIES_SUCCEEDED,
-  +payload: HttpResponseWithQuery<Entities>
-};
-
-export type ReadEntitiesSucceededActionCreator = (
-  payload: HttpResponseWithQuery<Entities>
-) => ReadEntitiesSucceededAction;
-
-export type ReadEntitiesFailedAction = {
-  +type: typeof READ_ENTITIES_FAILED,
-  +payload: ApiErrors
-};
-export type ReadEntitiesFailedActionCreator = (payload: ApiErrors) => ReadEntitiesFailedAction;
-
-export type ReadEntitiesAction =
-  | ReadEntitiesRequestedAction
-  | ReadEntitiesStartedAction
-  | ReadEntitiesSucceededAction
-  | ReadEntitiesFailedAction;
-
-//------------------
-// END READ ENTITIES
-//------------------
-
 //------------------
 // BEGIN READ ENTITY
 //------------------
@@ -198,6 +149,58 @@ export type ReadEntityAction =
 //----------------
 // END READ ENTITY
 //----------------
+
+//----------------------
+// BEGIN READ COLLECTION
+//----------------------
+
+export const READ_COLLECTION_REQUESTED: 'app/projects/read/collection/requested' =
+  'app/projects/read/collection/requested';
+export const READ_COLLECTION_STARTED: 'app/projects/read/collection/started' =
+  'app/projects/read/collection/started';
+export const READ_COLLECTION_SUCCEEDED: 'app/projects/read/collection/succeeded' =
+  'app/projects/read/collection/succeeded';
+export const READ_COLLECTION_FAILED: 'app/projects/read/collection/failed' =
+  'app/projects/read/collection/failed';
+
+export type ReadCollectionRequestedAction = {
+  +type: typeof READ_COLLECTION_REQUESTED,
+  +meta: HttpRequestWrapper
+};
+export type ReadCollectionRequestedActionCreator = (
+  query?: HttpQuery,
+  killCache?: boolean
+) => ReadCollectionRequestedAction;
+
+export type ReadCollectionStartedAction = { +type: typeof READ_COLLECTION_STARTED };
+export type ReadCollectionStartedActionCreator = () => ReadCollectionStartedAction;
+
+export type ReadCollectionSucceededAction = {
+  +type: typeof READ_COLLECTION_SUCCEEDED,
+  +payload: HttpResponseWithQuery<Collection>
+};
+
+export type ReadCollectionSucceededActionCreator = (
+  payload: HttpResponseWithQuery<Collection>
+) => ReadCollectionSucceededAction;
+
+export type ReadCollectionFailedAction = {
+  +type: typeof READ_COLLECTION_FAILED,
+  +payload: ApiErrors
+};
+export type ReadCollectionFailedActionCreator = (
+  payload: ApiErrors
+) => ReadCollectionFailedAction;
+
+export type ReadCollectionAction =
+  | ReadCollectionRequestedAction
+  | ReadCollectionStartedAction
+  | ReadCollectionSucceededAction
+  | ReadCollectionFailedAction;
+
+//--------------------
+// END READ COLLECTION
+//--------------------
 
 //--------------------
 // BEGIN UPDATE ENTITY
@@ -295,21 +298,28 @@ export type DeleteEntityAction =
 export type Action =
   | DatabaseAction
   | CreateEntityAction
-  | ReadEntitiesAction
+  | ReadCollectionAction
   | ReadEntityAction
   | UpdateEntityAction
   | DeleteEntityAction;
 
-export type CachedQuery = {
+export type CachedCollectionQuery = {
   +ids: Array<string>,
-  +response: HttpResponseWithQuery<Entities>
+  +meta: HttpResponseMeta,
+  +query: HttpQuery
 };
 
-export type CachedQueries = { +[query: string]: CachedQuery };
+export type CachedCollectionQueries = { +[query: string]: CachedCollectionQuery };
 
-export type CachedQueriesReducer = (state: CachedQueries, action: Action) => CachedQueries;
+export type CachedCollectionQueriesReducer = (
+  state: CachedCollectionQueries,
+  action: Action
+) => CachedCollectionQueries;
 
-export type CachedQueryWithEntities = { +entities: Entities, +cachedQuery: CachedQuery };
+export type CollectionWithQuery = {
+  +entities: Collection,
+  +cachedQuery: CachedCollectionQuery
+};
 
 export type ErrorReducer = (state: ApiErrors, action: Action) => ApiErrors;
 
@@ -317,19 +327,19 @@ export type IsConnectingReducer = (state: boolean, action: Action) => boolean;
 
 export type ProjectState = {
   +error: ApiErrors,
-  +cachedQueries: CachedQueries,
+  +cachedQueries: CachedCollectionQueries,
   +isConnecting: boolean
 };
 
-export type GetEntityByIdSelector = (state: AppState, id: string) => Entity;
+export type GetEntitySelector = (state: AppState, query: HttpQuery) => Entity;
 
-export type GetEntitiesByQuerySelector = (
+export type GetCollectionSelector = (
   state: AppState,
   query: HttpQuery
-) => CachedQueryWithEntities | void;
+) => CollectionWithQuery | void;
 
 export type GetErrorSelector = (state: AppState) => ApiErrors | null;
 
 export type GetIsConnectingSelector = (state: AppState) => boolean;
 
-export type HasEntitySelector = (state: AppState, id: string) => boolean;
+export type HasEntitySelector = (state: AppState, query: HttpQuery) => boolean;
