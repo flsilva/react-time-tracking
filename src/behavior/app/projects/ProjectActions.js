@@ -167,7 +167,7 @@ export const readEntityStarted: ReadEntityStartedActionCreator = (
 });
 
 export const readEntitySucceeded: ReadEntitySucceededActionCreator = (
-  payload: Entity,
+  payload: HttpResponseWithQuery<Entity>,
 ): ReadEntitySucceededAction => ({ type: READ_ENTITY_SUCCEEDED, payload });
 
 export const readEntityFailed: ReadEntityFailedActionCreator = (

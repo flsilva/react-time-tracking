@@ -40,7 +40,7 @@ const error = (state = null, action) => {
   }
 };
 
-const cachedQueries = (state = {}, { payload, type }) => {
+const cachedCollectionQueries = (state = {}, { payload, type }) => {
   switch (type) {
     case READ_ENTITIES_SUCCEEDED: {
       let query = payload.query || QUERY_ALL;
@@ -85,7 +85,7 @@ export const getEntities = (state, _query = QUERY_ALL) => {
   if (!state.stopwatches) return undefined;
 
   const query = isString(_query) ? _query : JSON.stringify(_query);
-  const cachedQuery = state.stopwatches.cachedQueries[query];
+  const cachedQuery = state.stopwatches.cachedCollectionQueries[query];
 
   if (!cachedQuery) return undefined;
 
@@ -111,6 +111,6 @@ const isConnecting = (state = false, action) => {
 
 export default combineReducers({
   error,
-  cachedQueries,
+  cachedCollectionQueries,
   isConnecting,
 });

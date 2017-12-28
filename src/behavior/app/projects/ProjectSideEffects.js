@@ -56,10 +56,10 @@ function* readEntitySaga({ meta }) {
   try {
     yield put(readEntityStarted());
 
-    const data = yield makeRequest(resource);
+    const response = yield makeRequest(resource);
 
-    yield put(updateDatabase(data));
-    yield put(readEntitySucceeded());
+    yield put(updateDatabase(response));
+    yield put(readEntitySucceeded({ response, query }));
   } catch (error) {
     yield put(readEntityFailed(error));
   }

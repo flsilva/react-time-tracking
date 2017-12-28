@@ -130,9 +130,11 @@ export type ReadEntityStartedActionCreator = () => ReadEntityStartedAction;
 
 export type ReadEntitySucceededAction = {
   +type: typeof READ_ENTITY_SUCCEEDED,
-  +payload: Entity
+  +payload: HttpResponseWithQuery<Entity>
 };
-export type ReadEntitySucceededActionCreator = (payload: Entity) => ReadEntitySucceededAction;
+export type ReadEntitySucceededActionCreator = (
+  payload: HttpResponseWithQuery<Entity>
+) => ReadEntitySucceededAction;
 
 export type ReadEntityFailedAction = {
   +type: typeof READ_ENTITY_FAILED,
@@ -321,13 +323,31 @@ export type CollectionWithQuery = {
   +cachedQuery: CachedCollectionQuery
 };
 
+export type CachedUnitQuery = {
+  +id: string,
+  +query: HttpQuery
+};
+
+export type CachedUnitQueries = { +[query: string]: CachedUnitQuery };
+
+export type CachedUnitQueriesReducer = (
+  state: CachedUnitQueries,
+  action: Action
+) => CachedUnitQueries;
+
+export type UnitWithQuery = {
+  +entity: Entity,
+  +cachedQuery: CachedUnitQuery
+};
+
 export type ErrorReducer = (state: ApiErrors, action: Action) => ApiErrors;
 
 export type IsConnectingReducer = (state: boolean, action: Action) => boolean;
 
 export type ProjectState = {
   +error: ApiErrors,
-  +cachedQueries: CachedCollectionQueries,
+  +cachedCollectionQueries: CachedCollectionQueries,
+  +cachedUnitQueries: CachedUnitQueries,
   +isConnecting: boolean
 };
 

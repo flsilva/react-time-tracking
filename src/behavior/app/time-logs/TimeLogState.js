@@ -37,7 +37,7 @@ export const entities = (state = {}, action) => {
   }
 };
 
-const cachedQueries = (state = {}, { payload, type }) => {
+const cachedCollectionQueries = (state = {}, { payload, type }) => {
   switch (type) {
     case READ_ENTITIES_SUCCEEDED: {
       let query = payload.query || QUERY_ALL;
@@ -126,7 +126,7 @@ export const getEntities = (state, _query = QUERY_ALL) => {
   if (!state.timeLogs) return undefined;
 
   const query = isString(_query) ? _query : JSON.stringify(_query);
-  const cachedQuery = state.timeLogs.cachedQueries[query];
+  const cachedQuery = state.timeLogs.cachedCollectionQueries[query];
 
   if (!cachedQuery) return undefined;
 
@@ -138,6 +138,6 @@ export const getEntities = (state, _query = QUERY_ALL) => {
 
 export default combineReducers({
   error,
-  cachedQueries,
+  cachedCollectionQueries,
   isConnecting,
 });

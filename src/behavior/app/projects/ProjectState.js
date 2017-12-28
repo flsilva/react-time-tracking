@@ -2,9 +2,12 @@
  * @flow
  */
 
+import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { combineReducers } from 'redux';
 import build from 'redux-object';
+import type { ArrayReducer } from '../../../types';
 import type { AppState } from '../types';
 import type { ApiErrors, HttpQuery } from '../api/types';
 import { generateQueryForResourceId } from '../utils/QueryUtils';
@@ -30,6 +33,7 @@ import {
 
 import type {
   Action,
+  Collection,
   Database,
   DatabaseReducer,
   Entity,
@@ -38,6 +42,10 @@ import type {
   CachedCollectionQueriesReducer,
   CachedCollectionQuery,
   CollectionWithQuery,
+  CachedUnitQueries,
+  CachedUnitQueriesReducer,
+  CachedUnitQuery,
+  UnitWithQuery,
   GetCollectionSelector,
   GetEntitySelector,
   GetErrorSelector,
@@ -62,15 +70,14 @@ export const database: DatabaseReducer = (
   }
 };
 
-const cachedQueries: CachedCollectionQueriesReducer = (
+const cachedCollectionQueries: CachedCollectionQueriesReducer = (
   state: CachedCollectionQueries = {},
   action: Action,
 ): CachedCollectionQueries => {
   switch (action.type) {
     case READ_COLLECTION_SUCCEEDED: {
       const query: HttpQuery = action.payload.query;
-
-      const data: Array<Entity> = action.payload.response.data || [];
+      const data: Collection = action.payload.response.data || [];
 
       return {
         ...state,
@@ -80,6 +87,65 @@ const cachedQueries: CachedCollectionQueriesReducer = (
           query,
         },
       };
+    }
+
+    case CLEAR_DATABASE:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+function createCachedUnitQuery(query: HttpQuery, entity: Entity): CachedUnitQuery {
+  return {
+    id: entity.id,
+    query,
+  };
+}
+
+function collectionToUnitQueriesReducerFactory(
+  query: HttpQuery,
+): ArrayReducer<CachedUnitQueries, Entity> {
+  return function collectionToUnitQueriesReducer(
+    acc: CachedUnitQueries,
+    value: Entity,
+  ): CachedUnitQueries {
+    const queryWithId:HttpQuery = generateQueryForResourceId(
+      value.id,
+    )(omit(query, 'collection'));
+
+    return {
+      ...acc,
+      [JSON.stringify(queryWithId)]: createCachedUnitQuery(queryWithId, value),
+    };
+  };
+}
+
+const cachedUnitQueries: CachedUnitQueriesReducer = (
+  state: CachedUnitQueries = {},
+  action: Action,
+): CachedUnitQueries => {
+  switch (action.type) {
+    case READ_ENTITY_SUCCEEDED: {
+      const query: HttpQuery = action.payload.query;
+      const entity: Entity | void = action.payload.response.data;
+
+      if (!entity) return state;
+
+      return {
+        ...state,
+        [JSON.stringify(query)]: createCachedUnitQuery(query, entity),
+      };
+    }
+
+    case READ_COLLECTION_SUCCEEDED: {
+      const query: HttpQuery = action.payload.query;
+      const collection: Collection | void = action.payload.response.data;
+
+      if (!collection || isEmpty(collection)) return state;
+
+      return collection.reduce(collectionToUnitQueriesReducerFactory(query), state);
     }
 
     case CLEAR_DATABASE:
@@ -169,12 +235,11 @@ export const getEntity: GetEntitySelector = (
 };
 
 export const hasEntity: HasEntitySelector = (state: AppState, query: HttpQuery): boolean => {
-  try {
-    getEntity(state, query);
-    return true;
-  } catch (e) {
-    return false;
-  }
+  const cachedQuery: CachedUnitQuery = state.projects.cachedUnitQueries[
+    JSON.stringify(query)
+  ];
+
+  return cachedQuery !== undefined;
 };
 
 export const getCollection: GetCollectionSelector = (
@@ -183,7 +248,7 @@ export const getCollection: GetCollectionSelector = (
 ): CollectionWithQuery | void => {
   if (!state.projects) return undefined;
 
-  const cachedQuery: CachedCollectionQuery = state.projects.cachedQueries[
+  const cachedQuery: CachedCollectionQuery = state.projects.cachedCollectionQueries[
     JSON.stringify(query)
   ];
 
@@ -207,6 +272,7 @@ export const getIsConnecting: GetIsConnectingSelector = (state: AppState): boole
 
 export default combineReducers({
   error,
-  cachedQueries,
+  cachedCollectionQueries,
+  cachedUnitQueries,
   isConnecting,
 });
