@@ -6,7 +6,7 @@ import {
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
 } from './types';
-import { getCollection, hasEntity } from './ProjectState';
+import { hasCollection, hasEntity } from './ProjectState';
 import {
   createEntityFailed,
   createEntityStarted,
@@ -70,8 +70,8 @@ function* readCollectionSaga({ meta }) {
   const { query } = resource;
 
   if (!killCache) {
-    const cachedResult = yield select(getCollection, query);
-    if (cachedResult) return;
+    const collectionExists = yield select(hasCollection, query);
+    if (collectionExists) return;
   }
 
   try {

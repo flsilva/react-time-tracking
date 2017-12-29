@@ -318,11 +318,6 @@ export type CachedCollectionQueriesReducer = (
   action: Action
 ) => CachedCollectionQueries;
 
-export type CollectionWithQuery = {
-  +entities: Collection,
-  +cachedQuery: CachedCollectionQuery
-};
-
 export type CachedUnitQuery = {
   +id: string,
   +query: HttpQuery
@@ -335,11 +330,6 @@ export type CachedUnitQueriesReducer = (
   action: Action
 ) => CachedUnitQueries;
 
-export type UnitWithQuery = {
-  +entity: Entity,
-  +cachedQuery: CachedUnitQuery
-};
-
 export type ErrorReducer = (state: ApiErrors, action: Action) => ApiErrors;
 
 export type IsConnectingReducer = (state: boolean, action: Action) => boolean;
@@ -351,15 +341,10 @@ export type ProjectState = {
   +isConnecting: boolean
 };
 
-export type GetEntitySelector = (state: AppState, query: HttpQuery) => Entity;
-
-export type GetCollectionSelector = (
-  state: AppState,
-  query: HttpQuery
-) => CollectionWithQuery | void;
-
 export type GetErrorSelector = (state: AppState) => ApiErrors | null;
 
 export type GetIsConnectingSelector = (state: AppState) => boolean;
+
+export type HasCollectionSelector = (state: AppState, query: HttpQuery) => boolean;
 
 export type HasEntitySelector = (state: AppState, query: HttpQuery) => boolean;

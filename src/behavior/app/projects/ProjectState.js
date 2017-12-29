@@ -6,7 +6,6 @@ import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import { combineReducers } from 'redux';
-import build from 'redux-object';
 import type { ArrayReducer } from '../../../types';
 import type { AppState } from '../types';
 import type { ApiErrors, HttpQuery } from '../api/types';
@@ -41,15 +40,12 @@ import type {
   CachedCollectionQueries,
   CachedCollectionQueriesReducer,
   CachedCollectionQuery,
-  CollectionWithQuery,
   CachedUnitQueries,
   CachedUnitQueriesReducer,
   CachedUnitQuery,
-  UnitWithQuery,
-  GetCollectionSelector,
-  GetEntitySelector,
   GetErrorSelector,
   GetIsConnectingSelector,
+  HasCollectionSelector,
   HasEntitySelector,
   IsConnectingReducer,
 } from './types';
@@ -211,27 +207,15 @@ const isConnecting: IsConnectingReducer = (
   }
 };
 
-export const getEntity: GetEntitySelector = (
+export const hasCollection: HasCollectionSelector = (
   state: AppState,
   query: HttpQuery,
-): Entity => {
-  if (!query) throw new Error('Argument <query> must not be null.');
-  if (!query.unit) throw new Error('Argument <query.unit> must not be null.');
+): boolean => {
+  const cachedQuery: CachedCollectionQuery = state.projects.cachedCollectionQueries[
+    JSON.stringify(query)
+  ];
 
-  const id: string | void = query.unit.id;
-  if (!id) throw new Error('Argument <query.unit.id> must not be null.');
-
-  const opts: { eager: boolean, ignoreLinks: boolean } = { eager: true, ignoreLinks: true };
-  const entity: Entity = build(state.database, 'projects', id, opts);
-  if (!entity) {
-    const notFoundError: string = `Entity not found for id: ${id}.` +
-      ' hasEntity() function should be called before calling this function' +
-      ' to avoid this error.';
-
-    throw new Error(notFoundError);
-  }
-
-  return entity;
+  return cachedQuery !== undefined;
 };
 
 export const hasEntity: HasEntitySelector = (state: AppState, query: HttpQuery): boolean => {
@@ -240,26 +224,6 @@ export const hasEntity: HasEntitySelector = (state: AppState, query: HttpQuery):
   ];
 
   return cachedQuery !== undefined;
-};
-
-export const getCollection: GetCollectionSelector = (
-  state: AppState,
-  query: HttpQuery,
-): CollectionWithQuery | void => {
-  if (!state.projects) return undefined;
-
-  const cachedQuery: CachedCollectionQuery = state.projects.cachedCollectionQueries[
-    JSON.stringify(query)
-  ];
-
-  if (!cachedQuery) return undefined;
-
-  return {
-    entities: cachedQuery.ids.map((id: string): Entity => (
-      getEntity(state, generateQueryForResourceId(id)(query))),
-    ),
-    cachedQuery,
-  };
 };
 
 export const getError: GetErrorSelector = (state: AppState): ApiErrors | null => (

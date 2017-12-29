@@ -1,9 +1,10 @@
 import withEntity from '../utils/withEntity';
+import { getEntityFactory } from '../DatabaseState';
 import { readEntity } from './ProjectActions';
-import { getEntity, getError, getIsConnecting, hasEntity } from './ProjectState';
+import { getError, getIsConnecting, hasEntity } from './ProjectState';
 
 export default withEntity({
-  getEntity,
+  getEntity: getEntityFactory('projects'),
   getError,
   getIsConnecting,
   hasEntity,
