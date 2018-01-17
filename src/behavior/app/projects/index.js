@@ -20,14 +20,14 @@ const composeEntitiesQueryFunction = itemsPerPage => page => (
   pipe([
     generateQueryForRelationship('author'),
     generateQueryForPagination({ page, itemsPerPage, sort: '-created-at' }),
-  ])()
+  ])({ resourceType: 'projects' })
 );
 
 const composeEntityQueryFunction = relationships => id => (
   pipe([
     generateQueryForRelationship(relationships),
     generateQueryForResourceId(id),
-  ])()
+  ])({ resourceType: 'projects' })
 );
 
 export const EditProjectScreenFactory = ({ navToEntities }) => pipe([

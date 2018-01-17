@@ -14,17 +14,19 @@ import { entities as stopwatchEntitiesReducer } from './stopwatches/StopwatchSta
 // import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
 import { generateQueryForResourceId } from './utils/QueryUtils';
 import type { HttpQuery } from './api/types';
+import type { CachedQuery } from './api/caching/types';
+import { getQueryCached } from './api/caching/Repository';
 import type {
   AppState,
   Collection,
   Entity,
-  CachedCollectionQuery,
-  CollectionWithQuery,
+  CollectionWithCachedQuery,
   GetCollectionSelector,
   GetCollectionSelectorFactory,
   GetEntitySelector,
   GetEntitySelectorFactory,
 } from './types';
+import { CLEAR_ENTITIES } from './types';
 
 /*
  * TODO: fix weird bug: commented out line above:
@@ -90,10 +92,11 @@ export default (state = {}, action) => {
         }), {});
     }
 
-    /*
-    case CLEAR_DATABASE:
-      return {};
-    */
+    case CLEAR_ENTITIES:
+      return {
+        ...state,
+        [action.payload]: undefined,
+      };
 
     default:
       return state;
@@ -128,13 +131,10 @@ export const getCollectionFactory: GetCollectionSelectorFactory = (
   function getCollection(
     state: AppState,
     query: HttpQuery,
-  ): CollectionWithQuery | void {
+  ): CollectionWithCachedQuery | void {
     if (!state[entityType]) return undefined;
 
-    const cachedQuery: CachedCollectionQuery = state[entityType].cachedCollectionQueries[
-      JSON.stringify(query)
-    ];
-
+    const cachedQuery: CachedQuery | void = getQueryCached(state, query);
     if (!cachedQuery) return undefined;
 
     const entities: Collection = [];

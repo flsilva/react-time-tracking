@@ -7,7 +7,6 @@ import type {
   ApiErrors,
   HttpQuery,
   HttpRequest,
-  HttpResponseMeta,
   HttpResponseWithQuery,
 } from '../api/types';
 
@@ -305,46 +304,15 @@ export type Action =
   | UpdateEntityAction
   | DeleteEntityAction;
 
-export type CachedCollectionQuery = {
-  +ids: Array<string>,
-  +meta: HttpResponseMeta,
-  +query: HttpQuery
-};
-
-export type CachedCollectionQueries = { +[query: string]: CachedCollectionQuery };
-
-export type CachedCollectionQueriesReducer = (
-  state: CachedCollectionQueries,
-  action: Action
-) => CachedCollectionQueries;
-
-export type CachedUnitQuery = {
-  +id: string,
-  +query: HttpQuery
-};
-
-export type CachedUnitQueries = { +[query: string]: CachedUnitQuery };
-
-export type CachedUnitQueriesReducer = (
-  state: CachedUnitQueries,
-  action: Action
-) => CachedUnitQueries;
-
 export type ErrorReducer = (state: ApiErrors, action: Action) => ApiErrors;
 
 export type IsConnectingReducer = (state: boolean, action: Action) => boolean;
 
 export type ProjectState = {
   +error: ApiErrors,
-  +cachedCollectionQueries: CachedCollectionQueries,
-  +cachedUnitQueries: CachedUnitQueries,
   +isConnecting: boolean
 };
 
 export type GetErrorSelector = (state: AppState) => ApiErrors | null;
 
 export type GetIsConnectingSelector = (state: AppState) => boolean;
-
-export type HasCollectionSelector = (state: AppState, query: HttpQuery) => boolean;
-
-export type HasEntitySelector = (state: AppState, query: HttpQuery) => boolean;

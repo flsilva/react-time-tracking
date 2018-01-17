@@ -1,4 +1,5 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
+import { clearEntities } from '../AppActions';
 import {
   CREATE_ENTITY_REQUESTED,
   READ_ENTITY_REQUESTED,
@@ -6,7 +7,7 @@ import {
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
 } from './types';
-import { hasCollection, hasEntity } from './ProjectState';
+import { isQueryCached } from '../api/caching/Repository';
 import {
   createEntityFailed,
   createEntityStarted,
@@ -23,10 +24,9 @@ import {
   deleteEntityFailed,
   deleteEntityStarted,
   deleteEntitySucceeded,
-  clearDatabase,
+  // clearDatabase,
   updateDatabase,
 } from './ProjectActions';
-
 
 function* createEntitySaga({ meta }) {
   try {
@@ -35,7 +35,7 @@ function* createEntitySaga({ meta }) {
     const { makeRequest, resource, successCb } = meta.http;
     const data = yield makeRequest(resource);
 
-    yield put(clearDatabase());
+    yield put(clearEntities('projects'));
     yield put(updateDatabase(data));
     yield put(createEntitySucceeded());
     if (successCb) successCb();
@@ -49,7 +49,7 @@ function* readEntitySaga({ meta }) {
   const { query } = resource;
 
   if (!killCache && query && query.unit && query.unit.id) {
-    const entityExists = yield select(hasEntity, query);
+    const entityExists = yield select(isQueryCached, query);
     if (entityExists) return;
   }
 
@@ -70,7 +70,7 @@ function* readCollectionSaga({ meta }) {
   const { query } = resource;
 
   if (!killCache) {
-    const collectionExists = yield select(hasCollection, query);
+    const collectionExists = yield select(isQueryCached, query);
     if (collectionExists) return;
   }
 
@@ -107,7 +107,7 @@ function* deleteEntitySaga({ meta }) {
 
     yield put(deleteEntityStarted());
     yield makeRequest(resource);
-    yield put(clearDatabase());
+    yield put(clearEntities('projects'));
     yield put(deleteEntitySucceeded());
     if (successCb) successCb();
   } catch (error) {

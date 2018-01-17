@@ -1,12 +1,13 @@
 import withEntity from '../utils/withEntity';
+import { isQueryCached } from '../api/caching/Repository';
 import { getEntityFactory } from '../DatabaseState';
 import { readEntity } from './ProjectActions';
-import { getError, getIsConnecting, hasEntity } from './ProjectState';
+import { getError, getIsConnecting } from './ProjectState';
 
 export default withEntity({
   getEntity: getEntityFactory('projects'),
   getError,
   getIsConnecting,
-  hasEntity,
+  isQueryCached,
   readEntity,
 });

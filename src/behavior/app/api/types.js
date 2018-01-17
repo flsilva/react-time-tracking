@@ -2,6 +2,18 @@
  * @flow
  */
 
+import type { CachingState } from './caching/types';
+
+//----------------
+// BEGIN API STATE
+//----------------
+
+export type ApiState = { +caching: CachingState };
+
+//--------------
+// END API STATE
+//--------------
+
 //-----------------
 // BEGIN API ERRORS
 //-----------------
@@ -65,6 +77,7 @@ export type HttpCollectionQuery = {
 
 export type HttpQuery = {
   +collection?: HttpCollectionQuery,
+  +resourceType: string,
   +unit?: HttpUnitQuery
 };
 
@@ -111,6 +124,27 @@ export type HttpResponseWithQuery<ResponsePayload> = {
 // END HTTP RESPONSE
 //------------------
 
+//-----------------------------
+// BEGIN HTTP REQUEST SUCCEEDED
+//-----------------------------
+
+// eslint-disable-next-line import/prefer-default-export
+export const HTTP_REQUEST_SUCCEEDED: 'app/api/request/succeeded' =
+  'app/api/request/succeeded';
+
+export type HttpRequestSucceededAction = {
+  +type: typeof HTTP_REQUEST_SUCCEEDED,
+  +payload: HttpResponseWithQuery<mixed>
+};
+
+export type HttpRequestSucceededActionCreator = (
+  payload: HttpResponseWithQuery<mixed>
+) => HttpRequestSucceededAction;
+
+//--------------------------
+// END HTTP REQUEST SUCEEDED
+//--------------------------
+
 //-------------------
 // BEGIN HTTP FETCHER
 //-------------------
@@ -122,3 +156,6 @@ export type HttpFetcher<ResponsePayload> = (
 //-----------------
 // END HTTP FETCHER
 //-----------------
+
+export type Action =
+  | HttpRequestSucceededAction;

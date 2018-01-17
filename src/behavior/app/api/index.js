@@ -2,13 +2,14 @@ import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
 import { formatPayloadToApi } from './JsonApiUtils';
+import { httpRequestSucceeded } from './ApiActions';
 import { formatApiError } from './ApiErrors';
 
 const getHeaders = () => ({ 'Content-Type': 'application/vnd.api+json' });
 
 const getFetcher = () => {
   const fetcher = axios.create({
-    baseURL: 'http://192.168.0.3:3000/',
+    baseURL: 'http://192.168.0.4:3000/',
     crossDomain: true,
     timeout: 5000,
   });
@@ -17,6 +18,11 @@ const getFetcher = () => {
 };
 
 const extractData = response => response.data;
+
+const dispatchHttpRequestSucceeded = (dispatch, query) => (response) => {
+  dispatch(httpRequestSucceeded({ response, query }));
+  return response;
+};
 
 const extractHttpAuthHeadersFromResponse = (dispatch, extractAuthDataFromObject) => (response) => {
   extractAuthDataFromObject(dispatch, response.headers);
@@ -32,7 +38,7 @@ const unauthorizedHttpHandler = (dispatch, unauthorizedHandler) => (error) => {
   return Promise.reject(unauthorizedHandler(dispatch));
 };
 
-const addInterceptors = (dispatch, action, fetcher) => {
+const addInterceptors = (dispatch, action, query, fetcher) => {
   const auth = action.meta.auth || {};
   const { extractAuthDataFromObject, unauthorizedHandler } = auth;
 
@@ -50,6 +56,9 @@ const addInterceptors = (dispatch, action, fetcher) => {
   }
 
   fetcher.interceptors.response.use(extractData, undefined);
+  fetcher.interceptors.response.use(
+    dispatchHttpRequestSucceeded(dispatch, query),
+  );
   fetcher.interceptors.response.use(undefined, formatApiErrorHandler);
 };
 
@@ -73,10 +82,12 @@ const resourceToAxios = (resource) => {
 
 // const makeRequest = fetcher => request => fetcher.request(request);
 
-const makeRequest = fetcher => (resource) => {
+const makeRequest = (fetcher, dispatch, action) => (resource) => {
   if (!resource) {
     throw new Error(`Argument <resource> must not be null. Received: ${resource}`);
   }
+
+  addInterceptors(dispatch, action, resource.query, fetcher);
 
   const axiosResource = resourceToAxios(resource);
   return fetcher.request(axiosResource);
@@ -100,8 +111,9 @@ export const middleware = store => next => (action) => {
   };
 
   const fetcher = getFetcher();
-  addInterceptors(store.dispatch, action, fetcher);
-  newAction.meta.http.makeRequest = makeRequest(fetcher);
+  // addInterceptors(store.dispatch, action, fetcher);
+  // newAction.meta.http.makeRequest = makeRequest(fetcher);
+  newAction.meta.http.makeRequest = makeRequest(fetcher, store.dispatch, action);
 
   if (!resource.payload || !resource.payload.data) return next(newAction);
 
