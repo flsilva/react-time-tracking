@@ -8,14 +8,14 @@ import bindSignOut from './auth/sign-out/SignOutSideEffects';
 import bindProject from './projects/ProjectSideEffects';
 import bindStopwatch from './stopwatches/StopwatchSideEffects';
 import bindTimeLog from './time-logs/TimeLogSideEffects';
-import { CLEAR_ENTITIES } from './types';
+import { CLEAR_DATABASE as CLEAR_PROJECTS_DATABASE } from './projects/types';
 
-function* clearEntitiesSaga({ payload }) {
-  yield put(clearCache(payload));
+function* clearEntitiesSaga(entityType) {
+  yield put(clearCache(entityType));
 }
 
 function* bindApp() {
-  yield takeLatest(CLEAR_ENTITIES, clearEntitiesSaga);
+  yield takeLatest(CLEAR_PROJECTS_DATABASE, clearEntitiesSaga, 'projects');
 }
 
 export default function* () {

@@ -1,5 +1,4 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { clearEntities } from '../AppActions';
 import {
   CREATE_ENTITY_REQUESTED,
   READ_ENTITY_REQUESTED,
@@ -9,6 +8,7 @@ import {
 } from './types';
 import { isQueryCached } from '../api/caching/Repository';
 import {
+  clearDatabase,
   createEntityFailed,
   createEntityStarted,
   createEntitySucceeded,
@@ -34,7 +34,7 @@ function* createEntitySaga({ meta }) {
     const { makeRequest, resource, successCb } = meta.http;
     const data = yield makeRequest(resource);
 
-    yield put(clearEntities('projects'));
+    yield put(clearDatabase());
     yield put(updateDatabase(data));
     yield put(createEntitySucceeded());
     if (successCb) successCb();
@@ -106,7 +106,7 @@ function* deleteEntitySaga({ meta }) {
 
     yield put(deleteEntityStarted());
     yield makeRequest(resource);
-    yield put(clearEntities('projects'));
+    yield put(clearDatabase());
     yield put(deleteEntitySucceeded());
     if (successCb) successCb();
   } catch (error) {

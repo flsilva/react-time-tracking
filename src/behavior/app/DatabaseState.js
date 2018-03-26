@@ -5,7 +5,10 @@
 import normalize from 'json-api-normalizer';
 import build from 'redux-object';
 import { database as projectDatabaseReducer } from './projects/ProjectState';
-import { UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE } from './projects/types';
+import {
+  CLEAR_DATABASE as CLEAR_PROJECTS_DATABASE,
+  UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE,
+} from './projects/types';
 import { entities as timeLogEntitiesReducer } from './time-logs/TimeLogState';
 import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLogActions';
 import { entities as userEntitiesReducer } from './users/UserState';
@@ -26,7 +29,6 @@ import type {
   GetEntitySelector,
   GetEntitySelectorFactory,
 } from './types';
-import { CLEAR_ENTITIES } from './types';
 
 /*
  * TODO: fix weird bug: commented out line above:
@@ -92,10 +94,10 @@ export default (state = {}, action) => {
         }), {});
     }
 
-    case CLEAR_ENTITIES:
+    case CLEAR_PROJECTS_DATABASE:
       return {
         ...state,
-        [action.payload]: undefined,
+        projects: undefined,
       };
 
     default:
