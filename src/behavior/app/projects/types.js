@@ -10,8 +10,6 @@ import type {
   HttpResponseWithQuery,
 } from '../api/types';
 
-type HttpRequestWrapper = { +http: HttpRequest };
-
 //-------------
 // BEGIN ENTITY
 //-------------
@@ -50,6 +48,16 @@ export type DatabaseReducer = (state: Database, action: DatabaseAction) => Datab
 //--------------------
 // END ENTITY DATABASE
 //--------------------
+
+//-----------
+// BEGIN HTTP
+//-----------
+
+type HttpRequestWrapper = { +http: HttpRequest };
+
+//---------
+// END HTTP
+//---------
 
 //--------------------
 // BEGIN CREATE ENTITY
