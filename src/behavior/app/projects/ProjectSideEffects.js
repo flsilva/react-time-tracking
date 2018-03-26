@@ -24,7 +24,6 @@ import {
   deleteEntityFailed,
   deleteEntityStarted,
   deleteEntitySucceeded,
-  // clearDatabase,
   updateDatabase,
 } from './ProjectActions';
 
