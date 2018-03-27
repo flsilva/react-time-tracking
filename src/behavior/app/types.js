@@ -3,7 +3,7 @@
  */
 
 import type { ApiState, HttpQuery } from './api/types';
-import type { QueryCache } from './api/caching/types';
+import type { QueryMetaResult } from './api/caching/types';
 import type { Database as ProjectDatabase, ProjectState } from './projects/types';
 
 export type DatabaseState = { projects: ProjectDatabase };
@@ -24,15 +24,15 @@ export type Entity = { +id: string, +attributes: EntityAttributes };
 
 export type Collection = Array<Entity>;
 
-export type CollectionWithQueryCache = {
+export type CollectionWithQueryMetaResult = {
   +entities: Collection,
-  +queryCache: QueryCache
+  +queryMetaResult: QueryMetaResult
 };
 
 export type GetCollectionSelector = (
   state: AppState,
   query: HttpQuery
-) => CollectionWithQueryCache | void;
+) => CollectionWithQueryMetaResult | void;
 
 export type GetCollectionSelectorFactory = (entityType: string) => GetCollectionSelector;
 

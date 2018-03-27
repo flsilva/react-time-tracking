@@ -17,13 +17,13 @@ import { entities as stopwatchEntitiesReducer } from './stopwatches/StopwatchSta
 // import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
 import { generateQueryForResourceId } from './utils/QueryUtils';
 import type { HttpQuery } from './api/types';
-import type { QueryCache } from './api/caching/types';
-import { getQueryCache } from './api/caching/Repository';
+import type { QueryMetaResult } from './api/caching/types';
+import { getQueryMetaResult } from './api/caching/Repository';
 import type {
   AppState,
   Collection,
   Entity,
-  CollectionWithQueryCache,
+  CollectionWithQueryMetaResult,
   GetCollectionSelector,
   GetCollectionSelectorFactory,
   GetEntitySelector,
@@ -133,18 +133,18 @@ export const getCollectionFactory: GetCollectionSelectorFactory = (
   function getCollection(
     state: AppState,
     query: HttpQuery,
-  ): CollectionWithQueryCache | void {
+  ): CollectionWithQueryMetaResult | void {
     if (!state[entityType]) return undefined;
 
-    const queryCache: QueryCache | void = getQueryCache(state, query);
-    if (!queryCache) return undefined;
+    const queryMetaResult: QueryMetaResult | void = getQueryMetaResult(state, query);
+    if (!queryMetaResult) return undefined;
 
     const entities: Collection = [];
 
-    queryCache.ids.forEach((id: string): Entity | void => {
+    queryMetaResult.ids.forEach((id: string): Entity | void => {
       const entity: Entity | void = getEntityFactory(entityType)(
         state,
-        generateQueryForResourceId(id)(queryCache.query),
+        generateQueryForResourceId(id)(queryMetaResult.query),
       );
 
       if (entity !== undefined) entities.push(entity);
@@ -152,7 +152,7 @@ export const getCollectionFactory: GetCollectionSelectorFactory = (
 
     return {
       entities,
-      queryCache,
+      queryMetaResult,
     };
   }
 );

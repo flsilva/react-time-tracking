@@ -76,11 +76,11 @@ export default ({
     );
 
     const getTotalEntities = result => (
-      result ? result.queryCache.meta['total-records'] : undefined
+      result ? result.queryMetaResult.meta['total-records'] : undefined
     );
 
     const getTotalPages = result => (
-      result ? result.queryCache.meta['total-pages'] : undefined
+      result ? result.queryMetaResult.meta['total-pages'] : undefined
     );
 
     const hasNextPage = (currentPage, totalPages) => (

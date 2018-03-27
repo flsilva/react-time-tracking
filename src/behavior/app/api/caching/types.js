@@ -6,32 +6,29 @@ import type { AppState } from '../../types';
 import type { Action, HttpQuery, HttpResponseMeta } from '../types';
 
 // eslint-disable-next-line import/prefer-default-export
-export const CLEAR_CACHE: 'app/api/caching/clear' =
-  'app/api/caching/clear';
+export const CLEAR_CACHE: 'app/api/caching/clear' = 'app/api/caching/clear';
 
-export type QueryCache = {
+export type QueryMetaResult = {
   +ids: Array<string>,
   +meta?: HttpResponseMeta,
   +query: HttpQuery
 };
 
-export type QueryCacheMap = { +[query: string]: QueryCache };
+export type QueryMetaResultMap = { +[query: string]: QueryMetaResult };
 
-export type ResourceTypeMap = { +[resourceType: string]: QueryCacheMap };
-
-export type QueryCacheReducer = (
-  state: ResourceTypeMap,
+export type QueryMetaResultReducer = (
+  state: QueryMetaResultMap,
   action: Action
-) => ResourceTypeMap;
+) => QueryMetaResultMap;
 
-export type CachingState = { +queries: ResourceTypeMap };
+export type CachingState = { +queries: QueryMetaResultMap };
 
-export type GetQueryCacheSelector = (
+export type GetQueryMetaResultSelector = (
   state: AppState,
   query: HttpQuery
-) => QueryCache | void;
+) => QueryMetaResult | void;
 
-export type HasQueryCacheSelector = (state: AppState, query: HttpQuery) => boolean;
+export type HasQueryMetaResultSelector = (state: AppState, query: HttpQuery) => boolean;
 
 export type ClearCacheAction = {
   +type: typeof CLEAR_CACHE,
