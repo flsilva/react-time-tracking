@@ -11,19 +11,20 @@ import type { Action, HttpQuery, HttpResponseMeta } from '../types';
 import { HTTP_REQUEST_SUCCEEDED } from '../types';
 
 import type {
-  CachedQueries,
-  CachedQueriesReducer,
-  CachedQuery,
-  GetQueryCachedSelector,
-  IsQueryCachedSelector,
+  GetQueryCacheSelector,
+  HasQueryCacheSelector,
+  QueryCache,
+  QueryCacheMap,
+  QueryCacheReducer,
+  ResourceTypeMap,
 } from './types';
 import { CLEAR_CACHE } from './types';
 
-function createCachedQuery(
+function createQueryCache(
   query: HttpQuery,
   meta: HttpResponseMeta | void,
   collection: Collection,
-): CachedQuery {
+): QueryCache {
   return {
     ids: collection.map((entity: Entity): string => entity.id),
     meta,
@@ -34,42 +35,42 @@ function createCachedQuery(
 function collectionToUnitQueriesReducerFactory(
   query: HttpQuery,
   meta: HttpResponseMeta | void,
-): ArrayReducer<CachedQueries, Entity> {
+): ArrayReducer<QueryCacheMap, Entity> {
   return function collectionToUnitQueriesReducer(
-    acc: CachedQueries,
+    acc: QueryCacheMap,
     value: Entity,
-  ): CachedQueries {
+  ): QueryCacheMap {
     const queryWithId:HttpQuery = generateQueryForResourceId(
       value.id,
     )(omit(query, 'collection'));
 
     return {
       ...acc,
-      [JSON.stringify(queryWithId)]: createCachedQuery(queryWithId, meta, [value]),
+      [JSON.stringify(queryWithId)]: createQueryCache(queryWithId, meta, [value]),
     };
   };
 }
 
-function createCachedQueryForCollection(
+function createQueryCacheForCollection(
   query: HttpQuery,
   collection: Collection,
   meta: HttpResponseMeta | void,
-): CachedQuery {
-  return createCachedQuery(query, meta, collection);
+): QueryCache {
+  return createQueryCache(query, meta, collection);
 }
 
-function createCachedQueriesForCollectionItens(
+function createQueryCacheMapForCollectionItens(
   query: HttpQuery,
   collection: Collection,
   meta: HttpResponseMeta | void,
-): CachedQueries {
+): QueryCacheMap {
   return collection.reduce(collectionToUnitQueriesReducerFactory(query, meta), {});
 }
 
-const queries: CachedQueriesReducer = (
-  state: CachedQueries = {},
+const queries: QueryCacheReducer = (
+  state: ResourceTypeMap = {},
   action: Action,
-): CachedQueries => {
+): ResourceTypeMap => {
   switch (action.type) {
     case HTTP_REQUEST_SUCCEEDED: {
       const query: HttpQuery = action.payload.query;
@@ -90,9 +91,9 @@ const queries: CachedQueriesReducer = (
           ...{
             [query.resourceType]: {
               ...{
-                [JSON.stringify(query)]: createCachedQueryForCollection(query, data, meta),
+                [JSON.stringify(query)]: createQueryCacheForCollection(query, data, meta),
               },
-              ...createCachedQueriesForCollectionItens(query, data, meta),
+              ...createQueryCacheMapForCollectionItens(query, data, meta),
             },
           },
         };
@@ -104,7 +105,7 @@ const queries: CachedQueriesReducer = (
           ...{
             [query.resourceType]: {
               ...{
-                [JSON.stringify(query)]: createCachedQuery(query, meta, collection),
+                [JSON.stringify(query)]: createQueryCache(query, meta, collection),
               },
             },
           },
@@ -128,15 +129,15 @@ const queries: CachedQueriesReducer = (
   }
 };
 
-export const getQueryCached: GetQueryCachedSelector = (
+export const getQueryCache: GetQueryCacheSelector = (
   state: AppState,
   query: HttpQuery,
-): CachedQuery | void => (
+): QueryCache | void => (
   state.api.caching.queries[query.resourceType] ?
     state.api.caching.queries[query.resourceType][JSON.stringify(query)] : undefined
 );
 
-export const isQueryCached: IsQueryCachedSelector = (
+export const hasQueryCache: HasQueryCacheSelector = (
   state: AppState,
   query: HttpQuery,
 ): boolean => (

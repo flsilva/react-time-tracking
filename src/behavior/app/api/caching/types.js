@@ -9,27 +9,29 @@ import type { Action, HttpQuery, HttpResponseMeta } from '../types';
 export const CLEAR_CACHE: 'app/api/caching/clear' =
   'app/api/caching/clear';
 
-export type CachedQuery = {
+export type QueryCache = {
   +ids: Array<string>,
   +meta?: HttpResponseMeta,
   +query: HttpQuery
 };
 
-export type CachedQueries = { +[query: string]: CachedQuery };
+export type QueryCacheMap = { +[query: string]: QueryCache };
 
-export type CachedQueriesReducer = (
-  state: CachedQueries,
+export type ResourceTypeMap = { +[resourceType: string]: QueryCacheMap };
+
+export type QueryCacheReducer = (
+  state: ResourceTypeMap,
   action: Action
-) => CachedQueries;
+) => ResourceTypeMap;
 
-export type CachingState = { +queries: CachedQueries };
+export type CachingState = { +queries: ResourceTypeMap };
 
-export type GetQueryCachedSelector = (
+export type GetQueryCacheSelector = (
   state: AppState,
   query: HttpQuery
-) => CachedQuery | void;
+) => QueryCache | void;
 
-export type IsQueryCachedSelector = (state: AppState, query: HttpQuery) => boolean;
+export type HasQueryCacheSelector = (state: AppState, query: HttpQuery) => boolean;
 
 export type ClearCacheAction = {
   +type: typeof CLEAR_CACHE,

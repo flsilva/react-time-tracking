@@ -2,6 +2,9 @@
  * @flow
  */
 
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
+import trim from 'lodash/trim';
 import type {
   ClearCacheAction,
   ClearCacheActionCreator,
@@ -12,12 +15,12 @@ import { CLEAR_CACHE } from './types';
 export const clearCache: ClearCacheActionCreator = (
   payload: string,
 ): ClearCacheAction => {
-  if (!payload) {
-    throw new Error('Argument <payload> must be a valid string. Received: ' + payload);
+  if (!isString(payload) || isEmpty(trim(payload))) {
+    throw new Error(`Argument <payload> must be a valid string. Received: ${payload}`);
   }
 
   return {
     type: CLEAR_CACHE,
     payload,
-  }
+  };
 };

@@ -6,7 +6,7 @@ import {
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
 } from './types';
-import { isQueryCached } from '../api/caching/Repository';
+import { hasQueryCache } from '../api/caching/Repository';
 import {
   clearDatabase,
   createEntityFailed,
@@ -48,7 +48,7 @@ function* readEntitySaga({ meta }) {
   const { query } = resource;
 
   if (!killCache && query && query.unit && query.unit.id) {
-    const entityExists = yield select(isQueryCached, query);
+    const entityExists = yield select(hasQueryCache, query);
     if (entityExists) return;
   }
 
@@ -69,7 +69,7 @@ function* readCollectionSaga({ meta }) {
   const { query } = resource;
 
   if (!killCache) {
-    const collectionExists = yield select(isQueryCached, query);
+    const collectionExists = yield select(hasQueryCache, query);
     if (collectionExists) return;
   }
 
