@@ -4,16 +4,17 @@
 
 import normalize from 'json-api-normalizer';
 import build from 'redux-object';
-import { database as projectDatabaseReducer } from './projects/ProjectState';
+import type { ArrayReducer } from '../../types';
+import { database as projectsReducer } from './projects/ProjectState';
 import {
   CLEAR_DATABASE as CLEAR_PROJECTS_DATABASE,
   UPDATE_DATABASE as UPDATE_PROJECTS_DATABASE,
 } from './projects/types';
-import { entities as timeLogEntitiesReducer } from './time-logs/TimeLogState';
+import { entities as timeLogsReducer } from './time-logs/TimeLogState';
 import { UPDATE_DATABASE as UPDATE_TIME_LOGS_DATABASE } from './time-logs/TimeLogActions';
-import { entities as userEntitiesReducer } from './users/UserState';
+import { entities as usersReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
-import { entities as stopwatchEntitiesReducer } from './stopwatches/StopwatchState';
+import { entities as stopwatchesReducer } from './stopwatches/StopwatchState';
 // import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
 import { generateQueryForResourceId } from './utils/QueryUtils';
 import type { HttpQuery } from './api/types';
@@ -21,6 +22,8 @@ import type { QueryMetaResult } from './api/caching/types';
 import { getQueryMetaResult } from './api/caching/Repository';
 import type {
   AppState,
+  DatabaseAction,
+  DatabaseState,
   Collection,
   Entity,
   CollectionWithQueryMetaResult,
@@ -44,54 +47,53 @@ const UPDATE_STOPWATCHES_DATABASE: 'app/stopwatches/update/database' =
 
 const entityReducers = {
   projects: {
-    reducer: projectDatabaseReducer,
+    reducer: projectsReducer,
     updateDbAction: UPDATE_PROJECTS_DATABASE,
   },
   stopwatches: {
-    reducer: stopwatchEntitiesReducer,
+    reducer: stopwatchesReducer,
     updateDbAction: UPDATE_STOPWATCHES_DATABASE,
   },
   timeLogs: {
-    reducer: timeLogEntitiesReducer,
+    reducer: timeLogsReducer,
     updateDbAction: UPDATE_TIME_LOGS_DATABASE,
   },
   users: {
-    reducer: userEntitiesReducer,
+    reducer: usersReducer,
     updateDbAction: UPDATE_USERS_DATABASE,
   },
 };
 
-export default (state = {}, action) => {
-  switch (action.type) {
-    case UPDATE_PROJECTS_DATABASE:
-    case UPDATE_STOPWATCHES_DATABASE:
-    case UPDATE_TIME_LOGS_DATABASE:
-    case UPDATE_USERS_DATABASE: {
-      console.log('DatabaseState() - action.payload: ', action.payload);
-      const normalizedData = normalize(action.payload);
-      console.log('DatabaseState() - normalizedData: ', normalizedData);
+function createDatabaseStateReducer(
+  updatedDB: DatabaseState,
+): ArrayReducer<DatabaseState, string> {
+  return function databaseStateReducer(acc: DatabaseState, entityType: string): DatabaseState {
+    return {
+      ...acc,
+      ...{
+        [entityType]:
+          entityReducers[entityType].reducer(acc[entityType], {
+            type: entityReducers[entityType].updateDbAction,
+            payload: updatedDB[entityType],
+          }),
+      },
+    };
+  };
+}
 
-      // reconsider if it wouldn't be better to have this static:
-      // return {
-      //   ...state,
-      //   ...{
-      //     projects: projectEntitiesReducer(state.projects, normalizedData.projects),
-      //     users: userEntitiesReducer(state.users, normalizedData.users),
-      //   }
-      // }
-      return Object.keys(normalizedData)
-        .filter(entityType => entityReducers[entityType])
-        .reduce((database, entityType) => ({
-          ...state,
-          ...database,
-          ...{
-            [entityType]:
-              entityReducers[entityType].reducer(state[entityType], {
-                type: entityReducers[entityType].updateDbAction,
-                payload: normalizedData[entityType],
-              }),
-          },
-        }), {});
+export default (state: DatabaseState = {}, action: DatabaseAction): DatabaseState => {
+  switch (action.type) {
+    case UPDATE_PROJECTS_DATABASE: {
+      // case UPDATE_STOPWATCHES_DATABASE:
+      // case UPDATE_TIME_LOGS_DATABASE:
+      // case UPDATE_USERS_DATABASE: {
+      console.log('DatabaseState() - action.payload: ', action.payload);
+      const updatedDB: DatabaseState = normalize(action.payload);
+      console.log('DatabaseState() - updatedDB: ', updatedDB);
+
+      return Object.keys(updatedDB)
+        .filter((entityType: string): boolean => entityReducers[entityType] !== undefined)
+        .reduce(createDatabaseStateReducer(updatedDB), state);
     }
 
     case CLEAR_PROJECTS_DATABASE:

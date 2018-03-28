@@ -4,15 +4,22 @@
 
 import type { ApiState, HttpQuery } from './api/types';
 import type { QueryMetaResult } from './api/caching/types';
-import type { Database as ProjectDatabase, ProjectState } from './projects/types';
+import type {
+  Database as ProjectDatabase,
+  DatabaseAction as ProjectDatabaseAction,
+  ProjectState,
+} from './projects/types';
 
-export type DatabaseState = { projects: ProjectDatabase };
+export type DatabaseState = { +projects?: ProjectDatabase };
 
 export type AppState = {
   api: ApiState,
   database: DatabaseState,
   projects: ProjectState
 };
+
+export type DatabaseAction =
+  | ProjectDatabaseAction;
 
 //-------------
 // BEGIN ENTITY
