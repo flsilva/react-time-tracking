@@ -16,10 +16,10 @@ import { entities as usersReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
 import { entities as stopwatchesReducer } from './stopwatches/StopwatchState';
 // import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
-import { generateQueryForResourceId } from './api/QueryUtils';
-import type { HttpQuery } from './api/types';
-import type { QueryMetaResult } from './api/caching/types';
-import { getQueryMetaResult } from './api/caching/Repository';
+import { generateQueryForResourceId } from './shared/net/http/QueryUtils';
+import type { HttpQuery } from './shared/net/http/types';
+import type { QueryMetaResult } from './shared/net/http/caching/types';
+import { getQueryMetaResult } from './shared/net/http/caching/Repository';
 import type {
   AppState,
   DatabaseAction,

@@ -6,7 +6,7 @@ import {
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
 } from './types';
-import { hasQueryMetaResult } from '../api/caching/Repository';
+import { hasQueryMetaResult } from '../shared/net/http/caching/Repository';
 import {
   clearDatabase,
   createEntityFailed,

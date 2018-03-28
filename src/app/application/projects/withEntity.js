@@ -1,5 +1,5 @@
 import withEntity from '../utils/withEntity';
-import { hasQueryMetaResult } from '../api/caching/Repository';
+import { hasQueryMetaResult } from '../shared/net/http/caching/Repository';
 import { getEntityFactory } from '../DatabaseState';
 import { readEntity } from './ProjectActions';
 import { getError, getIsConnecting } from './ProjectState';
