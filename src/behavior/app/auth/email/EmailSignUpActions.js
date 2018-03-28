@@ -16,14 +16,14 @@ export const emailSignUp = (data, successCb) => {
     type: EMAIL_SIGN_UP_REQUESTED,
     meta: {
       http: {
-        request: {
-          data: {
+        resource: {
+          method: 'POST',
+          payload: {
             confirm_success_url: 'http://127.0.0.1:3001/account/sign-up/confirmation',
             email,
             password,
             password_confirmation: confirmPassword,
           },
-          method: 'POST',
           url: 'auth/',
         },
         successCb,

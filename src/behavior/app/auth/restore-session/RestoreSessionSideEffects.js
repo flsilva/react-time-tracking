@@ -9,8 +9,8 @@ import {
 function* restoreSessionSaga({ meta }) {
   try {
     yield put(restoreSessionStarted());
-    const { makeRequest, request } = meta.http;
-    const data = yield makeRequest(request);
+    const { makeRequest, resource } = meta.http;
+    const data = yield makeRequest(resource);
     yield put(restoreSessionSucceeded(data.data));
   } catch (error) {
     yield put(restoreSessionFailed(error));

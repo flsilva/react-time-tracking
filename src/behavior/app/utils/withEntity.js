@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-export default ({ getEntityById, getError, getIsConnecting, readEntity }) => (
+export default ({ getEntity, getError, getIsConnecting, hasQueryMetaResult, readEntity }) => (
   (WrappedComponent) => {
     class WithEntity extends Component {
       componentDidMount() {
         const { getQuery, id } = this.props;
-        const query = getQuery ? getQuery() : undefined;
-        if (id) this.props.readEntity(id, query);
+        this.props.readEntity(getQuery(id));
       }
 
       render() {
@@ -29,21 +28,19 @@ export default ({ getEntityById, getError, getIsConnecting, readEntity }) => (
       readEntity: PropTypes.func.isRequired,
       entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
       error: PropTypes.arrayOf(PropTypes.object),
-      getQuery: PropTypes.func,
-      id: PropTypes.string,
+      getQuery: PropTypes.func.isRequired,
+      id: PropTypes.string.isRequired,
       isConnecting: PropTypes.bool,
     };
 
     WithEntity.defaultProps = {
-      getQuery: undefined,
       entity: undefined,
       error: undefined,
-      id: undefined,
       isConnecting: false,
     };
 
-    const mapStateToProps = (state, props) => ({
-      entity: props.id ? getEntityById(state, props.id) : undefined,
+    const mapStateToProps = (state, { getQuery, id }) => ({
+      entity: hasQueryMetaResult(state, getQuery(id)) ? getEntity(state, getQuery(id)) : undefined,
       error: getError(state),
       isConnecting: getIsConnecting(state),
     });

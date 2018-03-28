@@ -2,9 +2,9 @@ import pipe from 'lodash/fp/pipe';
 import withRouterParams from '../behavior/app/utils/withRouterParams';
 import { getNavTo } from '../behavior/app/navigation';
 import {
-  CreateEditProjectScreen,
-  CreateNewProjectScreen,
-  CreateProjectListScreen,
+  EditProjectScreenFactory,
+  NewProjectScreenFactory,
+  ProjectListScreenFactory,
 } from '../behavior/app/projects';
 
 export const navToEntities = () => {
@@ -21,12 +21,12 @@ export const navToNewEntity = () => {
 
 export const EditProjectRoute = pipe([
   withRouterParams({ projectId: 'id' }),
-])(CreateEditProjectScreen({ navToEntities }));
+])(EditProjectScreenFactory({ navToEntities }));
 
-export const NewProjectRoute = CreateNewProjectScreen({ navToEntities });
+export const NewProjectRoute = NewProjectScreenFactory({ navToEntities });
 
 export const ProjectListRoute = itemsPerPage => (
-  CreateProjectListScreen({
+  ProjectListScreenFactory({
     itemsPerPage,
     navToEntity,
     navToNewEntity,

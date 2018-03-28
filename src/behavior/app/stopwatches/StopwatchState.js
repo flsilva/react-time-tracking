@@ -40,7 +40,7 @@ const error = (state = null, action) => {
   }
 };
 
-const fetchedQueries = (state = {}, { payload, type }) => {
+const cachedCollectionQueries = (state = {}, { payload, type }) => {
   switch (type) {
     case READ_ENTITIES_SUCCEEDED: {
       let query = payload.query || QUERY_ALL;
@@ -63,7 +63,7 @@ const fetchedQueries = (state = {}, { payload, type }) => {
   }
 };
 
-export const getEntityById = (state, id) => {
+export const getEntity = (state, id) => {
   if (!id) throw new Error('Argument <id> must not be null.');
 
   const entity = build(state.database, 'stopwatches', id, {
@@ -85,13 +85,13 @@ export const getEntities = (state, _query = QUERY_ALL) => {
   if (!state.stopwatches) return undefined;
 
   const query = isString(_query) ? _query : JSON.stringify(_query);
-  const fetchedQuery = state.stopwatches.fetchedQueries[query];
+  const cachedQuery = state.stopwatches.cachedCollectionQueries[query];
 
-  if (!fetchedQuery) return undefined;
+  if (!cachedQuery) return undefined;
 
   return {
-    entities: fetchedQuery.ids.map(id => getEntityById(state, id)),
-    pagination: fetchedQuery.links,
+    entities: cachedQuery.ids.map(id => getEntity(state, id)),
+    pagination: cachedQuery.links,
   };
 };
 
@@ -111,6 +111,6 @@ const isConnecting = (state = false, action) => {
 
 export default combineReducers({
   error,
-  fetchedQueries,
+  cachedCollectionQueries,
   isConnecting,
 });

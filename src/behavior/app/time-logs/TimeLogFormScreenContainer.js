@@ -12,7 +12,7 @@ import { generateQueryForRelationship } from '../utils/QueryUtils';
 import { getNotifications } from '../utils';
 import { getTimeObjectFromSeconds } from '../utils/TimeUtils';
 import * as TimeLogActions from './TimeLogActions';
-import { getEntityById } from './TimeLogState';
+import { getEntity } from './TimeLogState';
 import ProjectDropdownContainer from '../projects/ProjectDropdownContainer';
 
 /*
@@ -162,7 +162,7 @@ TimeLogFormScreenContainer.defaultProps = {
 
 const mapStateToProps = (state, { location, match }) => {
   const entity = match.params.timeLogId ?
-    getEntityById(state, match.params.timeLogId) : location.state;
+    getEntity(state, match.params.timeLogId) : location.state;
 
   return {
     entity: entity || undefined,

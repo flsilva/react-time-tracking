@@ -1,14 +1,18 @@
+/*
+ * @flow
+ */
+
 import merge from 'lodash/merge';
-import isString from 'lodash/isString';
 import { combineReducers } from 'redux';
-import build from 'redux-object';
+import type { AppState } from '../types';
+import type { ApiErrors } from '../api/types';
 import {
   CREATE_ENTITY_STARTED,
   CREATE_ENTITY_SUCCEEDED,
   CREATE_ENTITY_FAILED,
-  READ_ENTITIES_STARTED,
-  READ_ENTITIES_SUCCEEDED,
-  READ_ENTITIES_FAILED,
+  READ_COLLECTION_STARTED,
+  READ_COLLECTION_SUCCEEDED,
+  READ_COLLECTION_FAILED,
   READ_ENTITY_STARTED,
   READ_ENTITY_SUCCEEDED,
   READ_ENTITY_FAILED,
@@ -20,11 +24,22 @@ import {
   DELETE_ENTITY_FAILED,
   CLEAR_DATABASE,
   UPDATE_DATABASE,
-} from './ProjectActions';
+} from './types';
 
-const QUERY_ALL = 'app/projects/query/entity/all';
+import type {
+  Action,
+  Database,
+  DatabaseReducer,
+  ErrorReducer,
+  GetErrorSelector,
+  GetIsConnectingSelector,
+  IsConnectingReducer,
+} from './types';
 
-export const entities = (state = {}, action) => {
+export const database: DatabaseReducer = (
+  state: Database = {},
+  action: Action,
+): Database => {
   switch (action.type) {
     case UPDATE_DATABASE:
       return merge({ ...state }, action.payload);
@@ -37,35 +52,11 @@ export const entities = (state = {}, action) => {
   }
 };
 
-const fetchedQueries = (state = {}, { payload, type }) => {
-  switch (type) {
-    case READ_ENTITIES_SUCCEEDED: {
-      let query = payload.query || QUERY_ALL;
-      query = isString(query) ? query : JSON.stringify(query);
-
-      return {
-        ...state,
-        [query]: {
-          ids: payload.data.data.map(entity => entity.id),
-          meta: payload.data.meta,
-          links: payload.data.links,
-        },
-      };
-    }
-
-    case CLEAR_DATABASE:
-      return {};
-
-    default:
-      return state;
-  }
-};
-
-const error = (state = null, action) => {
+const error: ErrorReducer = (state: ApiErrors = null, action: Action): ApiErrors => {
   switch (action.type) {
     case CREATE_ENTITY_FAILED:
     case DELETE_ENTITY_FAILED:
-    case READ_ENTITIES_FAILED:
+    case READ_COLLECTION_FAILED:
     case READ_ENTITY_FAILED:
     case UPDATE_ENTITY_FAILED:
       return action.payload || null;
@@ -74,8 +65,8 @@ const error = (state = null, action) => {
     case CREATE_ENTITY_SUCCEEDED:
     case DELETE_ENTITY_STARTED:
     case DELETE_ENTITY_SUCCEEDED:
-    case READ_ENTITIES_STARTED:
-    case READ_ENTITIES_SUCCEEDED:
+    case READ_COLLECTION_STARTED:
+    case READ_COLLECTION_SUCCEEDED:
     case READ_ENTITY_STARTED:
     case READ_ENTITY_SUCCEEDED:
     case UPDATE_ENTITY_STARTED:
@@ -87,14 +78,17 @@ const error = (state = null, action) => {
   }
 };
 
-const isConnecting = (state = false, action) => {
+const isConnecting: IsConnectingReducer = (
+  state: boolean = false,
+  action: Action,
+): boolean => {
   switch (action.type) {
     case CREATE_ENTITY_SUCCEEDED:
     case CREATE_ENTITY_FAILED:
     case DELETE_ENTITY_SUCCEEDED:
     case DELETE_ENTITY_FAILED:
-    case READ_ENTITIES_SUCCEEDED:
-    case READ_ENTITIES_FAILED:
+    case READ_COLLECTION_SUCCEEDED:
+    case READ_COLLECTION_FAILED:
     case READ_ENTITY_SUCCEEDED:
     case READ_ENTITY_FAILED:
     case UPDATE_ENTITY_SUCCEEDED:
@@ -103,7 +97,7 @@ const isConnecting = (state = false, action) => {
 
     case CREATE_ENTITY_STARTED:
     case DELETE_ENTITY_STARTED:
-    case READ_ENTITIES_STARTED:
+    case READ_COLLECTION_STARTED:
     case READ_ENTITY_STARTED:
     case UPDATE_ENTITY_STARTED:
       return true;
@@ -113,33 +107,15 @@ const isConnecting = (state = false, action) => {
   }
 };
 
-export const getEntityById = (state, id) => {
-  if (!id) throw new Error('Argument <id> must not be null.');
+export const getError: GetErrorSelector = (state: AppState): ApiErrors | null => (
+  state.projects.error
+);
 
-  const entity = build(state.database, 'projects', id, { eager: true, ignoreLinks: true });
-  return entity || undefined;
-};
-
-export const getEntities = (state, _query = QUERY_ALL) => {
-  if (!state.projects) return undefined;
-
-  const query = isString(_query) ? _query : JSON.stringify(_query);
-  const fetchedQuery = state.projects.fetchedQueries[query];
-
-  if (!fetchedQuery) return undefined;
-
-  return {
-    entities: fetchedQuery.ids.map(id => getEntityById(state, id)),
-    meta: fetchedQuery.meta,
-    query: _query,
-  };
-};
-
-export const getError = state => state.projects.error;
-export const getIsConnecting = state => state.projects.isConnecting;
+export const getIsConnecting: GetIsConnectingSelector = (state: AppState): boolean => (
+  state.projects.isConnecting
+);
 
 export default combineReducers({
   error,
-  fetchedQueries,
   isConnecting,
 });

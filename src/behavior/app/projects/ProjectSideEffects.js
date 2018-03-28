@@ -1,27 +1,29 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { getEntityById, getEntities } from './ProjectState';
 import {
   CREATE_ENTITY_REQUESTED,
   READ_ENTITY_REQUESTED,
-  READ_ENTITIES_REQUESTED,
+  READ_COLLECTION_REQUESTED,
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
+} from './types';
+import { hasQueryMetaResult } from '../api/caching/Repository';
+import {
+  clearDatabase,
   createEntityFailed,
   createEntityStarted,
   createEntitySucceeded,
   readEntityFailed,
   readEntityStarted,
   readEntitySucceeded,
-  readEntitiesFailed,
-  readEntitiesStarted,
-  readEntitiesSucceeded,
+  readCollectionFailed,
+  readCollectionStarted,
+  readCollectionSucceeded,
   updateEntityFailed,
   updateEntityStarted,
   updateEntitySucceeded,
   deleteEntityFailed,
   deleteEntityStarted,
   deleteEntitySucceeded,
-  clearDatabase,
   updateDatabase,
 } from './ProjectActions';
 
@@ -29,8 +31,8 @@ function* createEntitySaga({ meta }) {
   try {
     yield put(createEntityStarted());
 
-    const { makeRequest, request, successCb } = meta.http;
-    const data = yield makeRequest(request);
+    const { makeRequest, resource, successCb } = meta.http;
+    const data = yield makeRequest(resource);
 
     yield put(clearDatabase());
     yield put(updateDatabase(data));
@@ -42,42 +44,44 @@ function* createEntitySaga({ meta }) {
 }
 
 function* readEntitySaga({ meta }) {
-  const { entity, makeRequest, killCache, request } = meta.http;
+  const { makeRequest, killCache, resource } = meta.http;
+  const { query } = resource;
 
-  if (!killCache) {
-    const cachedProject = yield select(getEntityById, entity.id, request.params);
-    if (cachedProject) return;
+  if (!killCache && query && query.unit && query.unit.id) {
+    const entityExists = yield select(hasQueryMetaResult, query);
+    if (entityExists) return;
   }
 
   try {
     yield put(readEntityStarted());
 
-    const data = yield makeRequest(request);
+    const response = yield makeRequest(resource);
 
-    yield put(updateDatabase(data));
-    yield put(readEntitySucceeded());
+    yield put(updateDatabase(response));
+    yield put(readEntitySucceeded({ response, query }));
   } catch (error) {
     yield put(readEntityFailed(error));
   }
 }
 
-function* readEntitiesSaga({ meta }) {
-  const { makeRequest, killCache, request } = meta.http;
+function* readCollectionSaga({ meta }) {
+  const { makeRequest, killCache, resource } = meta.http;
+  const { query } = resource;
 
   if (!killCache) {
-    const cachedResult = yield select(getEntities, request.params);
-    if (cachedResult) return;
+    const collectionExists = yield select(hasQueryMetaResult, query);
+    if (collectionExists) return;
   }
 
   try {
-    yield put(readEntitiesStarted());
+    yield put(readCollectionStarted());
 
-    const data = yield makeRequest(request);
+    const response = yield makeRequest(resource);
 
-    yield put(updateDatabase(data));
-    yield put(readEntitiesSucceeded({ data, query: request.params }));
+    yield put(updateDatabase(response));
+    yield put(readCollectionSucceeded({ response, query }));
   } catch (error) {
-    yield put(readEntitiesFailed(error));
+    yield put(readCollectionFailed(error));
   }
 }
 
@@ -85,8 +89,8 @@ function* updateEntitySaga({ meta }) {
   try {
     yield put(updateEntityStarted());
 
-    const { makeRequest, request, successCb } = meta.http;
-    const data = yield makeRequest(request);
+    const { makeRequest, resource, successCb } = meta.http;
+    const data = yield makeRequest(resource);
 
     yield put(updateDatabase(data));
     yield put(updateEntitySucceeded());
@@ -98,10 +102,10 @@ function* updateEntitySaga({ meta }) {
 
 function* deleteEntitySaga({ meta }) {
   try {
-    const { makeRequest, request, successCb } = meta.http;
+    const { makeRequest, resource, successCb } = meta.http;
 
     yield put(deleteEntityStarted());
-    yield makeRequest(request);
+    yield makeRequest(resource);
     yield put(clearDatabase());
     yield put(deleteEntitySucceeded());
     if (successCb) successCb();
@@ -113,7 +117,7 @@ function* deleteEntitySaga({ meta }) {
 export default function* () {
   yield takeLatest(CREATE_ENTITY_REQUESTED, createEntitySaga);
   yield takeLatest(READ_ENTITY_REQUESTED, readEntitySaga);
-  yield takeLatest(READ_ENTITIES_REQUESTED, readEntitiesSaga);
+  yield takeLatest(READ_COLLECTION_REQUESTED, readCollectionSaga);
   yield takeLatest(UPDATE_ENTITY_REQUESTED, updateEntitySaga);
   yield takeLatest(DELETE_ENTITY_REQUESTED, deleteEntitySaga);
 }

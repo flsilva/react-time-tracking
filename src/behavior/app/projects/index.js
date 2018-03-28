@@ -7,6 +7,7 @@ import withQuery from '../utils/withQuery';
 import {
   generateQueryForPagination,
   generateQueryForRelationship,
+  generateQueryForResourceId,
 } from '../utils/QueryUtils';
 import withPaginatedProjectEntities from './withPaginatedEntities';
 import withProjectEntity from './withEntity';
@@ -19,25 +20,32 @@ const composeEntitiesQueryFunction = itemsPerPage => page => (
   pipe([
     generateQueryForRelationship('author'),
     generateQueryForPagination({ page, itemsPerPage, sort: '-created-at' }),
-  ])()
+  ])({ resourceType: 'projects' })
 );
 
-export const CreateEditProjectScreen = ({ navToEntities }) => pipe([
+const composeEntityQueryFunction = relationships => id => (
+  pipe([
+    generateQueryForRelationship(relationships),
+    generateQueryForResourceId(id),
+  ])({ resourceType: 'projects' })
+);
+
+export const EditProjectScreenFactory = ({ navToEntities }) => pipe([
   withAsyncEntityForm,
   withNavBack,
   withForm,
   withProjectEntityForm(navToEntities),
   withProjectEntity,
-  withQuery(generateQueryForRelationship('author')),
+  withQuery(composeEntityQueryFunction('author')),
 ])(ProjectFormScreenContainer);
 
-export const CreateNewProjectScreen = ({ navToEntities }) => pipe([
+export const NewProjectScreenFactory = ({ navToEntities }) => pipe([
   withNavBack,
   withForm,
   withProjectEntityForm(navToEntities),
 ])(ProjectFormScreenContainer);
 
-export const CreateProjectDropdown = (params) => {
+export const ProjectDropdownFactory = (params) => {
   const defaultParams = { autoLoad: true, pageSize: 999 };
   const { autoLoad, navToNewEntity, pageSize } = { ...defaultParams, ...params };
 
@@ -48,7 +56,7 @@ export const CreateProjectDropdown = (params) => {
   ])(CreateProjectDropdownContainer(navToNewEntity));
 };
 
-export const CreateProjectListScreen = ({ itemsPerPage, navToEntity, navToNewEntity }) => (
+export const ProjectListScreenFactory = ({ itemsPerPage, navToEntity, navToNewEntity }) => (
   pipe([
     withPaginatedProjectEntities({ autoLoad: true }),
     withPagination,

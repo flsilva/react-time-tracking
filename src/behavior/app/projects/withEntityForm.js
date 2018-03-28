@@ -16,7 +16,7 @@ export default successCb => (
         const { entity } = props;
 
         if (entity) {
-          props.updateEntity(entity.id, values, successCb);
+          props.updateEntity({ ...values, ...{ id: entity.id } }, successCb);
         } else {
           props.createEntity(values, successCb);
         }

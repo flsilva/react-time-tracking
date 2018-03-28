@@ -6,20 +6,26 @@ import flatten from 'lodash/flatten';
 import last from 'lodash/last';
 import pipe from 'lodash/fp/pipe';
 
-export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities }) => (
+export default ({
+  autoLoad,
+  getCollection,
+  getError,
+  getIsConnecting,
+  readCollection,
+}) => (
   (WrappedComponent) => {
     class WithPaginatedEntities extends Component {
       componentDidMount() {
         if (autoLoad) this.readNextPage();
       }
 
-      readNextPage = () => this.readEntities(this.props.getNextPageQuery());
+      readNextPage = () => this.readCollection(this.props.getNextPageQuery());
 
-      readPage = page => this.readEntities(this.props.getPageQuery(page));
+      readPage = page => this.readCollection(this.props.getPageQuery(page));
 
-      readPreviousPage = () => this.readEntities(this.props.getPreviousPageQuery());
+      readPreviousPage = () => this.readCollection(this.props.getPreviousPageQuery());
 
-      readEntities = query => this.props.readEntities(query);
+      readCollection = query => this.props.readCollection(query);
 
       render() {
         return (
@@ -42,7 +48,7 @@ export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities
       hasNextPage: PropTypes.bool,
       isConnecting: PropTypes.bool,
       queries: PropTypes.arrayOf(PropTypes.object),
-      readEntities: PropTypes.func.isRequired,
+      readCollection: PropTypes.func.isRequired,
     };
 
     WithPaginatedEntities.defaultProps = {
@@ -64,14 +70,18 @@ export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities
 
     const getResults = (state, queries) => (
       queries && queries.length ?
-        queries.map(paginatedQuery => getEntities(state, paginatedQuery.query))
+        queries.map(paginatedQuery => getCollection(state, paginatedQuery.query))
           .filter(result => result)
         : undefined
     );
 
-    const getTotalEntities = result => (result ? result.meta['total-records'] : undefined);
+    const getTotalEntities = result => (
+      result ? result.queryMetaResult.meta['total-records'] : undefined
+    );
 
-    const getTotalPages = result => (result ? result.meta['total-pages'] : undefined);
+    const getTotalPages = result => (
+      result ? result.queryMetaResult.meta['total-pages'] : undefined
+    );
 
     const hasNextPage = (currentPage, totalPages) => (
       totalPages && totalPages > currentPage
@@ -91,7 +101,7 @@ export default ({ autoLoad, getEntities, getError, getIsConnecting, readEntities
     );
 
     const mapDispatchToProps = dispatch => ({
-      ...bindActionCreators({ readEntities }, dispatch),
+      ...bindActionCreators({ readCollection }, dispatch),
     });
 
     return connect(
