@@ -6,10 +6,10 @@ import thunkMiddleware from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
-import Routes from './routes';
-import initApp, { appMiddleware } from './behavior/app';
-import sagas from './behavior/app/AppSideEffects';
-import { reducers as appReducers } from './behavior/app/AppState';
+import Routes from './app/navigation';
+import initApp, { appMiddleware } from './app/application';
+import sagas from './app/application/AppSideEffects';
+import { reducers as appReducers } from './app/application/AppState';
 import './index.css';
 
 const reducers = combineReducers({
