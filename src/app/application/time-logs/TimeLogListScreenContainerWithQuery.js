@@ -4,7 +4,7 @@ import withQuery from '../utils/withQuery';
 import {
   generateQueryForPagination,
   generateQueryForRelationship,
-} from '../utils/QueryUtils';
+} from '../api/QueryUtils';
 import TimeLogListScreenContainer from './TimeLogListScreenContainer';
 
 const composeQueryFunction = itemsPerPage => page => (

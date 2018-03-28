@@ -16,7 +16,7 @@ import { entities as usersReducer } from './users/UserState';
 import { UPDATE_DATABASE as UPDATE_USERS_DATABASE } from './users/UserActions';
 import { entities as stopwatchesReducer } from './stopwatches/StopwatchState';
 // import { UPDATE_DATABASE as UPDATE_STOPWATCHES_DATABASE } from './stopwatch/StopwatchActions';
-import { generateQueryForResourceId } from './utils/QueryUtils';
+import { generateQueryForResourceId } from './api/QueryUtils';
 import type { HttpQuery } from './api/types';
 import type { QueryMetaResult } from './api/caching/types';
 import { getQueryMetaResult } from './api/caching/Repository';

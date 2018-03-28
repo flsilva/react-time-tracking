@@ -8,7 +8,7 @@ import {
   generateQueryForPagination,
   generateQueryForRelationship,
   generateQueryForResourceId,
-} from '../utils/QueryUtils';
+} from '../api/QueryUtils';
 import withPaginatedProjectEntities from './withPaginatedEntities';
 import withProjectEntity from './withEntity';
 import withProjectEntityForm from './withEntityForm';

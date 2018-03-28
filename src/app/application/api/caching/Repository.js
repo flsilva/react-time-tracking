@@ -6,7 +6,7 @@ import omit from 'lodash/omit';
 import { combineReducers } from 'redux';
 import type { ArrayReducer } from '../../../../types';
 import type { AppState, Collection, Entity } from '../../types';
-import { generateQueryForResourceId } from '../../utils/QueryUtils';
+import { generateQueryForResourceId } from '../QueryUtils';
 import type { Action, HttpQuery, HttpResponseMeta } from '../types';
 import { HTTP_REQUEST_SUCCEEDED } from '../types';
 

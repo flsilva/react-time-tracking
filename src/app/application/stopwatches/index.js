@@ -1,6 +1,6 @@
 import pipe from 'lodash/fp/pipe';
 import withQuery from '../utils/withQuery';
-import { generateQueryForRelationship } from '../utils/QueryUtils';
+import { generateQueryForRelationship } from '../api/QueryUtils';
 import CreateStopwatchScreenContainer from './StopwatchScreenContainer';
 import CreateProjectDropdownContainer from './StopwatchProjectDropdownContainer';
 
