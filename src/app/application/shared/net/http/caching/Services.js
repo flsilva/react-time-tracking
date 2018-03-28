@@ -8,8 +8,8 @@ import trim from 'lodash/trim';
 import type {
   ClearCacheAction,
   ClearCacheActionCreator,
-} from './types';
-import { CLEAR_CACHE } from './types';
+} from './Types';
+import { CLEAR_CACHE } from './Types';
 
 // eslint-disable-next-line import/prefer-default-export
 export const clearCache: ClearCacheActionCreator = (

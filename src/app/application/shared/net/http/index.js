@@ -1,9 +1,9 @@
 import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
-import { formatPayloadToApi } from './JsonApiUtils';
-import { httpRequestSucceeded } from './ApiActions';
-import { formatApiError } from './ApiErrors';
+import { formatPayloadToApi } from './Utils';
+import { httpRequestSucceeded } from './Services';
+import { formatApiError } from './Errors';
 
 const getHeaders = () => ({ 'Content-Type': 'application/vnd.api+json' });
 

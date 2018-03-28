@@ -5,7 +5,7 @@
 import merge from 'lodash/merge';
 import { combineReducers } from 'redux';
 import type { AppState } from '../types';
-import type { ApiErrors } from '../api/types';
+import type { ApiErrors } from '../shared/net/http/Types';
 import {
   CREATE_ENTITY_STARTED,
   CREATE_ENTITY_SUCCEEDED,

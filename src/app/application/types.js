@@ -2,8 +2,9 @@
  * @flow
  */
 
-import type { ApiState, HttpQuery } from './api/types';
-import type { QueryMetaResult } from './api/caching/types';
+import type { NetState } from './shared/net/Types';
+import type { HttpQuery } from './shared/net/http/Types';
+import type { QueryMetaResult } from './shared/net/http/caching/Types';
 import type {
   Database as ProjectDatabase,
   DatabaseAction as ProjectDatabaseAction,
@@ -13,8 +14,8 @@ import type {
 export type DatabaseState = { +projects?: ProjectDatabase };
 
 export type AppState = {
-  api: ApiState,
   database: DatabaseState,
+  net: NetState,
   projects: ProjectState
 };
 

@@ -8,7 +8,7 @@ import type { CachingState } from './caching/types';
 // BEGIN API STATE
 //----------------
 
-export type ApiState = { +caching: CachingState };
+export type HttpState = { +caching: CachingState };
 
 //--------------
 // END API STATE

@@ -1,5 +1,5 @@
 import { all, put, takeLatest } from 'redux-saga/effects';
-import { clearCache } from './shared/net/http/caching/Actions';
+import { clearCache } from './shared/net/http/caching/Services';
 import bindAuth from './auth/AuthSideEffects';
 import bindEmailSignIn from './auth/email/EmailSignInSideEffects';
 import bindEmailSignUp from './auth/email/EmailSignUpSideEffects';

@@ -8,7 +8,7 @@ import type {
   HttpQuery,
   HttpRequest,
   HttpResponseWithQuery,
-} from '../api/types';
+} from '../shared/net/http/Types';
 
 //-------------
 // BEGIN ENTITY

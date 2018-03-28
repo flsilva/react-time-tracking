@@ -2,11 +2,12 @@
  * @flow
  */
 
-import type { AppState } from '../../types';
-import type { Action, HttpQuery, HttpResponseMeta } from '../types';
+import type { AppState } from '../../../../types';
+import type { Action, HttpQuery, HttpResponseMeta } from '../Types';
 
 // eslint-disable-next-line import/prefer-default-export
-export const CLEAR_CACHE: 'app/api/caching/clear' = 'app/api/caching/clear';
+export const CLEAR_CACHE: 'app/shared/net/http/caching/clear' =
+  'app/shared/net/http/caching/clear';
 
 export type QueryMetaResult = {
   +ids: Array<string>,

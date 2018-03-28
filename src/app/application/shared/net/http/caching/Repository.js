@@ -4,11 +4,11 @@
 
 import omit from 'lodash/omit';
 import { combineReducers } from 'redux';
-import type { ArrayReducer } from '../../../../types';
-import type { AppState, Collection, Entity } from '../../types';
-import { generateQueryForResourceId } from '../QueryUtils';
-import type { Action, HttpQuery, HttpResponseMeta } from '../types';
-import { HTTP_REQUEST_SUCCEEDED } from '../types';
+import type { ArrayReducer } from '../../../../../../types';
+import type { AppState, Collection, Entity } from '../../../../types';
+import { generateQueryForResourceId } from '../Utils';
+import type { Action, HttpQuery, HttpResponseMeta } from '../Types';
+import { HTTP_REQUEST_SUCCEEDED } from '../Types';
 
 import type {
   GetQueryMetaResultSelector,
@@ -16,8 +16,8 @@ import type {
   QueryMetaResult,
   QueryMetaResultMap,
   QueryMetaResultReducer,
-} from './types';
-import { CLEAR_CACHE } from './types';
+} from './Types';
+import { CLEAR_CACHE } from './Types';
 
 function clearCache(
   state: QueryMetaResultMap = {},
@@ -81,14 +81,14 @@ export const getQueryMetaResult: GetQueryMetaResultSelector = (
   state: AppState,
   query: HttpQuery,
 ): QueryMetaResult | void => (
-  state.api.caching.queries[JSON.stringify(query)]
+  state.net.http.caching.queries[JSON.stringify(query)]
 );
 
 export const hasQueryMetaResult: HasQueryMetaResultSelector = (
   state: AppState,
   query: HttpQuery,
 ): boolean => (
-  state.api.caching.queries[JSON.stringify(query)] !== undefined
+  state.net.http.caching.queries[JSON.stringify(query)] !== undefined
 );
 
 const queries: QueryMetaResultReducer = (

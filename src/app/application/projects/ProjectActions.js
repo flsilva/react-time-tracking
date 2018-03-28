@@ -8,7 +8,7 @@ import type {
   ApiErrors,
   HttpQuery,
   HttpResponseWithQuery,
-} from '../api/types';
+} from '../shared/net/http/Types';
 
 import type {
   Collection,

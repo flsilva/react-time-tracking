@@ -8,7 +8,7 @@ import CircularLoading from '../../../shared/presentation/CircularLoading';
 import Notifications from '../../presentation/utils/Notifications';
 import TimeLogFormAppBar from '../../presentation/time-logs/TimeLogFormAppBar';
 import TimeLogForm from '../../presentation/time-logs/TimeLogForm';
-import { generateQueryForRelationship } from '../shared/net/http/QueryUtils';
+import { generateQueryForRelationship } from '../shared/net/http/Utils';
 import { getNotifications } from '../utils';
 import { getTimeObjectFromSeconds } from '../utils/TimeUtils';
 import * as TimeLogActions from './TimeLogActions';
