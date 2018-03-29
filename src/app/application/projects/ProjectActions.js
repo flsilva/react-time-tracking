@@ -5,7 +5,7 @@
 import omit from 'lodash/omit';
 
 import type {
-  ApiErrors,
+  HttpErrorCollection,
   HttpQuery,
   HttpResponseWithQuery,
 } from '../shared/net/http/Types';
@@ -135,7 +135,7 @@ export const createEntitySucceeded: CreateEntitySucceededActionCreator = (
 ): CreateEntitySucceededAction => ({ type: CREATE_ENTITY_SUCCEEDED, payload });
 
 export const createEntityFailed: CreateEntityFailedActionCreator = (
-  payload: ApiErrors,
+  payload: HttpErrorCollection,
 ): CreateEntityFailedAction => ({ type: CREATE_ENTITY_FAILED, payload });
 
 export const readEntity: ReadEntityRequestedActionCreator = (
@@ -171,7 +171,7 @@ export const readEntitySucceeded: ReadEntitySucceededActionCreator = (
 ): ReadEntitySucceededAction => ({ type: READ_ENTITY_SUCCEEDED, payload });
 
 export const readEntityFailed: ReadEntityFailedActionCreator = (
-  payload: ApiErrors,
+  payload: HttpErrorCollection,
 ): ReadEntityFailedAction => ({ type: READ_ENTITY_FAILED, payload });
 
 export const readCollection: ReadCollectionRequestedActionCreator = (
@@ -204,7 +204,7 @@ export const readCollectionSucceeded: ReadCollectionSucceededActionCreator = (
 });
 
 export const readCollectionFailed: ReadCollectionFailedActionCreator = (
-  payload: ApiErrors,
+  payload: HttpErrorCollection,
 ): ReadCollectionFailedAction => ({
   type: READ_COLLECTION_FAILED,
   payload,
@@ -251,7 +251,7 @@ export const updateEntitySucceeded: UpdateEntitySucceededActionCreator = (
 });
 
 export const updateEntityFailed: UpdateEntityFailedActionCreator = (
-  payload: ApiErrors,
+  payload: HttpErrorCollection,
 ): UpdateEntityFailedAction => ({
   type: UPDATE_ENTITY_FAILED,
   payload,
@@ -288,7 +288,7 @@ export const deleteEntitySucceeded: DeleteEntitySucceededActionCreator = (
 });
 
 export const deleteEntityFailed: DeleteEntityFailedActionCreator = (
-  payload: ApiErrors,
+  payload: HttpErrorCollection,
 ): DeleteEntityFailedAction => ({
   type: DELETE_ENTITY_FAILED,
   payload,

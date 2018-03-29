@@ -4,7 +4,7 @@
 
 import type { AppState } from '../types';
 import type {
-  ApiErrors,
+  HttpErrorCollection,
   HttpQuery,
   HttpRequest,
   HttpResponseWithQuery,
@@ -95,9 +95,11 @@ export type CreateEntitySucceededActionCreator = (payload: Entity) => CreateEnti
 
 export type CreateEntityFailedAction = {
   +type: typeof CREATE_ENTITY_FAILED,
-  +payload: ApiErrors
+  +payload: HttpErrorCollection
 };
-export type CreateEntityFailedActionCreator = (payload: ApiErrors) => CreateEntityFailedAction;
+export type CreateEntityFailedActionCreator = (
+  payload: HttpErrorCollection
+) => CreateEntityFailedAction;
 
 export type CreateEntityAction =
   | CreateEntityRequestedAction
@@ -145,9 +147,11 @@ export type ReadEntitySucceededActionCreator = (
 
 export type ReadEntityFailedAction = {
   +type: typeof READ_ENTITY_FAILED,
-  +payload: ApiErrors
+  +payload: HttpErrorCollection
 };
-export type ReadEntityFailedActionCreator = (payload: ApiErrors) => ReadEntityFailedAction;
+export type ReadEntityFailedActionCreator = (
+  payload: HttpErrorCollection
+) => ReadEntityFailedAction;
 
 export type ReadEntityAction =
   | ReadEntityRequestedAction
@@ -195,10 +199,10 @@ export type ReadCollectionSucceededActionCreator = (
 
 export type ReadCollectionFailedAction = {
   +type: typeof READ_COLLECTION_FAILED,
-  +payload: ApiErrors
+  +payload: HttpErrorCollection
 };
 export type ReadCollectionFailedActionCreator = (
-  payload: ApiErrors
+  payload: HttpErrorCollection
 ) => ReadCollectionFailedAction;
 
 export type ReadCollectionAction =
@@ -246,9 +250,11 @@ export type UpdateEntitySucceededActionCreator = (payload: Entity) => UpdateEnti
 
 export type UpdateEntityFailedAction = {
   +type: typeof UPDATE_ENTITY_FAILED,
-  +payload: ApiErrors
+  +payload: HttpErrorCollection
 };
-export type UpdateEntityFailedActionCreator = (payload: ApiErrors) => UpdateEntityFailedAction;
+export type UpdateEntityFailedActionCreator = (
+  payload: HttpErrorCollection
+) => UpdateEntityFailedAction;
 
 export type UpdateEntityAction =
   | UpdateEntityRequestedAction
@@ -290,9 +296,11 @@ export type DeleteEntitySucceededActionCreator = () => DeleteEntitySucceededActi
 
 export type DeleteEntityFailedAction = {
   +type: typeof DELETE_ENTITY_FAILED,
-  +payload: ApiErrors
+  +payload: HttpErrorCollection
 };
-export type DeleteEntityFailedActionCreator = (payload: ApiErrors) => DeleteEntityFailedAction;
+export type DeleteEntityFailedActionCreator = (
+  payload: HttpErrorCollection
+) => DeleteEntityFailedAction;
 
 export type DeleteEntityAction =
   | DeleteEntityRequestedAction
@@ -312,15 +320,15 @@ export type Action =
   | UpdateEntityAction
   | DeleteEntityAction;
 
-export type ErrorReducer = (state: ApiErrors, action: Action) => ApiErrors;
+export type ErrorReducer = (state: HttpErrorCollection, action: Action) => HttpErrorCollection;
 
 export type IsConnectingReducer = (state: boolean, action: Action) => boolean;
 
 export type ProjectState = {
-  +error: ApiErrors,
+  +error: HttpErrorCollection,
   +isConnecting: boolean
 };
 
-export type GetErrorSelector = (state: AppState) => ApiErrors | null;
+export type GetErrorSelector = (state: AppState) => HttpErrorCollection | null;
 
 export type GetIsConnectingSelector = (state: AppState) => boolean;

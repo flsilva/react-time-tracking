@@ -5,7 +5,7 @@
 import merge from 'lodash/merge';
 import { combineReducers } from 'redux';
 import type { AppState } from '../types';
-import type { ApiErrors } from '../shared/net/http/Types';
+import type { HttpErrorCollection } from '../shared/net/http/Types';
 import {
   CREATE_ENTITY_STARTED,
   CREATE_ENTITY_SUCCEEDED,
@@ -52,7 +52,10 @@ export const database: DatabaseReducer = (
   }
 };
 
-const error: ErrorReducer = (state: ApiErrors = null, action: Action): ApiErrors => {
+const error: ErrorReducer = (
+  state: HttpErrorCollection = null,
+  action: Action,
+): HttpErrorCollection => {
   switch (action.type) {
     case CREATE_ENTITY_FAILED:
     case DELETE_ENTITY_FAILED:
@@ -107,7 +110,7 @@ const isConnecting: IsConnectingReducer = (
   }
 };
 
-export const getError: GetErrorSelector = (state: AppState): ApiErrors | null => (
+export const getError: GetErrorSelector = (state: AppState): HttpErrorCollection | null => (
   state.projects.error
 );
 

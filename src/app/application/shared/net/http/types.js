@@ -2,64 +2,64 @@
  * @flow
  */
 
-import type { CachingState } from './caching/types';
+import type { CachingState } from './caching/Types';
 
-//----------------
-// BEGIN API STATE
-//----------------
+//-----------------
+// BEGIN HTTP STATE
+//-----------------
 
 export type HttpState = { +caching: CachingState };
 
-//--------------
-// END API STATE
-//--------------
-
-//-----------------
-// BEGIN API ERRORS
-//-----------------
-
-export type ApiError = { +detail: string };
-
-export type ApiErrors = Array<ApiError> | null;
-
 //---------------
-// END API ERRORS
+// END HTTP STATE
 //---------------
 
-//-------------
-// BEGIN ENTITY
-//-------------
+//------------------
+// BEGIN HTTP ERRORS
+//------------------
+
+export type HttpError = { +detail: string };
+
+export type HttpErrorCollection = Array<HttpError> | null;
+
+//----------------
+// END HTTP ERRORS
+//----------------
+
+//---------------
+// BEGIN RESOURCE
+//---------------
 
 export type ResourceRelationship = { +id: string, +type: string };
 
 export type ResourceRelationshipWrapper = { +data: ResourceRelationship };
 
-export type ResourceRelationships = { +[relName: string]: ResourceRelationshipWrapper };
+export type ResourceRelationshipMap = { +[relName: string]: ResourceRelationshipWrapper };
 
 export type CreateResourcePayload = {
-  +relationships?: ResourceRelationships,
+  +relationships?: ResourceRelationshipMap,
   +type: string
 };
 
 export type UpdateResourcePayload = CreateResourcePayload & { +id: string };
 
-export type ResourcePayload =
+export type ResourceMutationPayload =
   | CreateResourcePayload
   | UpdateResourcePayload;
 
-export type ResourcePayloadWrapper = { +data: ResourcePayload };
+export type ResourceMutationPayloadWrapper = { +data: ResourceMutationPayload };
 
 export type ResourceObject = {
   +id: string,
-  +relationships?: ResourceRelationships,
+  +relationships?: ResourceRelationshipMap,
   +type: string
 };
 
 export type ResourceObjectCollection = Array<ResourceObject>;
 
-//-----------
-// END ENTITY
-//-----------
+//-------------
+// END RESOURCE
+//-------------
 
 //-------------------
 // BEGIN HTTP REQUEST
@@ -84,7 +84,7 @@ export type HttpQuery = {
 export type HttpResource = {
   +headers?: HttpHeaders,
   +method: string,
-  +payload?: ResourcePayloadWrapper,
+  +payload?: ResourceMutationPayloadWrapper,
   +query?: HttpQuery,
   +url: string
 };
