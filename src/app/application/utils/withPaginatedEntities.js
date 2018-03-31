@@ -8,7 +8,7 @@ import pipe from 'lodash/fp/pipe';
 
 export default ({
   autoLoad,
-  getCollection,
+  getRecordCollection,
   getError,
   getIsConnecting,
   readCollection,
@@ -25,7 +25,7 @@ export default ({
 
       readPreviousPage = () => this.readCollection(this.props.getPreviousPageQuery());
 
-      readCollection = query => this.props.readCollection(query);
+      readCollection = query => this.props.readCollection({ query });
 
       render() {
         return (
@@ -63,14 +63,14 @@ export default ({
       results && results.length ?
         flatten(
           results.map(result => (
-            result ? result.entities : undefined
+            result ? result.collection : undefined
           )),
         ) : undefined
     );
 
     const getResults = (state, queries) => (
       queries && queries.length ?
-        queries.map(paginatedQuery => getCollection(state, paginatedQuery.query))
+        queries.map(paginatedQuery => getRecordCollection(state, paginatedQuery.query))
           .filter(result => result)
         : undefined
     );

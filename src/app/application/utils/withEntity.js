@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-export default ({ getEntity, getError, getIsConnecting, hasQueryMetaResult, readEntity }) => (
+export default ({ getError, getIsConnecting, getRecord, hasQueryMetaResult, readResource }) => (
   (WrappedComponent) => {
     class WithEntity extends Component {
       componentDidMount() {
         const { getQuery, id } = this.props;
-        this.props.readEntity(getQuery(id));
+        this.props.readResource({ query: getQuery(id) });
       }
 
       render() {
@@ -25,7 +25,7 @@ export default ({ getEntity, getError, getIsConnecting, hasQueryMetaResult, read
     }
 
     WithEntity.propTypes = {
-      readEntity: PropTypes.func.isRequired,
+      readResource: PropTypes.func.isRequired,
       entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
       error: PropTypes.arrayOf(PropTypes.object),
       getQuery: PropTypes.func.isRequired,
@@ -40,13 +40,13 @@ export default ({ getEntity, getError, getIsConnecting, hasQueryMetaResult, read
     };
 
     const mapStateToProps = (state, { getQuery, id }) => ({
-      entity: hasQueryMetaResult(state, getQuery(id)) ? getEntity(state, getQuery(id)) : undefined,
+      entity: hasQueryMetaResult(state, getQuery(id)) ? getRecord(state, getQuery(id)) : undefined,
       error: getError(state),
       isConnecting: getIsConnecting(state),
     });
 
     const mapDispatchToProps = dispatch => ({
-      ...bindActionCreators({ readEntity }, dispatch),
+      ...bindActionCreators({ readResource }, dispatch),
     });
 
     return connect(

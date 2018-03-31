@@ -2,12 +2,27 @@
  * @flow
  */
 
-import type { AppState } from '../../../../types';
-import type { Action, HttpQuery, HttpResponseMeta } from '../Types';
+import type { AppState } from '../../../../../types';
+import type { UpdateResourceDatabaseAction } from '../../resources/Types';
+import type { HttpResponseMeta } from '../Types';
 
 // eslint-disable-next-line import/prefer-default-export
 export const CLEAR_CACHE: 'shared/net/http/caching/clear' =
   'shared/net/http/caching/clear';
+
+export type HttpUnitQuery = { +id?: string, +include?: string };
+
+export type HttpCollectionQuery = {
+  +'page[number]': number,
+  +'page[size]': number,
+  +sort: string
+};
+
+export type HttpQuery = {
+  +collection?: HttpCollectionQuery,
+  +resourceType: string,
+  +unit?: HttpUnitQuery
+};
 
 export type QueryMetaResult = {
   +ids: Array<string>,
@@ -19,7 +34,7 @@ export type QueryMetaResultMap = { +[query: string]: QueryMetaResult };
 
 export type QueryMetaResultReducer = (
   state: QueryMetaResultMap,
-  action: Action
+  action: UpdateResourceDatabaseAction
 ) => QueryMetaResultMap;
 
 export type CachingState = { +queries: QueryMetaResultMap };

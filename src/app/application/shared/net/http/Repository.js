@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import caching from './caching/Repository';
+import requests from './requests/Repository';
+import resources from './resources/Repository';
 
 export default combineReducers({
-  caching,
+  requests,
+  resources,
 });

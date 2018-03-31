@@ -3,16 +3,22 @@
  */
 
 import omit from 'lodash/omit';
-import { combineReducers } from 'redux';
-import type { ArrayReducer } from '../../../../../../types';
-import type { AppState, Collection, Entity } from '../../../../types';
-import { generateQueryForResourceId } from '../Utils';
-import type { Action, HttpQuery, HttpResponseMeta } from '../Types';
-import { HTTP_REQUEST_SUCCEEDED } from '../Types';
+import type { ArrayReducer } from '../../../../../../../types';
+import type { AppState } from '../../../../../types';
+import { generateQueryForResourceId } from '../../Utils';
+// import { HTTP_REQUEST_SUCCEEDED } from '../RequestTypes';
+import type {
+  ResourceObject,
+  ResourceObjectCollection,
+  UpdateResourceDatabaseAction,
+} from '../../resources/Types';
+import { UPDATE_RESOURCE_DATABASE } from '../../resources/Types';
+import type { HttpResponseMeta } from '../Types';
 
 import type {
   GetQueryMetaResultSelector,
   HasQueryMetaResultSelector,
+  HttpQuery,
   QueryMetaResult,
   QueryMetaResultMap,
   QueryMetaResultReducer,
@@ -33,10 +39,10 @@ function clearCache(
 function createQueryMetaResult(
   query: HttpQuery,
   meta: HttpResponseMeta | void,
-  collection: Collection,
+  collection: ResourceObjectCollection,
 ): QueryMetaResult {
   return {
-    ids: collection.map((entity: Entity): string => entity.id),
+    ids: collection.map((resourceObject: ResourceObject): string => resourceObject.id),
     meta,
     query,
   };
@@ -45,10 +51,10 @@ function createQueryMetaResult(
 function collectionToUnitQueriesReducerFactory(
   query: HttpQuery,
   meta: HttpResponseMeta | void,
-): ArrayReducer<QueryMetaResultMap, Entity> {
+): ArrayReducer<QueryMetaResultMap, ResourceObject> {
   return function collectionToUnitQueriesReducer(
     acc: QueryMetaResultMap,
-    value: Entity,
+    value: ResourceObject,
   ): QueryMetaResultMap {
     const queryWithId:HttpQuery = generateQueryForResourceId(
       value.id,
@@ -63,7 +69,7 @@ function collectionToUnitQueriesReducerFactory(
 
 function createQueryMetaResultForCollection(
   query: HttpQuery,
-  collection: Collection,
+  collection: ResourceObjectCollection,
   meta: HttpResponseMeta | void,
 ): QueryMetaResult {
   return createQueryMetaResult(query, meta, collection);
@@ -71,7 +77,7 @@ function createQueryMetaResultForCollection(
 
 function createQueryMetaResultMapForCollectionItens(
   query: HttpQuery,
-  collection: Collection,
+  collection: ResourceObjectCollection,
   meta: HttpResponseMeta | void,
 ): QueryMetaResultMap {
   return collection.reduce(collectionToUnitQueriesReducerFactory(query, meta), {});
@@ -81,23 +87,23 @@ export const getQueryMetaResult: GetQueryMetaResultSelector = (
   state: AppState,
   query: HttpQuery,
 ): QueryMetaResult | void => (
-  state.net.http.caching.queries[JSON.stringify(query)]
+  state.net.http.requests.queries[JSON.stringify(query)]
 );
 
 export const hasQueryMetaResult: HasQueryMetaResultSelector = (
   state: AppState,
   query: HttpQuery,
 ): boolean => (
-  state.net.http.caching.queries[JSON.stringify(query)] !== undefined
+  state.net.http.requests.queries[JSON.stringify(query)] !== undefined
 );
 
 const queries: QueryMetaResultReducer = (
   state: QueryMetaResultMap = {},
-  action: Action,
+  action: UpdateResourceDatabaseAction,
 ): QueryMetaResultMap => {
   switch (action.type) {
-    case HTTP_REQUEST_SUCCEEDED: {
-      const query: HttpQuery = action.payload.query;
+    case UPDATE_RESOURCE_DATABASE: {
+      const query: HttpQuery | void = action.payload.request.query;
       if (!query) return state;
 
       if (!query.resourceType) {
@@ -118,8 +124,8 @@ const queries: QueryMetaResultReducer = (
           ...createQueryMetaResultMapForCollectionItens(query, data, meta),
         };
       } else if (data instanceof Object) {
-        const entity: Entity = data;
-        const collection: Collection = [entity];
+        const resourceObject: ResourceObject = data;
+        const collection: ResourceObjectCollection = [resourceObject];
         return {
           ...state,
           ...{
@@ -142,6 +148,4 @@ const queries: QueryMetaResultReducer = (
   }
 };
 
-export default combineReducers({
-  queries,
-});
+export default queries;

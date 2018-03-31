@@ -9,8 +9,8 @@ import {
 function* emailSignInSaga({ meta }) {
   try {
     yield put(emailSignInStarted());
-    const { makeRequest, resource } = meta.http;
-    const data = yield makeRequest(resource);
+    const { makeRequest, request } = meta.http;
+    const data = yield makeRequest(request);
     yield put(emailSignInSucceeded(data.data));
   } catch (error) {
     yield put(emailSignInFailed(error));

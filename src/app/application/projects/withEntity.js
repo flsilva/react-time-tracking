@@ -1,13 +1,13 @@
 import withEntity from '../utils/withEntity';
-import { hasQueryMetaResult } from '../shared/net/http/caching/Repository';
-import { getEntityFactory } from '../DatabaseState';
-import { readEntity } from './ProjectActions';
+import { createRecordGetter } from '../shared/net/http/records/Repository';
+import { hasQueryMetaResult } from '../shared/net/http/requests/queries/Repository';
+import { readResource } from './ProjectActions';
 import { getError, getIsConnecting } from './ProjectState';
 
 export default withEntity({
-  getEntity: getEntityFactory('projects'),
   getError,
   getIsConnecting,
+  getRecord: createRecordGetter('projects'),
   hasQueryMetaResult,
-  readEntity,
+  readResource,
 });

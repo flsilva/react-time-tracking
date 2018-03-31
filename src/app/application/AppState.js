@@ -1,5 +1,4 @@
 import auth from './auth/AuthState';
-import database from './DatabaseState';
 import net from './shared/net/Repository';
 import projects from './projects/ProjectState';
 import stopwatches from './stopwatches/StopwatchState';
@@ -23,7 +22,6 @@ export const observeStore = (store, select, onChange) => {
 
 export const reducers = {
   auth,
-  database,
   net,
   projects,
   stopwatches,

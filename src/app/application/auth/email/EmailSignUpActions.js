@@ -1,6 +1,6 @@
 export const EMAIL_SIGN_UP_REQUESTED = 'app/auth/email/sign-up/requested';
 export const EMAIL_SIGN_UP_STARTED = 'app/auth/email/sign-up/started';
-export const EMAIL_SIGN_UP_SUCCEEDED = 'app/auth/email/sign-up/suceeded';
+export const EMAIL_SIGN_UP_SUCCEEDED = 'app/auth/email/sign-up/succeeded';
 export const EMAIL_SIGN_UP_FAILED = 'app/auth/email/sign-up/failed';
 
 export const emailSignUp = (data, successCb) => {
@@ -16,7 +16,7 @@ export const emailSignUp = (data, successCb) => {
     type: EMAIL_SIGN_UP_REQUESTED,
     meta: {
       http: {
-        resource: {
+        request: {
           method: 'POST',
           payload: {
             confirm_success_url: 'http://127.0.0.1:3001/account/sign-up/confirmation',

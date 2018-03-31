@@ -7,7 +7,7 @@ import type {
   HttpErrorCollection,
   HttpQuery,
   HttpRequest,
-  HttpResponseWithQuery,
+  RequestResponseWrapper,
 } from '../shared/net/http/Types';
 
 //-------------
@@ -53,7 +53,8 @@ export type DatabaseReducer = (state: Database, action: DatabaseAction) => Datab
 // BEGIN HTTP
 //-----------
 
-type HttpRequestWrapper = { +http: HttpRequest };
+type HttpWrapper = { +request: HttpRequest };
+type HttpWrapper = { +http: HttpRequestWrapper };
 
 //---------
 // END HTTP
@@ -76,7 +77,7 @@ export type CreateEntityPayload = { +name: string };
 
 export type CreateEntityRequestedAction = {
   +type: typeof CREATE_ENTITY_REQUESTED,
-  +meta: HttpRequestWrapper
+  +meta: HttpWrapper
 };
 
 export type CreateEntityRequestedActionCreator = (
@@ -126,7 +127,7 @@ export const READ_ENTITY_FAILED: 'app/projects/read/entity/failed' =
 
 export type ReadEntityRequestedAction = {
   +type: typeof READ_ENTITY_REQUESTED,
-  +meta: HttpRequestWrapper
+  +meta: HttpWrapper
 };
 
 export type ReadEntityRequestedActionCreator = (
@@ -139,10 +140,10 @@ export type ReadEntityStartedActionCreator = () => ReadEntityStartedAction;
 
 export type ReadEntitySucceededAction = {
   +type: typeof READ_ENTITY_SUCCEEDED,
-  +payload: HttpResponseWithQuery<Entity>
+  +payload: RequestResponseWrapper<Entity>
 };
 export type ReadEntitySucceededActionCreator = (
-  payload: HttpResponseWithQuery<Entity>
+  payload: RequestResponseWrapper<Entity>
 ) => ReadEntitySucceededAction;
 
 export type ReadEntityFailedAction = {
@@ -178,7 +179,7 @@ export const READ_COLLECTION_FAILED: 'app/projects/read/collection/failed' =
 
 export type ReadCollectionRequestedAction = {
   +type: typeof READ_COLLECTION_REQUESTED,
-  +meta: HttpRequestWrapper
+  +meta: HttpWrapper
 };
 export type ReadCollectionRequestedActionCreator = (
   query?: HttpQuery,
@@ -190,11 +191,11 @@ export type ReadCollectionStartedActionCreator = () => ReadCollectionStartedActi
 
 export type ReadCollectionSucceededAction = {
   +type: typeof READ_COLLECTION_SUCCEEDED,
-  +payload: HttpResponseWithQuery<Collection>
+  +payload: RequestResponseWrapper<Collection>
 };
 
 export type ReadCollectionSucceededActionCreator = (
-  payload: HttpResponseWithQuery<Collection>
+  payload: RequestResponseWrapper<Collection>
 ) => ReadCollectionSucceededAction;
 
 export type ReadCollectionFailedAction = {
@@ -232,7 +233,7 @@ export type UpdateEntityPayload = { +id: string, +name?: string };
 
 export type UpdateEntityRequestedAction = {
   +type: typeof UPDATE_ENTITY_REQUESTED,
-  +meta: HttpRequestWrapper
+  +meta: HttpWrapper
 };
 export type UpdateEntityRequestedActionCreator = (
   data: UpdateEntityPayload,
@@ -281,7 +282,7 @@ export const DELETE_ENTITY_FAILED: 'app/projects/delete/entity/failed' =
 
 export type DeleteEntityRequestedAction = {
   +type: typeof DELETE_ENTITY_REQUESTED,
-  +meta: HttpRequestWrapper
+  +meta: HttpWrapper
 };
 export type DeleteEntityRequestedActionCreator = (
   id: string,

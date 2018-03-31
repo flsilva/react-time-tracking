@@ -2,14 +2,25 @@
  * @flow
  */
 
+import cloneDeep from 'lodash/cloneDeep';
+import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 
 import type {
   HttpErrorCollection,
-  HttpQuery,
-  HttpResponseWithQuery,
 } from '../shared/net/http/Types';
-
+import type {
+  HttpRequest,
+  ReadCollectionRequestedAction,
+  ReadCollectionRequestedActionCreator,
+  ReadResourceRequestedAction,
+  ReadResourceRequestedActionCreator,
+  RequestResponseWrapper,
+} from '../shared/net/http/requests/Types';
+import {
+  readResourceCollection as readHttpResourceCollection,
+  readResource as readHttpResource,
+} from '../shared/net/http/requests/Services';
 import type {
   Collection,
   Database,
@@ -36,8 +47,8 @@ import type {
   ReadEntitySucceededActionCreator,
   ReadEntityFailedAction,
   ReadEntityFailedActionCreator,
-  ReadCollectionRequestedAction,
-  ReadCollectionRequestedActionCreator,
+  // ReadCollectionRequestedAction,
+  // ReadCollectionRequestedActionCreator,
   ReadCollectionStartedAction,
   ReadCollectionStartedActionCreator,
   ReadCollectionSucceededAction,
@@ -72,7 +83,7 @@ import {
   READ_ENTITY_STARTED,
   READ_ENTITY_SUCCEEDED,
   READ_ENTITY_FAILED,
-  READ_COLLECTION_REQUESTED,
+  // READ_COLLECTION_REQUESTED,
   READ_COLLECTION_STARTED,
   READ_COLLECTION_SUCCEEDED,
   READ_COLLECTION_FAILED,
@@ -93,6 +104,10 @@ export const clearDatabase: ClearDatabaseActionCreator = (): ClearDatabaseAction
 export const updateDatabase: UpdateDatabaseActionCreator = (
   payload: Database,
 ): UpdateDatabaseAction => ({ type: UPDATE_DATABASE, payload });
+
+//----------------------
+// BEGIN CREATE RESOURCE
+//----------------------
 
 export const createEntity: CreateEntityRequestedActionCreator = (
   payload: CreateEntityPayload,
@@ -138,6 +153,14 @@ export const createEntityFailed: CreateEntityFailedActionCreator = (
   payload: HttpErrorCollection,
 ): CreateEntityFailedAction => ({ type: CREATE_ENTITY_FAILED, payload });
 
+//--------------------
+// END CREATE RESOURCE
+//--------------------
+
+//--------------------
+// BEGIN READ RESOURCE
+//--------------------
+/*
 export const readEntity: ReadEntityRequestedActionCreator = (
   query: HttpQuery,
   killCache?: boolean,
@@ -160,36 +183,41 @@ export const readEntity: ReadEntityRequestedActionCreator = (
     },
   };
 };
-
+*/
 export const readEntityStarted: ReadEntityStartedActionCreator = (
 ): ReadEntityStartedAction => ({
   type: READ_ENTITY_STARTED,
 });
 
 export const readEntitySucceeded: ReadEntitySucceededActionCreator = (
-  payload: HttpResponseWithQuery<Entity>,
+  payload: RequestResponseWrapper<Entity>,
 ): ReadEntitySucceededAction => ({ type: READ_ENTITY_SUCCEEDED, payload });
 
 export const readEntityFailed: ReadEntityFailedActionCreator = (
   payload: HttpErrorCollection,
 ): ReadEntityFailedAction => ({ type: READ_ENTITY_FAILED, payload });
 
-export const readCollection: ReadCollectionRequestedActionCreator = (
-  query?: HttpQuery,
-  killCache?: boolean,
-): ReadCollectionRequestedAction => ({
-  type: READ_COLLECTION_REQUESTED,
-  meta: {
-    http: {
-      killCache,
-      resource: {
-        method: 'GET',
-        query,
-        url: 'projects/',
-      },
+export const readResource: ReadResourceRequestedActionCreator = (
+  request?: HttpRequest,
+): ReadResourceRequestedAction => (readHttpResource(
+  merge({
+    lifecycle: {
+      failed: [readEntityFailed],
+      started: [readEntityStarted],
+      succeeded: [readEntitySucceeded],
     },
+    url: `projects/${request.query.unit.id}`,
   },
-});
+  cloneDeep(request)),
+));
+
+//------------------
+// END READ RESOURCE
+//------------------
+
+//-------------------------------
+// BEGIN READ RESOURCE COLLECTION
+//-------------------------------
 
 export const readCollectionStarted: ReadCollectionStartedActionCreator = (
 ): ReadCollectionStartedAction => ({
@@ -197,7 +225,7 @@ export const readCollectionStarted: ReadCollectionStartedActionCreator = (
 });
 
 export const readCollectionSucceeded: ReadCollectionSucceededActionCreator = (
-  payload: HttpResponseWithQuery<Collection>,
+  payload: RequestResponseWrapper<Collection>,
 ): ReadCollectionSucceededAction => ({
   type: READ_COLLECTION_SUCCEEDED,
   payload,
@@ -210,6 +238,47 @@ export const readCollectionFailed: ReadCollectionFailedActionCreator = (
   payload,
 });
 
+/*
+export const readCollection: ReadCollectionRequestedActionCreator = (
+  query?: HttpQuery,
+  killCache?: boolean,
+): ReadCollectionRequestedAction => ({
+  type: READ_COLLECTION_REQUESTED,
+  meta: {
+    http: {
+      request: {
+        killCache,
+        method: 'GET',
+        query,
+        url: 'projects/',
+      },
+    },
+  },
+});
+*/
+
+export const readCollection: ReadCollectionRequestedActionCreator = (
+  request?: HttpRequest,
+): ReadCollectionRequestedAction => (readHttpResourceCollection(
+  merge({
+    lifecycle: {
+      failed: [readCollectionFailed],
+      started: [readCollectionStarted],
+      succeeded: [readCollectionSucceeded],
+    },
+    url: 'projects/',
+  },
+  cloneDeep(request)),
+));
+
+//-----------------------------
+// END READ RESOURCE COLLECTION
+//-----------------------------
+
+//----------------------
+// BEGIN UPDATE RESOURCE
+//----------------------
+/*
 export const updateEntity: UpdateEntityRequestedActionCreator = (
   payload: UpdateEntityPayload,
   successCb?: () => mixed,
@@ -237,7 +306,7 @@ export const updateEntity: UpdateEntityRequestedActionCreator = (
     },
   };
 };
-
+*/
 export const updateEntityStarted: UpdateEntityStartedActionCreator = (
 ): UpdateEntityStartedAction => ({
   type: UPDATE_ENTITY_STARTED,
@@ -256,6 +325,35 @@ export const updateEntityFailed: UpdateEntityFailedActionCreator = (
   type: UPDATE_ENTITY_FAILED,
   payload,
 });
+
+export const updateResource: UpdateResourceRequestedActionCreator = (
+  request?: HttpRequest,
+): UpdateResourceRequestedAction => (updateHttpResource(
+  merge({
+    lifecycle: {
+      failed: [updateEntityFailed],
+      started: [updateEntityStarted],
+      succeeded: [updateEntitySucceeded],
+    },
+    payload: {
+      data: {
+        attributes: omit(request.payload, 'id'),
+        id: payload.id,
+        type: 'projects',
+      },
+    },
+    url: `projects/${payload.id}`,
+  },
+  cloneDeep(request)),
+));
+
+//--------------------
+// END UPDATE RESOURCE
+//--------------------
+
+//----------------------
+// BEGIN DELETE RESOURCE
+//----------------------
 
 export const deleteEntity: DeleteEntityRequestedActionCreator = (
   id: string,
@@ -293,3 +391,7 @@ export const deleteEntityFailed: DeleteEntityFailedActionCreator = (
   type: DELETE_ENTITY_FAILED,
   payload,
 });
+
+//--------------------
+// END DELETE RESOURCE
+//--------------------

@@ -6,7 +6,7 @@ import {
   UPDATE_ENTITY_REQUESTED,
   DELETE_ENTITY_REQUESTED,
 } from './types';
-import { hasQueryMetaResult } from '../shared/net/http/caching/Repository';
+import { hasQueryMetaResult } from '../shared/net/http/requests/queries/Repository';
 import {
   clearDatabase,
   createEntityFailed,
@@ -65,8 +65,8 @@ function* readEntitySaga({ meta }) {
 }
 
 function* readCollectionSaga({ meta }) {
-  const { makeRequest, killCache, resource } = meta.http;
-  const { query } = resource;
+  const { makeRequest, request } = meta.http;
+  const { killCache, query } = request;
 
   if (!killCache) {
     const collectionExists = yield select(hasQueryMetaResult, query);
@@ -76,7 +76,7 @@ function* readCollectionSaga({ meta }) {
   try {
     yield put(readCollectionStarted());
 
-    const response = yield makeRequest(resource);
+    const response = yield makeRequest(request);
 
     yield put(updateDatabase(response));
     yield put(readCollectionSucceeded({ response, query }));
