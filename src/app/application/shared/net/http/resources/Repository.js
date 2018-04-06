@@ -3,6 +3,7 @@
  */
 
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import normalize from 'json-api-normalizer';
 import type {
   ResourceDatabase,
@@ -20,11 +21,7 @@ export const reduceResources: ResourceDatabaseReducer = (
       return merge({ ...state }, normalize(action.payload.response));
 
     case CLEAR_RESOURCE_DATABASE:
-      return Object.keys(state)
-        .filter((resourceType: string): boolean => resourceType !== action.payload)
-        .reduce((acc: ResourceDatabase, resourceType: string): ResourceDatabase => (
-          { ...acc, [resourceType]: state[resourceType] }
-        ), {});
+      return omit(state, [action.payload]);
 
     default:
       return state;
