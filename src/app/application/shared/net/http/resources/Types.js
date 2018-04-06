@@ -82,6 +82,10 @@ export type ResourceDatabaseReducer = (
   action: UpdateResourceDatabaseAction
 ) => ResourceDatabase;
 
+export type ResourceDatabaseAction =
+  | ClearResourceDatabaseAction
+  | UpdateResourceDatabaseAction;
+
 //----------------------
 // END RESOURCE DATABASE
 //----------------------
