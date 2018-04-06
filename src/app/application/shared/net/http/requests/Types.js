@@ -2,13 +2,22 @@
  * @flow
  */
 
+import type { HttpErrorCollection } from '../Types';
 import type {
+  CreateResourcePayload,
+  UpdateResourcePayload,
   ResourceMutationPayloadWrapper,
   ResourceObjectCollection,
 } from '../resources/Types';
+import type { ConnectingState } from './connecting/Types';
+import type { ErrorState } from './errors/Types';
 import type { HttpQuery, QueryMetaResultMap } from './queries/Types';
 
-export type RequestState = { +queries: QueryMetaResultMap };
+export type RequestState = {
+  +connecting: ConnectingState,
+  +errors: ErrorState,
+  +queries: QueryMetaResultMap
+};
 
 //-------------------
 // BEGIN HTTP REQUEST
@@ -19,26 +28,47 @@ export const HTTP_REQUEST_REQUESTED: 'net/http/request/requested' =
 
 export type HttpHeaders = { +[headerName: string]: string };
 
+export type LifeCycleCallback = {
+  +args?: Array<mixed>,
+  +fn: () => mixed,
+  +isAction?: boolean
+};
+
+export type SucceededLifeCycle = {
+  +afterUpdateResources?: Array<LifeCycleCallback>,
+  +beforeUpdateResources?: Array<LifeCycleCallback>
+};
+
 export type HttpRequestLifeCycle = {
-  +failed?: Array<() => mixed>,
-  +started?: Array<() => mixed>,
-  +succeeded?: Array<() => mixed>
+  +failed?: Array<LifeCycleCallback>,
+  +started?: Array<LifeCycleCallback>,
+  +succeeded?: SucceededLifeCycle
 };
 
 export type HttpRequest = {
   +headers?: HttpHeaders,
-  +method: string,
-  +killCache?: boolean,
+  +id: string,
   +lifecycle?: HttpRequestLifeCycle,
-  +payload?: ResourceMutationPayloadWrapper,
-  +query?: HttpQuery,
-  +shouldHandleResponse?: boolean,
+  +method: string,
+  +ignoreResponse?: boolean,
   +url: string
 };
 
-export type HttpRequestWrapper = { +request: HttpRequest };
+export type HttpDeleteRequest = HttpRequest & { +id: string };
 
-export type HttpWrapper = { +http: HttpRequestWrapper };
+export type HttpGetRequest = HttpRequest & { +killCache?: boolean, +query?: HttpQuery };
+
+export type HttpPatchRequest = HttpRequest & {
+  +payload: ResourceMutationPayloadWrapper<UpdateResourcePayload>
+};
+
+export type HttpPostRequest = HttpRequest & {
+  +payload?: ResourceMutationPayloadWrapper<CreateResourcePayload>
+};
+
+export type HttpRequestWrapper<RequestType> = { +request: RequestType };
+
+export type HttpWrapper<RequestType> = { +http: HttpRequestWrapper<RequestType> };
 
 //-----------------
 // END HTTP REQUEST
@@ -64,50 +94,73 @@ export type RequestResponseWrapper<ResponsePayload> = {
   +response: HttpResponse<ResponsePayload>
 };
 
+export type ResponseErrorWrapper = {
+  +error: HttpErrorCollection,
+  +request: HttpRequest
+};
+
 //------------------
 // END HTTP RESPONSE
 //------------------
 
-//------------------------------
-// BEGIN READ RESOURCE REQUESTED
-//------------------------------
+//--------------------------
+// BEGIN HTTP REQUEST ACTION
+//--------------------------
 
-export type ReadResourceRequestedAction = {
+export type RequestAction<RequestType> = {
   +type: typeof HTTP_REQUEST_REQUESTED,
-  +meta: HttpWrapper
+  +meta: HttpWrapper<RequestType>
 };
 
-export type ReadResourceRequestedActionCreator = (
-  request?: HttpRequest
-) => ReadResourceRequestedAction;
+export type RequestActionCreator<RequestType> = (
+  request: RequestType
+) => RequestAction<RequestType>;
 
-//----------------------------
-// END READ RESOURCE REQUESTED
-//----------------------------
+//------------------------
+// END HTTP REQUEST ACTION
+//------------------------
 
-//-----------------------------------------
-// BEGIN READ RESOURCE COLLECTION REQUESTED
-//-----------------------------------------
+//--------------------------
+// BEGIN HTTP REQUEST CACHED
+//--------------------------
 
-export type ReadCollectionRequestedAction = {
-  +type: typeof HTTP_REQUEST_REQUESTED,
-  +meta: HttpWrapper
+export const HTTP_REQUEST_CACHED: 'net/http/request/cached' =
+  'net/http/request/cached';
+
+export type HttpRequestCachedAction = { +type: typeof HTTP_REQUEST_CACHED };
+
+export type HttpRequestCachedActionCreator = () => HttpRequestCachedAction;
+
+//------------------------
+// END HTTP REQUEST CACHED
+//------------------------
+
+//---------------------------
+// BEGIN HTTP REQUEST STARTED
+//---------------------------
+
+export const HTTP_REQUEST_STARTED: 'net/http/request/started' =
+  'net/http/request/started';
+
+export type HttpRequestStartedAction = {
+  +type: typeof HTTP_REQUEST_STARTED,
+  +payload: HttpRequest
 };
 
-export type ReadCollectionRequestedActionCreator = (
-  request?: HttpRequest
-) => ReadCollectionRequestedAction;
+export type HttpRequestStartedActionCreator = (
+  payload: HttpRequest
+) => HttpRequestStartedAction;
 
-//---------------------------------------
-// END READ RESOURCE COLLECTION REQUESTED
-//---------------------------------------
+//-------------------------
+// END HTTP REQUEST STARTED
+//-------------------------
 
 //-----------------------------
 // BEGIN HTTP REQUEST SUCCEEDED
 //-----------------------------
 
-export const HTTP_REQUEST_SUCCEEDED: 'app/api/request/succeeded' =
-  'app/api/request/succeeded';
+export const HTTP_REQUEST_SUCCEEDED: 'net/http/request/succeeded' =
+  'net/http/request/succeeded';
 
 export type HttpRequestSucceededAction = {
   +type: typeof HTTP_REQUEST_SUCCEEDED,
@@ -122,6 +175,26 @@ export type HttpRequestSucceededActionCreator = (
 // END HTTP REQUEST SUCCEEDED
 //---------------------------
 
+//--------------------------
+// BEGIN HTTP REQUEST FAILED
+//--------------------------
+
+export const HTTP_REQUEST_FAILED: 'net/http/request/failed' =
+  'net/http/request/failed';
+
+export type HttpRequestFailedAction = {
+  +type: typeof HTTP_REQUEST_FAILED,
+  +payload: ResponseErrorWrapper
+};
+
+export type HttpRequestFailedActionCreator = (
+  payload: ResponseErrorWrapper
+) => HttpRequestFailedAction;
+
+//-------------------------
+// END HTTP REQUEST STARTED
+//-------------------------
+
 //-------------------
 // BEGIN HTTP FETCHER
 //-------------------
@@ -133,3 +206,8 @@ export type HttpFetcher<ResponsePayload> = (
 //-----------------
 // END HTTP FETCHER
 //-----------------
+
+export type HttpRequestAction =
+  | HttpRequestFailedAction
+  | HttpRequestStartedAction
+  | HttpRequestSucceededAction;

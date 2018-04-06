@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
-import { formatPayloadToApi } from './Utils';
+import { dasherizePayloadToApi } from './requests/Utils';
 // import { updateResourceDatabase } from './resources/Services';
 // import { httpRequestSucceeded } from './Services';
 import { formatApiError } from './Errors';
@@ -27,7 +27,7 @@ const extractData = (response) => {
 /*
 const dispatchHttpRequestSucceeded = (dispatch, request) => (response) => {
   dispatch(httpRequestSucceeded({ request, response }));
-  if (request.shouldHandleResponse) dispatch(updateResourceDatabase({ request, response }));
+  if (!request.ignoreResponse) dispatch(updateResourceDatabase({ request, response }));
   return response;
 };
 */
@@ -141,7 +141,7 @@ export const middleware = store => next => (action) => {
     }, {});
   }
 
-  request.payload = formatPayloadToApi(request.payload);
+  request.payload = dasherizePayloadToApi(request.payload);
 
   return next(newAction);
 };

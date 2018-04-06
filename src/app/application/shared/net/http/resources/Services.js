@@ -2,18 +2,24 @@
  * @flow
  */
 
+import type { RequestResponseWrapper } from '../requests/Types';
 import type {
-  RequestResponseWrapper,
   ResourceObject,
   ResourceObjectCollection,
-} from '../Types';
-import type {
+  ClearResourceDatabaseAction,
+  ClearResourceDatabaseActionCreator,
   UpdateResourceDatabaseAction,
   UpdateResourceDatabaseActionCreator,
 } from './Types';
-import { UPDATE_RESOURCE_DATABASE } from './Types';
+import { CLEAR_RESOURCE_DATABASE, UPDATE_RESOURCE_DATABASE } from './Types';
 
-// eslint-disable-next-line import/prefer-default-export
+export const clearResourceDatabase: ClearResourceDatabaseActionCreator = (
+  payload: string,
+): ClearResourceDatabaseAction => ({
+  type: CLEAR_RESOURCE_DATABASE,
+  payload,
+});
+
 export const updateResourceDatabase: UpdateResourceDatabaseActionCreator = (
   payload: RequestResponseWrapper<ResourceObject | ResourceObjectCollection>,
 ): UpdateResourceDatabaseAction => ({

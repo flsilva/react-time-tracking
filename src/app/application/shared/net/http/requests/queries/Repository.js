@@ -5,14 +5,13 @@
 import omit from 'lodash/omit';
 import type { ArrayReducer } from '../../../../../../../types';
 import type { AppState } from '../../../../../types';
-import { generateQueryForResourceId } from '../../Utils';
-// import { HTTP_REQUEST_SUCCEEDED } from '../RequestTypes';
+import { generateQueryForResourceId } from './Utils';
 import type {
   ResourceObject,
   ResourceObjectCollection,
   UpdateResourceDatabaseAction,
 } from '../../resources/Types';
-import { UPDATE_RESOURCE_DATABASE } from '../../resources/Types';
+import { CLEAR_RESOURCE_DATABASE, UPDATE_RESOURCE_DATABASE } from '../../resources/Types';
 import type { HttpResponseMeta } from '../Types';
 
 import type {
@@ -137,7 +136,8 @@ const queries: QueryMetaResultReducer = (
       return state;
     }
 
-    case CLEAR_CACHE: {
+    // case CLEAR_CACHE: {
+    case CLEAR_RESOURCE_DATABASE: {
       if (!action.payload) return state;
 
       return clearCache(state, action.payload);

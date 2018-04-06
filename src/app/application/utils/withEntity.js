@@ -8,7 +8,7 @@ export default ({ getError, getIsConnecting, getRecord, hasQueryMetaResult, read
     class WithEntity extends Component {
       componentDidMount() {
         const { getQuery, id } = this.props;
-        this.props.readResource({ query: getQuery(id) });
+        this.props.readResource(getQuery(id));
       }
 
       render() {

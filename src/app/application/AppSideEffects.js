@@ -6,7 +6,6 @@ import bindEmailSignUp from './auth/email/EmailSignUpSideEffects';
 import bindNet from './shared/net/SideEffects';
 import bindRestoreSession from './auth/restore-session/RestoreSessionSideEffects';
 import bindSignOut from './auth/sign-out/SignOutSideEffects';
-import bindProject from './projects/ProjectSideEffects';
 import bindStopwatch from './stopwatches/StopwatchSideEffects';
 import bindTimeLog from './time-logs/TimeLogSideEffects';
 // import { CLEAR_DATABASE as CLEAR_PROJECTS_DATABASE } from './projects/types';
@@ -28,7 +27,6 @@ export default function* () {
     bindNet(),
     bindRestoreSession(),
     bindSignOut(),
-    bindProject(),
     bindStopwatch(),
     bindTimeLog(),
   ]);

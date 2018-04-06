@@ -6,7 +6,7 @@ import build from 'redux-object';
 import type { AppState } from '../../../../types';
 import type { HttpQuery, QueryMetaResult } from '../requests/queries/Types';
 import { getQueryMetaResult } from '../requests/queries/Repository';
-import { generateQueryForResourceId } from '../Utils';
+import { generateQueryForResourceId } from '../requests/queries/Utils';
 import type {
   CollectionWithQueryMetaResult,
   Record,

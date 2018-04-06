@@ -25,7 +25,7 @@ export default ({
 
       readPreviousPage = () => this.readCollection(this.props.getPreviousPageQuery());
 
-      readCollection = query => this.props.readCollection({ query });
+      readCollection = query => this.props.readCollection(query);
 
       render() {
         return (
