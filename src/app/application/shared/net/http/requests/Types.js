@@ -21,6 +21,12 @@ export type RequestState = {
 // BEGIN HTTP REQUEST
 //-------------------
 
+export const DELETE_REQUEST: string = 'DELETE';
+export const GET_REQUEST: string = 'GET';
+export const PATCH_REQUEST: string = 'PATCH';
+export const POST_REQUEST: string = 'POST';
+export const PUT_REQUEST: string = 'PUT';
+
 export const HTTP_REQUEST_REQUESTED: 'net/http/request/requested' =
   'net/http/request/requested';
 

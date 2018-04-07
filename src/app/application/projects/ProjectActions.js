@@ -11,6 +11,12 @@ import type {
   RequestAction,
 } from '../shared/net/http/requests/Types';
 import {
+  DELETE_REQUEST,
+  GET_REQUEST,
+  PATCH_REQUEST,
+  POST_REQUEST,
+} from '../shared/net/http/requests/Types';
+import {
   createBeforeUpdateResourcesLifeCycle,
   createRequestUrl,
   mergeLifeCycles,
@@ -46,7 +52,7 @@ export const createResource: ResourceCreator = (
   const request: HttpRequest = {
     id: REQUEST_ID,
     lifecycle: mergeLifeCycles(clearCache, lifecycle),
-    method: 'POST',
+    method: POST_REQUEST,
     payload,
     url: createRequestUrl([{ type: RESOURCE_TYPE }]),
   };
@@ -75,7 +81,7 @@ export const readResource: ResourceReader = (
 
   const request: HttpRequest = {
     id: REQUEST_ID,
-    method: 'GET',
+    method: GET_REQUEST,
     query,
     url: createRequestUrl([{ type: RESOURCE_TYPE, id }]),
   };
@@ -95,7 +101,7 @@ export const readCollection: ResourceReader = (
   query?: HttpQuery,
 ): RequestAction => createRequestAction({
   id: REQUEST_ID,
-  method: 'GET',
+  method: GET_REQUEST,
   query,
   url: createRequestUrl([{ type: RESOURCE_TYPE }]),
 });
@@ -114,7 +120,7 @@ export const updateResource: ResourceUpdater = (
 ): RequestAction => createRequestAction({
   id: REQUEST_ID,
   lifecycle,
-  method: 'PATCH',
+  method: PATCH_REQUEST,
   payload,
   url: createRequestUrl([{ type: RESOURCE_TYPE, id: payload.data.id }]),
 });
@@ -144,7 +150,7 @@ export const deleteResource: ResourceRemover = (
   const request: HttpRequest = {
     id: REQUEST_ID,
     lifecycle: mergeLifeCycles(clearCache, lifecycle),
-    method: 'DELETE',
+    method: DELETE_REQUEST,
     url: createRequestUrl([{ type: RESOURCE_TYPE, id }]),
   };
 
