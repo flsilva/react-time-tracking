@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { AppState } from '../../../../../types';
+import type { RootState } from '../../../Types';
 import type { UpdateResourceDatabaseAction } from '../../resources/Types';
 import type { HttpResponseMeta } from '../Types';
 
@@ -40,11 +40,11 @@ export type QueryMetaResultReducer = (
 export type CachingState = { +queries: QueryMetaResultMap };
 
 export type GetQueryMetaResultSelector = (
-  state: AppState,
+  state: RootState,
   query: HttpQuery
 ) => QueryMetaResult | void;
 
-export type HasQueryMetaResultSelector = (state: AppState, query: HttpQuery) => boolean;
+export type HasQueryMetaResultSelector = (state: RootState, query: HttpQuery) => boolean;
 
 export type ClearCacheAction = {
   +type: typeof CLEAR_CACHE,

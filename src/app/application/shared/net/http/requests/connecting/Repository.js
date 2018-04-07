@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { AppState } from '../../../../../types';
+import type { RootState } from '../../../Types';
 import type { HttpRequestAction } from '../Types';
 import {
   HTTP_REQUEST_FAILED,
@@ -41,7 +41,7 @@ const connecting: ConnectingReducer = (
 export const createIsConnectingGetter: IsConnectingGetterFactory = (
   requestId: string,
 ): IsConnectingGetter => (
-  function getIsConnecting(state: AppState): boolean {
+  function getIsConnecting(state: RootState): boolean {
     return state.net.http.requests.connecting[requestId];
   }
 );

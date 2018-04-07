@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { AppState } from '../../../../../types';
+import type { RootState } from '../../../Types';
 import type { HttpErrorCollection } from '../../Types';
 import type { HttpRequestAction } from '../Types';
 
@@ -15,6 +15,6 @@ export type ErrorReducer = (
 
 export type ErrorState = { +errors: ErrorMap };
 
-export type ErrorGetter = (state: AppState) => HttpErrorCollection;
+export type ErrorGetter = (state: RootState) => HttpErrorCollection;
 
 export type ErrorGetterFactory = (requestId: string) => ErrorGetter;

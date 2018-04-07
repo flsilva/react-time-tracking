@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { AppState } from '../../../../../types';
+import type { RootState } from '../../../Types';
 import type { HttpRequestAction } from '../Types';
 
 export type ConnectingMap = { +[requestId: string]: boolean };
@@ -14,6 +14,6 @@ export type ConnectingReducer = (
 
 export type ConnectingState = { +connecting: ConnectingMap };
 
-export type IsConnectingGetter = (state: AppState) => boolean;
+export type IsConnectingGetter = (state: RootState) => boolean;
 
 export type IsConnectingGetterFactory = (requestId: string) => IsConnectingGetter;

@@ -23,7 +23,7 @@ export default successCb => (
       const onDeleteResource = () => {
         props.deleteResource(
           props.entity.id,
-          { succeeded: { afterUpdateResources: [{ fn: successCb }] } },
+          createAfterUpdateResourcesLifeCycle({ fn: successCb }),
         );
       };
 
@@ -33,7 +33,7 @@ export default successCb => (
         if (entity) {
           props.updateResource(
             createPatchPayload(RESOURCE_TYPE, entity.id, attributes),
-            createAfterUpdateResourcesLifeCycle(successCb),
+            createAfterUpdateResourcesLifeCycle({ fn: successCb }),
           );
         } else {
           const authorRelId = { id: 'AUTH_USER_ID', type: 'users' };

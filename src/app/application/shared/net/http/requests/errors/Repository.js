@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { AppState } from '../../../../../types';
+import type { RootState } from '../../../Types';
 import type { HttpErrorCollection } from '../../Types';
 import type { HttpRequestAction } from '../Types';
 import { HTTP_REQUEST_FAILED, HTTP_REQUEST_STARTED, HTTP_REQUEST_SUCCEEDED } from '../Types';
@@ -36,7 +36,7 @@ const error: ErrorReducer = (
 export const createErrorGetter: ErrorGetterFactory = (
   requestId: string,
 ): ErrorGetter => (
-  function getError(state: AppState): HttpErrorCollection {
+  function getError(state: RootState): HttpErrorCollection {
     return state.net.http.requests.errors[requestId];
   }
 );

@@ -3,7 +3,7 @@
  */
 
 import build from 'redux-object';
-import type { AppState } from '../../../../types';
+import type { RootState } from '../../Types';
 import type { HttpQuery, QueryMetaResult } from '../requests/queries/Types';
 import { getQueryMetaResult } from '../requests/queries/Repository';
 import { generateQueryForResourceId } from '../requests/queries/Utils';
@@ -20,7 +20,7 @@ import type {
 export const createRecordGetter: RecordGetterFactory = (
   resourceType: string,
 ): RecordGetter => (
-  function getRecord(state: AppState, query: HttpQuery): Record | void {
+  function getRecord(state: RootState, query: HttpQuery): Record | void {
     if (!query) throw new Error('Argument <query> must not be null.');
     if (!query.unit) throw new Error('Argument <query.unit> must not be null.');
 
@@ -43,7 +43,7 @@ export const createRecordCollectionGetter: RecordCollectionGetterFactory = (
   resourceType: string,
 ): RecordCollectionGetter => (
   function getRecordCollection(
-    state: AppState,
+    state: RootState,
     query: HttpQuery,
   ): CollectionWithQueryMetaResult | void {
     if (!state.net.http.resources[resourceType]) return undefined;

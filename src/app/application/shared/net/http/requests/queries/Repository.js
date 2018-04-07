@@ -4,7 +4,7 @@
 
 import omit from 'lodash/omit';
 import type { ArrayReducer } from '../../../../../../../types';
-import type { AppState } from '../../../../../types';
+import type { RootState } from '../../../Types';
 import { generateQueryForResourceId } from './Utils';
 import type {
   ResourceObject,
@@ -83,14 +83,14 @@ function createQueryMetaResultMapForCollectionItens(
 }
 
 export const getQueryMetaResult: GetQueryMetaResultSelector = (
-  state: AppState,
+  state: RootState,
   query: HttpQuery,
 ): QueryMetaResult | void => (
   state.net.http.requests.queries[JSON.stringify(query)]
 );
 
 export const hasQueryMetaResult: HasQueryMetaResultSelector = (
-  state: AppState,
+  state: RootState,
   query: HttpQuery,
 ): boolean => (
   state.net.http.requests.queries[JSON.stringify(query)] !== undefined

@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { createRecordGetter } from '../shared/net/http/records/Repository';
+import { hasQueryMetaResult } from '../shared/net/http/requests/queries/Repository';
+import { createIsConnectingGetter } from '../shared/net/http/requests/connecting/Repository';
+import { createErrorGetter } from '../shared/net/http/requests/errors/Repository';
 
-export default ({ getError, getIsConnecting, getRecord, hasQueryMetaResult, readResource }) => (
+export default ({ readResource, requestId, resourceType }) => (
   (WrappedComponent) => {
     class WithEntity extends Component {
       componentDidMount() {
@@ -40,9 +44,10 @@ export default ({ getError, getIsConnecting, getRecord, hasQueryMetaResult, read
     };
 
     const mapStateToProps = (state, { getQuery, id }) => ({
-      entity: hasQueryMetaResult(state, getQuery(id)) ? getRecord(state, getQuery(id)) : undefined,
-      error: getError(state),
-      isConnecting: getIsConnecting(state),
+      entity: hasQueryMetaResult(state, getQuery(id)) ?
+        createRecordGetter(resourceType)(state, getQuery(id)) : undefined,
+      error: createErrorGetter(requestId)(state),
+      isConnecting: createIsConnectingGetter(requestId)(state),
     });
 
     const mapDispatchToProps = dispatch => ({

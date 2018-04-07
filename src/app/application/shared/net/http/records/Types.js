@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { AppState } from '../../../../types';
+import type { RootState } from '../../Types';
 import type { HttpQuery, QueryMetaResult } from '../requests/queries/Types';
 
 //-------------
@@ -17,20 +17,20 @@ export type CollectionWithQueryMetaResult = {
   +queryMetaResult: QueryMetaResult
 };
 
-//-------------
-// BEGIN RECORD
-//-------------
+//-----------
+// END RECORD
+//-----------
 
 //--------------------
 // BEGIN RECORD GETTER
 //--------------------
 
-export type RecordGetter = (state: AppState, query: HttpQuery) => Record | void;
+export type RecordGetter = (state: RootState, query: HttpQuery) => Record | void;
 
 export type RecordGetterFactory = (resourceType: string) => RecordGetter;
 
 export type RecordCollectionGetter = (
-  state: AppState,
+  state: RootState,
   query: HttpQuery
 ) => CollectionWithQueryMetaResult | void;
 
