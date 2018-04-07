@@ -4,10 +4,17 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createIsConnectingGetter } from '../shared/net/http/requests/connecting/Repository';
 import {
+  createAfterUpdateResourcesLifeCycle,
+  createPatchPayload,
+  createPostPayload,
+  createPayloadRelationship,
+} from '../shared/net/http/requests/Utils';
+import {
   createResource,
   deleteResource,
   updateResource,
   REQUEST_ID,
+  RESOURCE_TYPE,
 } from './ProjectActions';
 
 export default successCb => (
@@ -24,32 +31,17 @@ export default successCb => (
         const { entity } = props;
 
         if (entity) {
-          // props.updateResource({ ...values, ...{ id: entity.id } }, successCb);
           props.updateResource(
-            {
-              data: {
-                attributes,
-                id: entity.id,
-                type: 'projects',
-              },
-            },
-            { succeeded: { afterUpdateResources: [{ fn: successCb }] } },
+            createPatchPayload(RESOURCE_TYPE, entity.id, attributes),
+            createAfterUpdateResourcesLifeCycle(successCb),
           );
         } else {
-          // props.createEntity(attributes, successCb);
+          const authorRelId = { id: 'AUTH_USER_ID', type: 'users' };
+          const relationships = createPayloadRelationship('author', authorRelId);
+
           props.createResource(
-            {
-              data: {
-                attributes,
-                relationships: {
-                  author: {
-                    data: { id: 'AUTH_USER_ID', type: 'users' },
-                  },
-                },
-                type: 'projects',
-              },
-            },
-            { succeeded: { afterUpdateResources: [{ fn: successCb }] } },
+            createPostPayload(RESOURCE_TYPE, attributes, relationships),
+            createAfterUpdateResourcesLifeCycle({ fn: successCb }),
           );
         }
       };

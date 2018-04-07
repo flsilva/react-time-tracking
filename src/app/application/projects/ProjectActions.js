@@ -2,29 +2,22 @@
  * @flow
  */
 
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
+import trim from 'lodash/trim';
 import type {
-  HttpDeleteRequest,
-  HttpGetRequest,
-  HttpPatchRequest,
-  HttpPostRequest,
+  HttpRequest,
   HttpRequestLifeCycle,
   RequestAction,
 } from '../shared/net/http/requests/Types';
 import {
+  createBeforeUpdateResourcesLifeCycle,
+  createRequestUrl,
   mergeLifeCycles,
 } from '../shared/net/http/requests/Utils';
-import {
-  createDeleteAction,
-  createGetAction,
-  createPatchAction,
-  createPostAction,
-} from '../shared/net/http/requests/Services';
+import { createRequestAction } from '../shared/net/http/requests/Services';
 import type { HttpQuery } from '../shared/net/http/requests/queries/Types';
-import type {
-  CreateResourcePayload,
-  UpdateResourcePayload,
-  ResourceMutationPayloadWrapper,
-} from '../shared/net/http/resources/Types';
+import type { ResourceMutationPayloadWrapper } from '../shared/net/http/resources/Types';
 import { clearResourceDatabase } from '../shared/net/http/resources/Services';
 import type {
   ResourceCreator,
@@ -34,34 +27,31 @@ import type {
 } from './types';
 
 export const REQUEST_ID: string = 'app/projects/request';
+export const RESOURCE_TYPE: string = 'projects';
 
 //----------------------
 // BEGIN CREATE RESOURCE
 //----------------------
 
 export const createResource: ResourceCreator = (
-  payload: ResourceMutationPayloadWrapper<CreateResourcePayload>,
+  payload: ResourceMutationPayloadWrapper,
   lifecycle?: HttpRequestLifeCycle,
-): RequestAction<HttpPostRequest> => {
-  const clearCache: HttpRequestLifeCycle = {
-    succeeded: {
-      beforeUpdateResources: [{
-        fn: clearResourceDatabase, isAction: true, args: ['projects'],
-      }],
-    },
-  };
+): RequestAction => {
+  const clearCache: HttpRequestLifeCycle = createBeforeUpdateResourcesLifeCycle({
+    fn: clearResourceDatabase,
+    isAction: true,
+    args: [RESOURCE_TYPE],
+  });
 
-  const mergedLifecycle: HttpRequestLifeCycle = mergeLifeCycles(clearCache, lifecycle);
-
-  const request: HttpPostRequest = {
+  const request: HttpRequest = {
     id: REQUEST_ID,
-    lifecycle: mergedLifecycle,
+    lifecycle: mergeLifeCycles(clearCache, lifecycle),
     method: 'POST',
     payload,
-    url: 'projects/',
+    url: createRequestUrl([{ type: RESOURCE_TYPE }]),
   };
 
-  return createPostAction(request);
+  return createRequestAction(request);
 };
 
 //--------------------
@@ -74,15 +64,23 @@ export const createResource: ResourceCreator = (
 
 export const readResource: ResourceReader = (
   query: HttpQuery,
-): RequestAction<HttpGetRequest> => {
-  const request: HttpGetRequest = {
+): RequestAction => {
+  if (!query) throw new Error('Argument <query> must be a valid object.');
+  if (!query.unit) throw new Error('Argument <query.unit> must be a valid object.');
+
+  const id: string = query.unit.id || '';
+  if (!isString(id) || isEmpty(trim(id))) {
+    throw new Error('Argument <query.unit.id> must be a valid string.');
+  }
+
+  const request: HttpRequest = {
     id: REQUEST_ID,
     method: 'GET',
     query,
-    url: `projects/${query.unit.id}`,
+    url: createRequestUrl([{ type: RESOURCE_TYPE, id }]),
   };
 
-  return createGetAction(request);
+  return createRequestAction(request);
 };
 
 //------------------
@@ -95,16 +93,12 @@ export const readResource: ResourceReader = (
 
 export const readCollection: ResourceReader = (
   query?: HttpQuery,
-): RequestAction<HttpGetRequest> => {
-  const request: HttpGetRequest = {
-    id: REQUEST_ID,
-    method: 'GET',
-    query,
-    url: 'projects/',
-  };
-
-  return createGetAction(request);
-};
+): RequestAction => createRequestAction({
+  id: REQUEST_ID,
+  method: 'GET',
+  query,
+  url: createRequestUrl([{ type: RESOURCE_TYPE }]),
+});
 
 //-----------------------------
 // END READ RESOURCE COLLECTION
@@ -115,19 +109,15 @@ export const readCollection: ResourceReader = (
 //----------------------
 
 export const updateResource: ResourceUpdater = (
-  payload: ResourceMutationPayloadWrapper<UpdateResourcePayload>,
+  payload: ResourceMutationPayloadWrapper,
   lifecycle?: HttpRequestLifeCycle,
-): RequestAction<HttpPatchRequest> => {
-  const request: HttpPatchRequest = {
-    id: REQUEST_ID,
-    lifecycle,
-    method: 'PATCH',
-    payload,
-    url: `projects/${payload.data.id}`,
-  };
-
-  return createPatchAction(request);
-};
+): RequestAction => createRequestAction({
+  id: REQUEST_ID,
+  lifecycle,
+  method: 'PATCH',
+  payload,
+  url: createRequestUrl([{ type: RESOURCE_TYPE, id: payload.data.id }]),
+});
 
 //--------------------
 // END UPDATE RESOURCE
@@ -140,25 +130,25 @@ export const updateResource: ResourceUpdater = (
 export const deleteResource: ResourceRemover = (
   id: string,
   lifecycle?: HttpRequestLifeCycle,
-): RequestAction<HttpDeleteRequest> => {
-  const clearCache: HttpRequestLifeCycle = {
-    succeeded: {
-      beforeUpdateResources: [{
-        fn: clearResourceDatabase, isAction: true, args: ['projects'],
-      }],
-    },
-  };
+): RequestAction => {
+  if (!isString(id) || isEmpty(trim(id))) {
+    throw new Error('Argument <id> must be a valid string.');
+  }
 
-  const mergedLifecycle: HttpRequestLifeCycle = mergeLifeCycles(clearCache, lifecycle);
+  const clearCache: HttpRequestLifeCycle = createBeforeUpdateResourcesLifeCycle({
+    fn: clearResourceDatabase,
+    isAction: true,
+    args: [RESOURCE_TYPE],
+  });
 
-  const request: HttpDeleteRequest = {
+  const request: HttpRequest = {
     id: REQUEST_ID,
-    lifecycle: mergedLifecycle,
+    lifecycle: mergeLifeCycles(clearCache, lifecycle),
     method: 'DELETE',
-    url: `projects/${id}`,
+    url: createRequestUrl([{ type: RESOURCE_TYPE, id }]),
   };
 
-  return createDeleteAction(request);
+  return createRequestAction(request);
 };
 
 //--------------------

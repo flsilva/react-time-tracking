@@ -3,30 +3,22 @@
  */
 
 import type {
-  HttpDeleteRequest,
-  HttpGetRequest,
-  HttpPatchRequest,
-  HttpPostRequest,
   HttpRequestLifeCycle,
   RequestAction,
 } from '../shared/net/http/requests/Types';
 import type {
   HttpQuery,
 } from '../shared/net/http/requests/queries/Types';
-import type {
-  CreateResourcePayload,
-  ResourceMutationPayloadWrapper,
-  UpdateResourcePayload,
-} from '../shared/net/http/resources/Types';
+import type { ResourceMutationPayloadWrapper } from '../shared/net/http/resources/Types';
 
 //----------------------
 // BEGIN CREATE RESOURCE
 //----------------------
 
 export type ResourceCreator = (
-  payload: ResourceMutationPayloadWrapper<CreateResourcePayload>,
+  payload: ResourceMutationPayloadWrapper,
   lifecycle?: HttpRequestLifeCycle
-) => RequestAction<HttpPostRequest>;
+) => RequestAction;
 
 //--------------------
 // END CREATE RESOURCE
@@ -38,7 +30,7 @@ export type ResourceCreator = (
 
 export type ResourceReader = (
   query: HttpQuery
-) => RequestAction<HttpGetRequest>;
+) => RequestAction;
 
 //------------------
 // END READ RESOURCE
@@ -49,9 +41,9 @@ export type ResourceReader = (
 //----------------------
 
 export type ResourceUpdater = (
-  payload: ResourceMutationPayloadWrapper<UpdateResourcePayload>,
+  payload: ResourceMutationPayloadWrapper,
   lifecycle?: HttpRequestLifeCycle
-) => RequestAction<HttpPatchRequest>;
+) => RequestAction;
 
 //--------------------
 // END UPDATE RESOURCE
@@ -64,7 +56,7 @@ export type ResourceUpdater = (
 export type ResourceRemover = (
   id: string,
   lifecycle?: HttpRequestLifeCycle
-) => RequestAction<HttpDeleteRequest>;
+) => RequestAction;
 
 //--------------------
 // END DELETE RESOURCE

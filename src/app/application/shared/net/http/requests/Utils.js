@@ -3,66 +3,209 @@
  */
 
 import cloneDeep from 'lodash/cloneDeep';
+import isEmpty from 'lodash/isEmpty';
+import isFunction from 'lodash/isFunction';
+import isPlainObject from 'lodash/isPlainObject';
+import isString from 'lodash/isString';
 import merge from 'lodash/merge';
+import trim from 'lodash/trim';
 import humps from 'humps';
 import type {
-  CreateResourcePayload,
+  ResourceIdentifier,
+  ResourceIdentifierCollection,
   ResourceMutationPayloadWrapper,
-  UpdateResourcePayload,
+  ResourcePayload,
+  ResourceRelationshipMap,
 } from '../resources/Types';
 import type {
-  HttpHeaders,
-  HttpPatchRequest,
-  HttpPatchRequestParams,
-  HttpPostRequest,
-  HttpPostRequestParams,
   HttpRequest,
-  HttpRequestParams,
   HttpRequestLifeCycle,
   LifeCycleCallback,
 } from './Types';
 
-export type PayloadDasherizer = (
-  payload: CreateResourcePayload | UpdateResourcePayload
-) => CreateResourcePayload | UpdateResourcePayload;
+export type PayloadDasherizer = (payload: ResourcePayload) => ResourcePayload;
 
 export type HttpRequestLifeCycleMerger = (
   l1: HttpRequestLifeCycle | void,
   l2: HttpRequestLifeCycle | void
 ) => HttpRequestLifeCycle;
 
-/*
-export type HttpRequestMerger = (
-  r1: HttpRequest | void,
-  r2: HttpRequest | void
-) => HttpRequest | void;
+export type PatchPayloadCreator = (
+  resourceType: string,
+  resourceId: string,
+  attributes: {}
+) => ResourceMutationPayloadWrapper;
 
-export type HttpPatchRequestMerger = (
-  r1: HttpPatchRequest,
-  r2: HttpPatchRequest
-) => HttpPatchRequest;
-*/
-/*
-export type HttpRequestCreator = (
-  params1: HttpRequestParams,
-  params2: HttpRequestParams
-) => HttpRequest;
+export type PayloadRelationshipCreator = (
+  relName: string,
+  identifier: ResourceIdentifier
+) => ResourceRelationshipMap;
 
-export type HttpPatchRequestCreator = (
-  params1: HttpPatchRequestParams,
-  params2: HttpPatchRequestParams
-) => HttpPatchRequest;
+export type PostPayloadCreator = (
+  resourceType: string,
+  attributes: {},
+  relationships?: ResourceRelationshipMap,
+) => ResourceMutationPayloadWrapper;
 
-export type HttpPostRequestCreator = (
-  params1: HttpPostRequestParams,
-  params2: HttpPostRequestParams
-) => HttpPostRequest;
-*/
+export type RequestLifeCycleCreator = (callback: LifeCycleCallback) => HttpRequestLifeCycle;
 
-// eslint-disable-next-line import/prefer-default-export
+export type RequestValidator = (request: HttpRequest) => void;
+
+export type UrlRequestCreator = (identifiers: ResourceIdentifierCollection) => string;
+
+export const createAfterUpdateResourcesLifeCycle: RequestLifeCycleCreator = (
+  callback: LifeCycleCallback,
+): HttpRequestLifeCycle => {
+  if (!callback) throw new Error(`Invalid <callback> argument: ${callback}`);
+
+  if (!isFunction(callback.fn)) {
+    const callbackError: string = 'Argument <callback.fn> must be a valid function.' +
+      ` Received: ${String(callback)}`;
+    throw new Error(callbackError);
+  }
+
+  return { succeeded: { afterUpdateResources: [callback] } };
+};
+
+export const createBeforeUpdateResourcesLifeCycle: RequestLifeCycleCreator = (
+  callback: LifeCycleCallback,
+): HttpRequestLifeCycle => {
+  if (!callback) throw new Error(`Invalid <callback> argument: ${callback}`);
+
+  if (!isFunction(callback.fn)) {
+    const callbackError: string = 'Argument <callback.fn> must be a valid function.' +
+      ` Received: ${String(callback)}`;
+    throw new Error(callbackError);
+  }
+
+  return { succeeded: { beforeUpdateResources: [callback] } };
+};
+
+export const createPatchPayload: PatchPayloadCreator = (
+  resourceType: string,
+  resourceId: string,
+  attributes: {},
+): ResourceMutationPayloadWrapper => {
+  if (!isString(resourceType) || isEmpty(trim(resourceType))) {
+    const typeError: string = 'Argument <resourceType> must be a valid string.' +
+      ` Received: ${resourceType}`;
+    throw new Error(typeError);
+  }
+
+  if (!isString(resourceId) || isEmpty(trim(resourceId))) {
+    const idError: string = 'Argument <resourceId> must be a valid string.' +
+      ` Received: ${resourceId}`;
+    throw new Error(idError);
+  }
+
+  if (!attributes || !isPlainObject(attributes)) {
+    const attributesError: string = 'Argument <attributes> must be a valid object.' +
+      ` Received: ${String(attributes)}`;
+    throw new Error(attributesError);
+  }
+
+  return {
+    data: {
+      attributes,
+      id: resourceId,
+      type: resourceType,
+    },
+  };
+};
+
+export const createPayloadRelationship: PayloadRelationshipCreator = (
+  relName: string,
+  identifier: ResourceIdentifier,
+): ResourceRelationshipMap => {
+  if (!identifier) throw new Error(`Invalid <identifier> argument: ${identifier}`);
+
+  const type: string = identifier.type;
+  if (!isString(type) || isEmpty(trim(type))) {
+    const typeError: string = '<identifier.type> property must be a valid string.' +
+      ` Received: ${identifier.type}`;
+    throw new Error(typeError);
+  }
+
+  const id: string = identifier.id || '';
+  if (!isString(id) || isEmpty(trim(id))) {
+    const idError: string = '<identifier.id> property must be a valid string.' +
+      ` Received: ${id}`;
+    throw new Error(idError);
+  }
+
+  return {
+    [relName]: {
+      data: { id, type },
+    },
+  };
+};
+
+export const createPostPayload: PostPayloadCreator = (
+  resourceType: string,
+  attributes: {},
+  relationships?: ResourceRelationshipMap,
+): ResourceMutationPayloadWrapper => {
+  if (!isString(resourceType) || isEmpty(trim(resourceType))) {
+    const typeError: string = 'Argument <resourceType> must be a valid string.' +
+      ` Received: ${resourceType}`;
+    throw new Error(typeError);
+  }
+
+  if (!attributes || !isPlainObject(attributes)) {
+    const attributesError: string = 'Argument <attributes> must be a valid object.' +
+      ` Received: ${String(attributes)}`;
+    throw new Error(attributesError);
+  }
+
+  return {
+    data: {
+      attributes,
+      relationships: { ...relationships },
+      type: resourceType,
+    },
+  };
+};
+
+export const createRequestUrl: UrlRequestCreator = (
+  identifiers: ResourceIdentifierCollection,
+): string => {
+  if (!identifiers || !Array.isArray(identifiers)) {
+    throw new Error(`Argument <identifiers> must be a valid array. Received: ${identifiers}`);
+  }
+
+  if (identifiers.length < 1) {
+    const emptyError: string = 'Argument <identifiers> must have at least one ' +
+      'ResourceIdentifier object, but an empty Array was provided.';
+    throw new Error(emptyError);
+  }
+
+  const url: string = identifiers.reduce(
+    (acc: string, identifier: ResourceIdentifier): string => {
+      if (!identifier) throw new Error(`Invalid <identifier> object: ${identifier}`);
+
+      const type: string = identifier.type;
+      if (!isString(type) || isEmpty(trim(type))) {
+        const typeError: string = '<identifier.type> property must be a valid string.' +
+          ` Received: ${identifier.type}`;
+        throw new Error(typeError);
+      }
+
+      let path: string = acc + type;
+
+      const id: string = identifier.id || '';
+      if (isString(id) && !isEmpty(trim(id))) path += `/${id}`;
+
+      path += '/';
+      return path;
+    },
+  '');
+
+  return url.substring(0, url.length - 1); // removes last forward slash
+};
+
 export const dasherizePayloadToApi: PayloadDasherizer = (
-  payload: CreateResourcePayload | UpdateResourcePayload,
-): CreateResourcePayload | UpdateResourcePayload => {
+  payload: ResourcePayload,
+): ResourcePayload => {
   if (!payload) throw new Error('Argument <payload> must not be null.');
   return humps.decamelizeKeys(payload, { separator: '-' });
 };
@@ -120,162 +263,21 @@ export const mergeLifeCycles: HttpRequestLifeCycleMerger = (
   return l;
 };
 
-/*
-export const mergeRequests: HttpRequestMerger = (
-  r1: HttpRequest | void,
-  r2: HttpRequest | void,
-): HttpRequest | void => {
-  if (!r1 && !r2) throw new Error('Arguments <r1> and <r2> are null.');
+export const validateRequest: RequestValidator = (request: HttpRequest) => {
+  if (!request) throw new Error('Argument <request> must not be null.');
 
-  if (r1 && r2) {
-    const headers: HttpHeaders = merge({}, r1.headers, r2.headers);
-    const lifecycle: HttpRequestLifeCycle = mergeLifeCycles(r1.lifecycle, r2.lifecycle);
-    const method: string = r2.method || r1.method;
-    const ignoreResponse: boolean | void = (
-      r2.ignoreResponse || r1.ignoreResponse
-    );
-    const url: string = r2.url || r1.url;
-
-    return {
-      headers,
-      lifecycle,
-      method,
-      ignoreResponse,
-      url,
-    };
+  const id: string = request.id;
+  if (!isString(id) || isEmpty(trim(id))) {
+    throw new Error(`Argument <request.id> must be a valid string. Received: ${id}`);
   }
 
-  return r1 || r2;
+  const method: string = request.method;
+  if (!isString(method) || isEmpty(trim(method))) {
+    throw new Error(`Argument <request.method> must be a valid string. Received: ${method}`);
+  }
+
+  const url: string = request.url;
+  if (!isString(url) || isEmpty(trim(url))) {
+    throw new Error(`Argument <request.url> must be a valid string. Received: ${url}`);
+  }
 };
-export const mergePatchRequests: HttpPatchRequestMerger = (
-  r1: HttpPatchRequest,
-  r2: HttpPatchRequest,
-): HttpPatchRequest => {
-  if (!r1 && !r2) throw new Error('Arguments <r1> and <r2> are null.');
-  if (r1 && !r2) return r1;
-  if (r2 && !r1) return r2;
-
-  const r: HttpRequest | void = mergeRequests(r1, r2);
-  const p1: ResourceMutationPayloadWrapper<UpdateResourcePayload> | void = (
-    (r1 !== undefined) ? r1.payload : undefined
-  );
-  const p2: ResourceMutationPayloadWrapper<UpdateResourcePayload> | void = (
-    (r2 !== undefined) ? r2.payload : undefined
-  );
-
-  const payload: UpdateResourcePayload = merge(p1, p2);
-
-  return merge({}, r, { payload });
-};
-*/
-
-/*
-export const createRequest: HttpRequestCreator = (
-  params1: HttpRequestParams | void,
-  params2: HttpRequestParams | void,
-): HttpRequest => {
-  if (!params1 && !params2) throw new Error('Arguments <params1> and <params2> are null.');
-
-  // We create a temp object here because it's easier to validate values,
-  // but it doens't merge lifecycle object correctly, so we do that later.
-  const tempRequest: HttpRequest = merge({}, params1, params2);
-  //
-
-  if (!tempRequest.method) {
-    const methodError: string = 'At least one <method> string is mandatory' +
-      ', but arguments <params1.method> and <params2.method> are null.';
-    throw new Error(methodError);
-  }
-
-  if (!tempRequest.url) {
-    const urlError: string = 'At least one <method> string is mandatory' +
-      ', but arguments <params1.url> and <params2.url> are null.';
-    throw new Error(urlError);
-  }
-
-  const lifecycle1: HttpRequestLifeCycle | void = (
-    params1 !== undefined ? params1.lifecycle : undefined
-  );
-  const lifecycle2: HttpRequestLifeCycle | void = (
-    params2 !== undefined ? params2.lifecycle : undefined
-  );
-
-  const lifecycle: HttpRequestLifeCycle = mergeLifeCycles(lifecycle1, lifecycle2);
-
-  return {
-    headers: tempRequest.headers,
-    lifecycle,
-    method: tempRequest.method,
-    ignoreResponse: tempRequest.ignoreResponse,
-    url: tempRequest.url,
-  };
-};
-
-export const createPatchRequest: HttpPatchRequestCreator = (
-  params1: HttpPatchRequestParams,
-  params2: HttpPatchRequestParams,
-): HttpPatchRequest => {
-  if (!params1 && !params2) throw new Error('Arguments <params1> and <params2> are null.');
-
-  const method1: string | void = (params1 !== undefined) ? params1.method : undefined;
-  const method2: string | void = (params2 !== undefined) ? params2.method : undefined;
-
-  let request: HttpRequest;
-
-  if (!method1 && !method2) {
-    const params3: HttpPatchRequestParams = merge({ method: 'PATCH' }, params2);
-    request = createRequest(params1, params3);
-  } else {
-    request = createRequest(params1, params2);
-  }
-
-  const payload1: ResourceMutationPayloadWrapper<UpdateResourcePayload> | void = (
-    params1 !== undefined ? params1.payload : undefined
-  );
-
-  const payload2: ResourceMutationPayloadWrapper<UpdateResourcePayload> | void = (
-    params2 !== undefined ? params2.payload : undefined
-  );
-
-  if (!payload1 && !payload2) {
-    const payloadError: string = 'At least one <payload> object is mandatory' +
-      ', but arguments <params1.payload> and <params2.payload> are null.';
-    throw new Error(payloadError);
-  }
-
-  const payload: UpdateResourcePayload = merge({}, payload1, payload2);
-
-  return merge({}, request, { payload });
-};
-
-export const createPostRequest: HttpPostRequestCreator = (
-  params1: HttpPostRequestParams,
-  params2: HttpPostRequestParams,
-): HttpPostRequest => {
-  if (!params1 && !params2) throw new Error('Arguments <params1> and <params2> are null.');
-
-  const method1: string | void = (params1 !== undefined) ? params1.method : undefined;
-  const method2: string | void = (params2 !== undefined) ? params2.method : undefined;
-
-  let request: HttpRequest;
-
-  if (!method1 && !method2) {
-    const params3: HttpPostRequestParams = merge({ method: 'POST' }, params2);
-    request = createRequest(params1, params3);
-  } else {
-    request = createRequest(params1, params2);
-  }
-
-  const payload1: ResourceMutationPayloadWrapper<CreateResourcePayload> | void = (
-    params1 !== undefined ? params1.payload : undefined
-  );
-
-  const payload2: ResourceMutationPayloadWrapper<CreateResourcePayload> | void = (
-    params2 !== undefined ? params2.payload : undefined
-  );
-
-  const payload: CreateResourcePayload = merge({}, payload1, payload2);
-
-  return merge({}, request, { payload });
-};
-*/

@@ -3,10 +3,6 @@
  */
 
 import type {
-  HttpDeleteRequest,
-  HttpGetRequest,
-  HttpPatchRequest,
-  HttpPostRequest,
   HttpRequest,
   HttpRequestCachedAction,
   HttpRequestCachedActionCreator,
@@ -28,50 +24,24 @@ import {
   HTTP_REQUEST_SUCCEEDED,
   HTTP_REQUEST_FAILED,
 } from './Types';
+import { validateRequest } from './Utils';
 
-export const createDeleteAction: RequestActionCreator<HttpDeleteRequest> = (
-  request: HttpDeleteRequest,
-): RequestAction<HttpDeleteRequest> => ({
-  type: HTTP_REQUEST_REQUESTED,
-  meta: {
-    http: {
-      request,
-    },
-  },
-});
+export const createRequestAction: RequestActionCreator = (
+  request: HttpRequest,
+): RequestAction => {
+  if (!request) throw new Error('Argument <request> must not be null.');
 
-export const createGetAction: RequestActionCreator<HttpGetRequest> = (
-  request: HttpGetRequest,
-): RequestAction<HttpGetRequest> => ({
-  type: HTTP_REQUEST_REQUESTED,
-  meta: {
-    http: {
-      request,
-    },
-  },
-});
+  validateRequest(request);
 
-export const createPatchAction: RequestActionCreator<HttpPatchRequest> = (
-  request: HttpPatchRequest,
-): RequestAction<HttpPatchRequest> => ({
-  type: HTTP_REQUEST_REQUESTED,
-  meta: {
-    http: {
-      request,
+  return {
+    type: HTTP_REQUEST_REQUESTED,
+    meta: {
+      http: {
+        request,
+      },
     },
-  },
-});
-
-export const createPostAction: RequestActionCreator<HttpPostRequest> = (
-  request: HttpPostRequest,
-): RequestAction<HttpPostRequest> => ({
-  type: HTTP_REQUEST_REQUESTED,
-  meta: {
-    http: {
-      request,
-    },
-  },
-});
+  };
+};
 
 export const httpRequestStarted: HttpRequestStartedActionCreator = (
   payload: HttpRequest,

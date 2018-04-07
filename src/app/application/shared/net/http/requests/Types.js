@@ -4,8 +4,6 @@
 
 import type { HttpErrorCollection } from '../Types';
 import type {
-  CreateResourcePayload,
-  UpdateResourcePayload,
   ResourceMutationPayloadWrapper,
   ResourceObjectCollection,
 } from '../resources/Types';
@@ -48,27 +46,18 @@ export type HttpRequestLifeCycle = {
 export type HttpRequest = {
   +headers?: HttpHeaders,
   +id: string,
+  +ignoreResponse?: boolean,
+  +killCache?: boolean,
   +lifecycle?: HttpRequestLifeCycle,
   +method: string,
-  +ignoreResponse?: boolean,
+  +payload?: ResourceMutationPayloadWrapper,
+  +query?: HttpQuery,
   +url: string
 };
 
-export type HttpDeleteRequest = HttpRequest & { +id: string };
+export type HttpRequestWrapper = { +request: HttpRequest };
 
-export type HttpGetRequest = HttpRequest & { +killCache?: boolean, +query?: HttpQuery };
-
-export type HttpPatchRequest = HttpRequest & {
-  +payload: ResourceMutationPayloadWrapper<UpdateResourcePayload>
-};
-
-export type HttpPostRequest = HttpRequest & {
-  +payload?: ResourceMutationPayloadWrapper<CreateResourcePayload>
-};
-
-export type HttpRequestWrapper<RequestType> = { +request: RequestType };
-
-export type HttpWrapper<RequestType> = { +http: HttpRequestWrapper<RequestType> };
+export type HttpWrapper = { +http: HttpRequestWrapper };
 
 //-----------------
 // END HTTP REQUEST
@@ -107,14 +96,14 @@ export type ResponseErrorWrapper = {
 // BEGIN HTTP REQUEST ACTION
 //--------------------------
 
-export type RequestAction<RequestType> = {
+export type RequestAction = {
   +type: typeof HTTP_REQUEST_REQUESTED,
-  +meta: HttpWrapper<RequestType>
+  +meta: HttpWrapper
 };
 
-export type RequestActionCreator<RequestType> = (
-  request: RequestType
-) => RequestAction<RequestType>;
+export type RequestActionCreator = (
+  request: HttpRequest
+) => RequestAction;
 
 //------------------------
 // END HTTP REQUEST ACTION

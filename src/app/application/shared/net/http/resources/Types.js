@@ -8,7 +8,7 @@ import type { RequestResponseWrapper } from '../requests/Types';
 // BEGIN RESOURCE
 //---------------
 
-export type ResourceIdentifier = { +id: string, +type: string };
+export type ResourceIdentifier = { +id?: string, +type: string };
 export type ResourceIdentifierCollection = Array<ResourceIdentifier>;
 
 export type ResourceAttributeMap = { +[attrName: string]: mixed };
@@ -18,21 +18,14 @@ export type ResourceRelationshipWrapper = {
 };
 export type ResourceRelationshipMap = { +[relName: string]: ResourceRelationshipWrapper };
 
-export type CreateResourcePayload = {
+export type ResourcePayload = {
   +attributes?: ResourceAttributeMap,
+  +id?: string,
   +relationships?: ResourceRelationshipMap,
   +type: string
 };
 
-export type UpdateResourcePayload = CreateResourcePayload & { +id: string };
-/*
-export type ResourceMutationPayload =
-  | CreateResourcePayload
-  | UpdateResourcePayload;
-  */
-export type ResourceMutationPayloadWrapper<MutationPayloadType> = {
-  +data: MutationPayloadType
-};
+export type ResourceMutationPayloadWrapper = { +data: ResourcePayload };
 
 export type ResourceObject = ResourceIdentifier & {
   +attributes?: ResourceAttributeMap,
