@@ -10,6 +10,7 @@ import type { HttpQuery, QueryMetaResult } from '../requests/queries/Types';
 //-------------
 
 export type Record = { +id: string };
+
 export type RecordCollection = Array<Record>;
 
 export type CollectionWithQueryMetaResult = {

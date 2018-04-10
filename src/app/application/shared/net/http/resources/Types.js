@@ -2,6 +2,7 @@
  * @flow
  */
 
+import type { RootState } from '../../Types';
 import type { RequestResponseWrapper } from '../requests/Types';
 
 //---------------
@@ -75,6 +76,8 @@ export type ResourceDatabaseReducer = (
   action: UpdateResourceDatabaseAction
 ) => ResourceDatabase;
 
+export type ResourceDatabaseGetter = (state: RootState) => ResourceDatabase;
+
 export type ResourceDatabaseAction =
   | ClearResourceDatabaseAction
   | UpdateResourceDatabaseAction;
@@ -82,3 +85,33 @@ export type ResourceDatabaseAction =
 //----------------------
 // END RESOURCE DATABASE
 //----------------------
+
+//-------------------------
+// BEGIN RESOURCE SELECTORS
+//-------------------------
+
+export type ResourceChecker = (
+  state: RootState,
+  type: string,
+  id: string
+) => boolean;
+
+export type ResourceGetter = (
+  state: RootState,
+  type: string,
+  id: string
+) => ResourceObject | void;
+
+export type ResourceMapGetter = (
+  state: RootState,
+  type: string,
+) => ResourceMap | void;
+
+export type ResourceMapChecker = (
+  state: RootState,
+  type: string,
+) => boolean;
+
+//-----------------------
+// END RESOURCE SELECTORS
+//-----------------------
