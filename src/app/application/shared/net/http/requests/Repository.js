@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { reduceConnections as connections } from './connecting/Repository';
+import { reduceConnections as connections } from './connections/Repository';
 import errors from './errors/Repository';
 import queries from './queries/Repository';
 

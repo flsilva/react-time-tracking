@@ -1,6 +1,6 @@
 import withPaginatedEntities from '../utils/withPaginatedEntities';
 import { createRecordCollectionGetter } from '../shared/net/http/records/Repository';
-import { createConnectionChecker } from '../shared/net/http/requests/connecting/Repository';
+import { createConnectionChecker } from '../shared/net/http/requests/connections/Repository';
 import { createErrorGetter } from '../shared/net/http/requests/errors/Repository';
 import { readCollection, REQUEST_ID } from './ProjectActions';
 

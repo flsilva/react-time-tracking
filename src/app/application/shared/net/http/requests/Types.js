@@ -7,7 +7,7 @@ import type {
   ResourceMutationPayloadWrapper,
   ResourceObjectCollection,
 } from '../resources/Types';
-import type { ConnectionsMap } from './connecting/Types';
+import type { ConnectionsMap } from './connections/Types';
 import type { ErrorMap } from './errors/Types';
 import type { HttpQuery, QueryMetaResultMap } from './queries/Types';
 
