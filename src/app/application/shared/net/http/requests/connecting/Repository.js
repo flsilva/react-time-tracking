@@ -2,25 +2,28 @@
  * @flow
  */
 
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
+import trim from 'lodash/trim';
 import type { RootState } from '../../../Types';
 import type { HttpRequestAction } from '../Types';
 import {
   HTTP_REQUEST_FAILED,
   HTTP_REQUEST_STARTED,
   HTTP_REQUEST_SUCCEEDED,
-} from '../Types';
+} from '../';
 
 import type {
-  ConnectingMap,
-  ConnectingReducer,
-  IsConnectingGetter,
-  IsConnectingGetterFactory,
+  ConnectionMap,
+  ConnectionReducer,
+  ConnectionChecker,
+  ConnectionCheckerFactory,
 } from './Types';
 
-const connecting: ConnectingReducer = (
-  state: ConnectingMap = {},
+export const reduceConnections: ConnectionReducer = (
+  state: ConnectionMap = {},
   action: HttpRequestAction,
-): ConnectingMap => {
+): ConnectionMap => {
   switch (action.type) {
     case HTTP_REQUEST_FAILED:
       return { ...state, ...{ [action.payload.request.id]: false } };
@@ -38,12 +41,16 @@ const connecting: ConnectingReducer = (
   }
 };
 
-export const createIsConnectingGetter: IsConnectingGetterFactory = (
+export const createConnectionChecker: ConnectionCheckerFactory = (
   requestId: string,
-): IsConnectingGetter => (
-  function getIsConnecting(state: RootState): boolean {
-    return state.net.http.requests.connecting[requestId];
+): ConnectionChecker => {
+  if (!isString(requestId) || isEmpty(trim(requestId))) {
+    throw new Error('Argument <requestId> must be a valid string.');
   }
-);
 
-export default connecting;
+  function hasConnection(state: RootState): boolean {
+    return state.net.http.requests.connections[requestId];
+  }
+
+  return hasConnection;
+};

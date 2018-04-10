@@ -7,12 +7,12 @@ import type {
   ResourceMutationPayloadWrapper,
   ResourceObjectCollection,
 } from '../resources/Types';
-import type { ConnectingMap } from './connecting/Types';
+import type { ConnectionsMap } from './connecting/Types';
 import type { ErrorMap } from './errors/Types';
 import type { HttpQuery, QueryMetaResultMap } from './queries/Types';
 
 export type RequestState = {
-  +connecting: ConnectingMap,
+  +connections: ConnectionsMap,
   +errors: ErrorMap,
   +queries: QueryMetaResultMap
 };

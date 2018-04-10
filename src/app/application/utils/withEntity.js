@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createRecordGetter } from '../shared/net/http/records/Repository';
 import { hasQueryMetaResult } from '../shared/net/http/requests/queries/Repository';
-import { createIsConnectingGetter } from '../shared/net/http/requests/connecting/Repository';
+import { createConnectionChecker } from '../shared/net/http/requests/connecting/Repository';
 import { createErrorGetter } from '../shared/net/http/requests/errors/Repository';
 
 export default ({ readResource, requestId, resourceType }) => (
@@ -47,7 +47,7 @@ export default ({ readResource, requestId, resourceType }) => (
       entity: hasQueryMetaResult(state, getQuery(id)) ?
         createRecordGetter(resourceType)(state, getQuery(id)) : undefined,
       error: createErrorGetter(requestId)(state),
-      isConnecting: createIsConnectingGetter(requestId)(state),
+      isConnecting: createConnectionChecker(requestId)(state),
     });
 
     const mapDispatchToProps = dispatch => ({

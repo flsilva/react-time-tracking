@@ -5,13 +5,13 @@
 import type { RootState } from '../../../Types';
 import type { HttpRequestAction } from '../Types';
 
-export type ConnectingMap = { +[requestId: string]: boolean };
+export type ConnectionMap = { +[requestId: string]: boolean };
 
-export type ConnectingReducer = (
-  state: ConnectingMap,
+export type ConnectionReducer = (
+  state: ConnectionMap,
   action: HttpRequestAction
-) => ConnectingMap;
+) => ConnectionMap;
 
-export type IsConnectingGetter = (state: RootState) => boolean;
+export type ConnectionChecker = (state: RootState) => boolean;
 
-export type IsConnectingGetterFactory = (requestId: string) => IsConnectingGetter;
+export type ConnectionCheckerFactory = (requestId: string) => ConnectionChecker;

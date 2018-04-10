@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { createIsConnectingGetter } from '../shared/net/http/requests/connecting/Repository';
+import { createConnectionChecker } from '../shared/net/http/requests/connecting/Repository';
 import {
   createAfterUpdateResourcesLifeCycle,
   createPatchPayload,
@@ -76,7 +76,7 @@ export default successCb => (
     };
 
     const mapStateToProps = state => ({
-      isConnecting: createIsConnectingGetter(REQUEST_ID)(state),
+      isConnecting: createConnectionChecker(REQUEST_ID)(state),
     });
 
     const mapDispatchToProps = dispatch => ({
