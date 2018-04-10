@@ -12,8 +12,6 @@ export type ConnectingReducer = (
   action: HttpRequestAction
 ) => ConnectingMap;
 
-export type ConnectingState = { +connecting: ConnectingMap };
-
 export type IsConnectingGetter = (state: RootState) => boolean;
 
 export type IsConnectingGetterFactory = (requestId: string) => IsConnectingGetter;

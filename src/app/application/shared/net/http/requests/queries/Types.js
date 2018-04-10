@@ -37,8 +37,6 @@ export type QueryMetaResultReducer = (
   action: UpdateResourceDatabaseAction
 ) => QueryMetaResultMap;
 
-export type CachingState = { +queries: QueryMetaResultMap };
-
 export type GetQueryMetaResultSelector = (
   state: RootState,
   query: HttpQuery

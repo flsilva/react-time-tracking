@@ -13,8 +13,6 @@ export type ErrorReducer = (
   action: HttpRequestAction
 ) => ErrorMap;
 
-export type ErrorState = { +errors: ErrorMap };
-
 export type ErrorGetter = (state: RootState) => HttpErrorCollection;
 
 export type ErrorGetterFactory = (requestId: string) => ErrorGetter;
