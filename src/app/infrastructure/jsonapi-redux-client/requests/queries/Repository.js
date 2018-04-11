@@ -3,10 +3,10 @@
  */
 
 import omit from 'lodash/omit';
-import type { ArrayReducer } from '../../../../../../../types';
-import type { RootState } from '../../../Types';
+import type { ArrayReducer, RootState } from '../../Types';
 import { generateQueryForResourceId } from './Utils';
 import type {
+  ClearResourceDatabaseAction,
   ResourceObject,
   ResourceObjectCollection,
   UpdateResourceDatabaseAction,
@@ -22,7 +22,6 @@ import type {
   QueryMetaResultMap,
   QueryMetaResultReducer,
 } from './Types';
-import { CLEAR_CACHE } from './Types';
 
 function clearCache(
   state: QueryMetaResultMap = {},
@@ -86,19 +85,19 @@ export const getQueryMetaResult: GetQueryMetaResultSelector = (
   state: RootState,
   query: HttpQuery,
 ): QueryMetaResult | void => (
-  state.net.http.requests.queries[JSON.stringify(query)]
+  state.jsonApi.requests.queries[JSON.stringify(query)]
 );
 
 export const hasQueryMetaResult: HasQueryMetaResultSelector = (
   state: RootState,
   query: HttpQuery,
 ): boolean => (
-  state.net.http.requests.queries[JSON.stringify(query)] !== undefined
+  state.jsonApi.requests.queries[JSON.stringify(query)] !== undefined
 );
 
 export const reduceQueries: QueryMetaResultReducer = (
   state: QueryMetaResultMap = {},
-  action: UpdateResourceDatabaseAction,
+  action: UpdateResourceDatabaseAction | ClearResourceDatabaseAction,
 ): QueryMetaResultMap => {
   switch (action.type) {
     case UPDATE_RESOURCE_DATABASE: {
@@ -136,7 +135,6 @@ export const reduceQueries: QueryMetaResultReducer = (
       return state;
     }
 
-    // case CLEAR_CACHE: {
     case CLEAR_RESOURCE_DATABASE: {
       if (!action.payload) return state;
 

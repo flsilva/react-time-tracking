@@ -129,6 +129,9 @@ function* httpRequestSaga({ meta }) {
   }
 }
 
-export default function* () {
+export function* bindRequestsSideEffects() {
   yield takeLatest(HTTP_REQUEST_REQUESTED, httpRequestSaga);
 }
+
+// eslint-disable-next-line import/prefer-default-export
+// export { bindRequestsSideEffects };

@@ -6,6 +6,11 @@ import { dasherizePayloadToApi } from './requests/Utils';
 // import { httpRequestSucceeded } from './Services';
 import { formatApiError } from './Errors';
 
+export * from './requests';
+export * from './responses';
+export * from './Repository';
+export * from './SideEffects';
+
 const getHeaders = () => ({ 'Content-Type': 'application/vnd.api+json' });
 
 const getFetcher = () => {

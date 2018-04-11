@@ -5,11 +5,11 @@
 import type {
   HttpRequestLifeCycle,
   RequestAction,
-} from '../shared/net/http/requests/Types';
+} from '../../infrastructure/jsonapi-redux-client/requests/Types';
 import type {
   HttpQuery,
-} from '../shared/net/http/requests/queries/Types';
-import type { ResourceMutationPayloadWrapper } from '../shared/net/http/resources/Types';
+} from '../../infrastructure/jsonapi-redux-client/requests/queries/Types';
+import type { ResourceMutationPayloadWrapper } from '../../infrastructure/jsonapi-redux-client/responses/resources/Types';
 
 //----------------------
 // BEGIN CREATE RESOURCE

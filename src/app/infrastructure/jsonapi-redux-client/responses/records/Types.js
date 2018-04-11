@@ -3,7 +3,7 @@
  */
 
 import type { RootState } from '../../Types';
-import type { HttpQuery, QueryMetaResult } from '../requests/queries/Types';
+import type { HttpQuery, QueryMetaResult } from '../../requests/queries/Types';
 
 //-------------
 // BEGIN RECORD

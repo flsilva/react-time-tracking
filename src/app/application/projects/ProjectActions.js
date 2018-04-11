@@ -9,22 +9,20 @@ import type {
   HttpRequest,
   HttpRequestLifeCycle,
   RequestAction,
-} from '../shared/net/http/requests/Types';
+} from '../../infrastructure/jsonapi-redux-client/requests/Types';
 import {
+  clearResourceDatabase,
+  createBeforeUpdateResourcesLifeCycle,
+  createRequestAction,
+  createRequestUrl,
+  mergeLifeCycles,
   DELETE_REQUEST,
   GET_REQUEST,
   PATCH_REQUEST,
   POST_REQUEST,
-} from '../shared/net/http/requests';
-import {
-  createBeforeUpdateResourcesLifeCycle,
-  createRequestUrl,
-  mergeLifeCycles,
-} from '../shared/net/http/requests/Utils';
-import { createRequestAction } from '../shared/net/http/requests/Services';
-import type { HttpQuery } from '../shared/net/http/requests/queries/Types';
-import type { ResourceMutationPayloadWrapper } from '../shared/net/http/responses/resources/Types';
-import { clearResourceDatabase } from '../shared/net/http/responses/resources';
+} from '../../infrastructure/jsonapi-redux-client';
+import type { HttpQuery } from '../../infrastructure/jsonapi-redux-client/requests/queries/Types';
+import type { ResourceMutationPayloadWrapper } from '../../infrastructure/jsonapi-redux-client/responses/resources/Types';
 import type {
   ResourceCreator,
   ResourceReader,

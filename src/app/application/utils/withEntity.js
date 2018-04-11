@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { createErrorGetter } from '../shared/net/http/responses/errors';
-import { createRecordGetter } from '../shared/net/http/responses/records';
-import { hasQueryMetaResult } from '../shared/net/http/requests/queries';
-import { createConnectionChecker } from '../shared/net/http/requests/connections';
+import {
+  createConnectionChecker,
+  createErrorGetter,
+  createRecordGetter,
+  hasQueryMetaResult,
+} from '../../infrastructure/jsonapi-redux-client';
 
 export default ({ readResource, requestId, resourceType }) => (
   (WrappedComponent) => {

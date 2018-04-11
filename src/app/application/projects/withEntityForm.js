@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { createConnectionChecker } from '../shared/net/http/requests/connections';
 import {
   createAfterUpdateResourcesLifeCycle,
+  createConnectionChecker,
   createPatchPayload,
   createPostPayload,
   createPayloadRelationship,
-} from '../shared/net/http/requests/Utils';
+} from '../../infrastructure/jsonapi-redux-client';
 import {
   createResource,
   deleteResource,

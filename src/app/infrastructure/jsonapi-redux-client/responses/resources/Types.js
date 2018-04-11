@@ -3,7 +3,7 @@
  */
 
 import type { RootState } from '../../Types';
-import type { RequestResponseWrapper } from '../requests/Types';
+import type { RequestResponseWrapper } from '../../requests/Types';
 
 //---------------
 // BEGIN RESOURCE

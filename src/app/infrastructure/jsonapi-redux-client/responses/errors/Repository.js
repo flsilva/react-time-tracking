@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { RootState } from '../../../Types';
+import type { RootState } from '../../Types';
 import type { HttpRequestAction } from '../../requests/Types';
 import { HTTP_REQUEST_FAILED, HTTP_REQUEST_STARTED, HTTP_REQUEST_SUCCEEDED } from '../../requests';
 
@@ -37,6 +37,6 @@ export const createErrorGetter: ErrorGetterFactory = (
   requestId: string,
 ): ErrorGetter => (
   function getError(state: RootState): HttpErrorCollection {
-    return state.net.http.responses.errors[requestId];
+    return state.jsonApi.responses.errors[requestId];
   }
 );

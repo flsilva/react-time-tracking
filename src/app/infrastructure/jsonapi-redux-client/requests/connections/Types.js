@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { RootState } from '../../../Types';
+import type { RootState } from '../../Types';
 import type { HttpRequestAction } from '../Types';
 
 export type ConnectionMap = { +[requestId: string]: boolean };
