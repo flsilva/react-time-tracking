@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import caching from './caching/Repository';
+import { reduceRequests as requests } from './requests';
+import { reduceResponses as responses } from './responses';
 
 export default combineReducers({
-  caching,
+  requests,
+  responses,
 });

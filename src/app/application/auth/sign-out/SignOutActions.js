@@ -1,6 +1,6 @@
 export const SIGN_OUT_REQUESTED = 'app/auth/sign-out/requested';
 export const SIGN_OUT_STARTED = 'app/auth/sign-out/started';
-export const SIGN_OUT_SUCCEEDED = 'app/auth/sign-out/suceeded';
+export const SIGN_OUT_SUCCEEDED = 'app/auth/sign-out/succeeded';
 export const SIGN_OUT_FAILED = 'app/auth/sign-out/failed';
 
 export const signOut = () => ({

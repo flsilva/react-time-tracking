@@ -2,23 +2,47 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { createEntity, deleteEntity, updateEntity } from './ProjectActions';
-import { getIsConnecting } from './ProjectState';
+import { createConnectionChecker } from '../shared/net/http/requests/connections';
+import {
+  createAfterUpdateResourcesLifeCycle,
+  createPatchPayload,
+  createPostPayload,
+  createPayloadRelationship,
+} from '../shared/net/http/requests/Utils';
+import {
+  createResource,
+  deleteResource,
+  updateResource,
+  REQUEST_ID,
+  RESOURCE_TYPE,
+} from './ProjectActions';
 
 export default successCb => (
   (WrappedComponent) => {
     function withEntityForm(props) {
-      const onDeleteEntity = () => {
-        props.deleteEntity(props.entity.id, successCb);
+      const onDeleteResource = () => {
+        props.deleteResource(
+          props.entity.id,
+          createAfterUpdateResourcesLifeCycle({ fn: successCb }),
+        );
       };
 
-      const onSubmit = (values) => {
+      const onSubmit = (attributes) => {
         const { entity } = props;
 
         if (entity) {
-          props.updateEntity({ ...values, ...{ id: entity.id } }, successCb);
+          props.updateResource(
+            createPatchPayload(RESOURCE_TYPE, entity.id, attributes),
+            createAfterUpdateResourcesLifeCycle({ fn: successCb }),
+          );
         } else {
-          props.createEntity(values, successCb);
+          const authorRelId = { id: 'AUTH_USER_ID', type: 'users' };
+          const relationships = createPayloadRelationship('author', authorRelId);
+
+          props.createResource(
+            createPostPayload(RESOURCE_TYPE, attributes, relationships),
+            createAfterUpdateResourcesLifeCycle({ fn: successCb }),
+          );
         }
       };
 
@@ -29,7 +53,7 @@ export default successCb => (
       return (
         <WrappedComponent
           {...props}
-          deleteEntity={onDeleteEntity}
+          deleteEntity={onDeleteResource}
           initialValues={toFormValues(props.entity)}
           onSubmit={onSubmit}
           toFormValues={toFormValues}
@@ -38,25 +62,25 @@ export default successCb => (
     }
 
     withEntityForm.propTypes = {
-      createEntity: PropTypes.func.isRequired,
-      deleteEntity: PropTypes.func,
+      createResource: PropTypes.func.isRequired,
+      deleteResource: PropTypes.func,
       entity: PropTypes.shape({ id: PropTypes.string.isRequired }),
       isConnecting: PropTypes.bool,
-      updateEntity: PropTypes.func.isRequired,
+      updateResource: PropTypes.func.isRequired,
     };
 
     withEntityForm.defaultProps = {
-      deleteEntity: undefined,
+      deleteResource: undefined,
       entity: undefined,
       isConnecting: false,
     };
 
     const mapStateToProps = state => ({
-      isConnecting: getIsConnecting(state),
+      isConnecting: createConnectionChecker(REQUEST_ID)(state),
     });
 
     const mapDispatchToProps = dispatch => ({
-      ...bindActionCreators({ createEntity, deleteEntity, updateEntity }, dispatch),
+      ...bindActionCreators({ createResource, deleteResource, updateResource }, dispatch),
     });
 
     return connect(

@@ -1,13 +1,8 @@
 import withEntity from '../utils/withEntity';
-import { hasQueryMetaResult } from '../shared/net/http/caching/Repository';
-import { getEntityFactory } from '../DatabaseState';
-import { readEntity } from './ProjectActions';
-import { getError, getIsConnecting } from './ProjectState';
+import { readResource, REQUEST_ID, RESOURCE_TYPE } from './ProjectActions';
 
 export default withEntity({
-  getEntity: getEntityFactory('projects'),
-  getError,
-  getIsConnecting,
-  hasQueryMetaResult,
-  readEntity,
+  readResource,
+  requestId: REQUEST_ID,
+  resourceType: RESOURCE_TYPE,
 });

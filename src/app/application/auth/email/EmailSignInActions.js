@@ -1,6 +1,6 @@
 export const EMAIL_SIGN_IN_REQUESTED = 'app/auth/email/sign-in/requested';
 export const EMAIL_SIGN_IN_STARTED = 'app/auth/email/sign-in/started';
-export const EMAIL_SIGN_IN_SUCCEEDED = 'app/auth/email/sign-in/suceeded';
+export const EMAIL_SIGN_IN_SUCCEEDED = 'app/auth/email/sign-in/succeeded';
 export const EMAIL_SIGN_IN_FAILED = 'app/auth/email/sign-in/failed';
 
 export const emailSignIn = (email, password) => {
@@ -11,7 +11,7 @@ export const emailSignIn = (email, password) => {
     type: EMAIL_SIGN_IN_REQUESTED,
     meta: {
       http: {
-        resource: {
+        request: {
           method: 'POST',
           payload: { email, password },
           url: 'auth/sign_in/',

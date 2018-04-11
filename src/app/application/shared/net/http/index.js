@@ -1,8 +1,9 @@
 import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
-import { formatPayloadToApi } from './Utils';
-import { httpRequestSucceeded } from './Services';
+import { dasherizePayloadToApi } from './requests/Utils';
+// import { updateResourceDatabase } from './resources/Services';
+// import { httpRequestSucceeded } from './Services';
 import { formatApiError } from './Errors';
 
 const getHeaders = () => ({ 'Content-Type': 'application/vnd.api+json' });
@@ -17,12 +18,19 @@ const getFetcher = () => {
   return fetcher;
 };
 
-const extractData = response => response.data;
+// const extractData = response => response.data;
+const extractData = (response) => {
+  console.log('extractData - response: ', response);
+  return response.data;
+};
 
-const dispatchHttpRequestSucceeded = (dispatch, query) => (response) => {
-  dispatch(httpRequestSucceeded({ response, query }));
+/*
+const dispatchHttpRequestSucceeded = (dispatch, request) => (response) => {
+  dispatch(httpRequestSucceeded({ request, response }));
+  if (!request.ignoreResponse) dispatch(updateResourceDatabase({ request, response }));
   return response;
 };
+*/
 
 const extractHttpAuthHeadersFromResponse = (dispatch, extractAuthDataFromObject) => (response) => {
   extractAuthDataFromObject(dispatch, response.headers);
@@ -38,7 +46,7 @@ const unauthorizedHttpHandler = (dispatch, unauthorizedHandler) => (error) => {
   return Promise.reject(unauthorizedHandler(dispatch));
 };
 
-const addInterceptors = (dispatch, action, query, fetcher) => {
+const addInterceptors = (dispatch, action, request, fetcher) => {
   const auth = action.meta.auth || {};
   const { extractAuthDataFromObject, unauthorizedHandler } = auth;
 
@@ -56,56 +64,61 @@ const addInterceptors = (dispatch, action, query, fetcher) => {
   }
 
   fetcher.interceptors.response.use(extractData, undefined);
+  /*
   fetcher.interceptors.response.use(
-    dispatchHttpRequestSucceeded(dispatch, query),
+    dispatchHttpRequestSucceeded(dispatch, request),
   );
+  */
   fetcher.interceptors.response.use(undefined, formatApiErrorHandler);
 };
 
-const resourceToAxios = (resource) => {
-  if (!resource) {
-    throw new Error(`Argument <resource> must not be null. Received: ${resource}`);
+const requestToAxios = (request) => {
+  if (!request) {
+    throw new Error(`Argument <request> must not be null. Received: ${request}`);
   }
 
-  const query = resource.query || {};
+  const query = request.query || {};
   const unitQuery = omit(query.unit, 'id') || {};
   const collectionQuery = query.collection || {};
 
+  const { headers, method, payload, url } = request;
+
   return {
-    data: resource.payload,
-    headers: resource.headers,
-    method: resource.method,
+    data: payload,
+    headers,
+    method,
     params: { ...unitQuery, ...collectionQuery },
-    url: resource.url,
+    url,
   };
 };
 
 // const makeRequest = fetcher => request => fetcher.request(request);
 
-const makeRequest = (fetcher, dispatch, action) => (resource) => {
-  if (!resource) {
-    throw new Error(`Argument <resource> must not be null. Received: ${resource}`);
+const makeRequest = (fetcher, dispatch, action) => (request) => {
+  console.log('makeRequest() - request: ', request);
+  if (!request) {
+    throw new Error(`Argument <request> must not be null. Received: ${request}`);
   }
 
-  addInterceptors(dispatch, action, resource.query, fetcher);
+  addInterceptors(dispatch, action, request, fetcher);
 
-  const axiosResource = resourceToAxios(resource);
-  return fetcher.request(axiosResource);
+  const axiosRequest = requestToAxios(request);
+  return fetcher.request(axiosRequest);
 };
 
 // eslint-disable-next-line import/prefer-default-export
 export const middleware = store => next => (action) => {
-  // console.log('ApiModule().middleware() - action', action);
+  console.log('ApiModule().middleware() - action', action);
 
   if (!action.meta || !action.meta.http) return next(action);
-  if (!action.meta.http.resource) return next(action);
+  if (!action.meta.http.request) return next(action);
 
   const newAction = cloneDeep(action);
-  const { resource } = newAction.meta.http;
+  const { request } = newAction.meta.http;
 
   const { auth } = newAction.meta;
   const token = (auth && auth.token) ? auth.token : undefined;
-  resource.headers = {
+  request.headers = {
     ...getHeaders(),
     ...token,
   };
@@ -115,11 +128,12 @@ export const middleware = store => next => (action) => {
   // newAction.meta.http.makeRequest = makeRequest(fetcher);
   newAction.meta.http.makeRequest = makeRequest(fetcher, store.dispatch, action);
 
-  if (!resource.payload || !resource.payload.data) return next(newAction);
+  console.log('ApiModule().middleware() - PASSOU - newAction', newAction);
+  if (!request.payload || !request.payload.data) return next(newAction);
 
-  const { relationships } = resource.payload.data;
+  const { relationships } = request.payload.data;
   if (relationships) {
-    resource.payload.data.relationships = Object.keys(relationships).reduce((acc, value) => {
+    request.payload.data.relationships = Object.keys(relationships).reduce((acc, value) => {
       const rel = cloneDeep(relationships[value]);
       if (rel.data.id === 'AUTH_USER_ID') rel.data.id = newAction.meta.auth.user.id;
       acc[value] = rel;
@@ -127,7 +141,7 @@ export const middleware = store => next => (action) => {
     }, {});
   }
 
-  resource.payload = formatPayloadToApi(resource.payload);
+  request.payload = dasherizePayloadToApi(request.payload);
 
   return next(newAction);
 };

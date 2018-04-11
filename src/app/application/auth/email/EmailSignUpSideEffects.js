@@ -9,8 +9,8 @@ import {
 function* emailSignUpSaga({ meta }) {
   try {
     yield put(emailSignUpStarted());
-    const { makeRequest, resource, successCb } = meta.http;
-    const data = yield makeRequest(resource);
+    const { makeRequest, request, successCb } = meta.http;
+    const data = yield makeRequest(request);
     yield put(emailSignUpSucceeded(data.data));
     if (successCb) successCb();
   } catch (error) {
