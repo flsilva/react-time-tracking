@@ -2,18 +2,16 @@
  * @flow
  */
 
-import type { HttpErrorCollection } from '../Types';
+import type { HttpErrorCollection } from '../responses/errors/Types';
 import type {
   ResourceMutationPayloadWrapper,
   ResourceObjectCollection,
-} from '../resources/Types';
+} from '../responses/resources/Types';
 import type { ConnectionMap } from './connections/Types';
-import type { ErrorMap } from './errors/Types';
 import type { HttpQuery, QueryMetaResultMap } from './queries/Types';
 
 export type RequestState = {
   +connections: ConnectionMap,
-  +errors: ErrorMap,
   +queries: QueryMetaResultMap
 };
 

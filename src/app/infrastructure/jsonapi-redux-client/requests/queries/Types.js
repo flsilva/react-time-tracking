@@ -2,8 +2,8 @@
  * @flow
  */
 
-import type { RootState } from '../../../Types';
-import type { UpdateResourceDatabaseAction } from '../../resources/Types';
+import type { RootState } from '../../Types';
+import type { UpdateResourceDatabaseAction } from '../../responses/resources/Types';
 import type { HttpResponseMeta } from '../Types';
 
 // eslint-disable-next-line import/prefer-default-export

@@ -2,7 +2,7 @@
  * @flow
  */
 
-import type { RequestResponseWrapper } from '../requests/Types';
+import type { RequestResponseWrapper } from '../../requests/Types';
 import type {
   ResourceObject,
   ResourceObjectCollection,

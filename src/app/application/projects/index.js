@@ -8,7 +8,7 @@ import {
   generateQueryForPagination,
   generateQueryForRelationship,
   generateQueryForResourceId,
-} from '../shared/net/http/requests/queries/Utils';
+} from '../../infrastructure/jsonapi-redux-client';
 import withPaginatedProjectEntities from './withPaginatedEntities';
 import withProjectEntity from './withEntity';
 import withProjectEntityForm from './withEntityForm';

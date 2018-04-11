@@ -2,10 +2,6 @@
  * @flow
  */
 
-import type { NetState } from './shared/net/Types';
-import type { ProjectState } from './projects/types';
+import type { JsonApiState } from '../infrastructure/jsonapi-redux-client/Types';
 
-export type AppState = {
-  +net: NetState,
-  +projects: ProjectState
-};
+export type AppState = { +jsonApi: JsonApiState };

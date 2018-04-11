@@ -2,8 +2,8 @@
  * @flow
  */
 
-import type { RootState } from '../../../Types';
-import type { HttpRequestAction } from '../Types';
+import type { RootState } from '../../Types';
+import type { HttpRequestAction } from '../../requests/Types';
 
 export type HttpError = { +detail: string };
 

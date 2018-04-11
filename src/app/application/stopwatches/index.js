@@ -1,6 +1,6 @@
 import pipe from 'lodash/fp/pipe';
 import withQuery from '../utils/withQuery';
-import { generateQueryForRelationship } from '../shared/net/http/requests/queries/Utils';
+import { generateQueryForRelationship } from '../../infrastructure/jsonapi-redux-client';
 import CreateStopwatchScreenContainer from './StopwatchScreenContainer';
 import CreateProjectDropdownContainer from './StopwatchProjectDropdownContainer';
 

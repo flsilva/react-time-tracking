@@ -5,7 +5,7 @@
 import isEmpty from 'lodash/isEmpty';
 import isString from 'lodash/isString';
 import trim from 'lodash/trim';
-import type { RootState } from '../../../Types';
+import type { RootState } from '../../Types';
 import type { HttpRequestAction } from '../Types';
 import {
   HTTP_REQUEST_FAILED,
@@ -49,7 +49,7 @@ export const createConnectionChecker: ConnectionCheckerFactory = (
   }
 
   function hasConnection(state: RootState): boolean {
-    return state.net.http.requests.connections[requestId];
+    return state.jsonApi.requests.connections[requestId];
   }
 
   return hasConnection;

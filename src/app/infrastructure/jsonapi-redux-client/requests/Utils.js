@@ -16,7 +16,7 @@ import type {
   ResourceMutationPayloadWrapper,
   ResourcePayload,
   ResourceRelationshipMap,
-} from '../resources/Types';
+} from '../responses/resources/Types';
 import type {
   HttpRequest,
   HttpRequestLifeCycle,
