@@ -10,8 +10,8 @@ import type {
   ResourceObject,
   ResourceObjectCollection,
   UpdateResourceDatabaseAction,
-} from '../../resources/Types';
-import { CLEAR_RESOURCE_DATABASE, UPDATE_RESOURCE_DATABASE } from '../../resources/Types';
+} from '../../responses/resources/Types';
+import { CLEAR_RESOURCE_DATABASE, UPDATE_RESOURCE_DATABASE } from '../../responses/resources';
 import type { HttpResponseMeta } from '../Types';
 
 import type {
@@ -96,7 +96,7 @@ export const hasQueryMetaResult: HasQueryMetaResultSelector = (
   state.net.http.requests.queries[JSON.stringify(query)] !== undefined
 );
 
-const queries: QueryMetaResultReducer = (
+export const reduceQueries: QueryMetaResultReducer = (
   state: QueryMetaResultMap = {},
   action: UpdateResourceDatabaseAction,
 ): QueryMetaResultMap => {
@@ -147,5 +147,3 @@ const queries: QueryMetaResultReducer = (
       return state;
   }
 };
-
-export default queries;

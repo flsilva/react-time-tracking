@@ -8,7 +8,7 @@ import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import trim from 'lodash/trim';
 import normalize from 'json-api-normalizer';
-import type { RootState } from '../../Types';
+import type { RootState } from '../../../Types';
 import type {
   ResourceChecker,
   ResourceDatabaseGetter,
@@ -46,7 +46,7 @@ export const getResourceDatabase: ResourceDatabaseGetter = (
     throw new Error('Argument <state> must be a valid object.');
   }
 
-  return state.net.http.resources;
+  return state.net.http.responses.resources;
 };
 
 export const getResourceMap: ResourceMapGetter = (

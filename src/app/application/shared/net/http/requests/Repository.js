@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
-import { reduceConnections as connections } from './connections/Repository';
-import errors from './errors/Repository';
-import queries from './queries/Repository';
+import { reduceConnections as connections } from './connections';
+import { reduceQueries as queries } from './queries';
 
-export default combineReducers({
+// eslint-disable-next-line import/prefer-default-export
+export const reduceRequests = combineReducers({
   connections,
-  errors,
   queries,
 });

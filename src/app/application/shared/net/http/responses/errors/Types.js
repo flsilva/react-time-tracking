@@ -3,8 +3,11 @@
  */
 
 import type { RootState } from '../../../Types';
-import type { HttpErrorCollection } from '../../Types';
 import type { HttpRequestAction } from '../Types';
+
+export type HttpError = { +detail: string };
+
+export type HttpErrorCollection = Array<HttpError> | null;
 
 export type ErrorMap = { +[requestId: string]: HttpErrorCollection };
 

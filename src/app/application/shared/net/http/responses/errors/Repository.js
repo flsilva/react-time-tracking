@@ -3,18 +3,18 @@
  */
 
 import type { RootState } from '../../../Types';
-import type { HttpErrorCollection } from '../../Types';
-import type { HttpRequestAction } from '../Types';
-import { HTTP_REQUEST_FAILED, HTTP_REQUEST_STARTED, HTTP_REQUEST_SUCCEEDED } from '../Types';
+import type { HttpRequestAction } from '../../requests/Types';
+import { HTTP_REQUEST_FAILED, HTTP_REQUEST_STARTED, HTTP_REQUEST_SUCCEEDED } from '../../requests';
 
 import type {
   ErrorMap,
   ErrorReducer,
   ErrorGetter,
   ErrorGetterFactory,
+  HttpErrorCollection,
 } from './Types';
 
-const error: ErrorReducer = (
+export const reduceErrors: ErrorReducer = (
   state: ErrorMap = {},
   action: HttpRequestAction,
 ): ErrorMap => {
@@ -37,8 +37,6 @@ export const createErrorGetter: ErrorGetterFactory = (
   requestId: string,
 ): ErrorGetter => (
   function getError(state: RootState): HttpErrorCollection {
-    return state.net.http.requests.errors[requestId];
+    return state.net.http.responses.errors[requestId];
   }
 );
-
-export default error;

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import requests from './requests/Repository';
-import { reduceResources as resources } from './resources/Repository';
+import { reduceRequests as requests } from './requests';
+import { reduceResponses as responses } from './responses';
 
 export default combineReducers({
   requests,
-  resources,
+  responses,
 });

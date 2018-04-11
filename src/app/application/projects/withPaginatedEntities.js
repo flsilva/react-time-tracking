@@ -1,7 +1,7 @@
 import withPaginatedEntities from '../utils/withPaginatedEntities';
-import { createRecordCollectionGetter } from '../shared/net/http/records/Repository';
-import { createConnectionChecker } from '../shared/net/http/requests/connections/Repository';
-import { createErrorGetter } from '../shared/net/http/requests/errors/Repository';
+import { createErrorGetter } from '../shared/net/http/responses/errors';
+import { createRecordCollectionGetter } from '../shared/net/http/responses/records';
+import { createConnectionChecker } from '../shared/net/http/requests/connections';
 import { readCollection, REQUEST_ID } from './ProjectActions';
 
 export default ({ autoLoad }) => withPaginatedEntities({

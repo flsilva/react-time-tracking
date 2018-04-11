@@ -6,10 +6,10 @@ import build from 'redux-object';
 import isEmpty from 'lodash/isEmpty';
 import isString from 'lodash/isString';
 import trim from 'lodash/trim';
-import type { RootState } from '../../Types';
+import type { RootState } from '../../../Types';
 import { getResourceDatabase, hasResource, hasResourceMap } from '../resources';
-import { generateQueryForResourceId, getQueryMetaResult } from '../requests/queries';
-import type { HttpQuery, QueryMetaResult } from '../requests/queries/Types';
+import { generateQueryForResourceId, getQueryMetaResult } from '../../requests/queries';
+import type { HttpQuery, QueryMetaResult } from '../../requests/queries/Types';
 import type {
   CollectionWithQueryMetaResult,
   Record,

@@ -1,13 +1,13 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import { updateResourceDatabase } from '../resources/Services';
-import { hasQueryMetaResult } from './queries/Repository';
+import { updateResourceDatabase } from '../responses/resources';
+import { hasQueryMetaResult } from './queries';
 import {
   httpRequestCached,
   httpRequestStarted,
   httpRequestSucceeded,
   httpRequestFailed,
-} from './Services';
-import { HTTP_REQUEST_REQUESTED } from './Types';
+  HTTP_REQUEST_REQUESTED,
+} from './';
 
 function* httpRequestSaga({ meta }) {
   const { makeRequest, request } = meta.http;

@@ -15,7 +15,7 @@ import {
   GET_REQUEST,
   PATCH_REQUEST,
   POST_REQUEST,
-} from '../shared/net/http/requests/Types';
+} from '../shared/net/http/requests';
 import {
   createBeforeUpdateResourcesLifeCycle,
   createRequestUrl,
@@ -23,8 +23,8 @@ import {
 } from '../shared/net/http/requests/Utils';
 import { createRequestAction } from '../shared/net/http/requests/Services';
 import type { HttpQuery } from '../shared/net/http/requests/queries/Types';
-import type { ResourceMutationPayloadWrapper } from '../shared/net/http/resources/Types';
-import { clearResourceDatabase } from '../shared/net/http/resources/Services';
+import type { ResourceMutationPayloadWrapper } from '../shared/net/http/responses/resources/Types';
+import { clearResourceDatabase } from '../shared/net/http/responses/resources';
 import type {
   ResourceCreator,
   ResourceReader,
